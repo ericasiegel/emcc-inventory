@@ -1,5 +1,5 @@
 .DS_Store
-inventory_main/settings/dev.py
+inventory/settings/dev.py
 static/
 media/
 
