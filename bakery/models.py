@@ -17,7 +17,7 @@ class Recipe(models.Model):
     ingredients = models.TextField()
     instructions = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
     
@@ -40,6 +40,7 @@ class Dough(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
     location = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
     
 
 class BakedCookie(models.Model):
@@ -47,6 +48,7 @@ class BakedCookie(models.Model):
     size = models.CharField(max_length=50, choices=SIZE_CHOICES)
     quantity = models.PositiveIntegerField(default=0)
     location = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True)
     
     
 class Grocery(models.Model):
