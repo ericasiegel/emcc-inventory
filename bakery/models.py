@@ -48,6 +48,13 @@ class BakedCookie(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     location = models.ForeignKey(Shelf, on_delete=models.CASCADE)
     
+    
+class Grocery(models.Model):
+    title = models.CharField(max_length=100)
+    quantity = models.PositiveIntegerField(default=0)
+    description = models.TextField(null=True)
+    order_link = models.URLField(max_length=250)
+    
 
 class Store(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
