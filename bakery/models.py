@@ -10,6 +10,12 @@ SIZE_CHOICES = (
 class Cookie(models.Model):
     name = models.CharField(max_length=100)
     
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['name']
+    
     
 class Recipe(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
@@ -20,10 +26,18 @@ class Recipe(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
+    def __str__(self):
+        return self.cookie.name
+    
+    class Meta:
+        ordering = ['cookie']
+    
     
 class Storage(models.Model):
     title = models.CharField(max_length=100)
     
+    def __str__(self):
+        return self.title
     
 class Shelf(models.Model):
     SHELF_CHOICES = (
@@ -35,27 +49,49 @@ class Shelf(models.Model):
     type = models.CharField(max_length=50, choices=SHELF_CHOICES)
     storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.type
+    
+    class Meta:
+        ordering = ['storage']
 
 class Dough(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
-    location = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.cookie.name
     
+    class Meta:
+        ordering = ['cookie', 'date_added']
 
 class BakedCookie(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     size = models.CharField(max_length=50, choices=SIZE_CHOICES)
     quantity = models.PositiveIntegerField(default=0)
-    location = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.cookie.name
+    
+    class Meta:
+        ordering = ['cookie', 'size', 'date_added']
     
 class Grocery(models.Model):
     title = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField(default=0)
     description = models.TextField(null=True)
+    shelf = models.ForeignKey(Shelf, on_delete=models.PROTECT)
     order_link = models.URLField(max_length=250)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['title']
     
 
 class Store(models.Model):
@@ -65,6 +101,13 @@ class Store(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     
+    def __str__(self):
+        return self.cookie.name
+    
+    class Meta:
+        ordering = ['cookie', 'size']
+        verbose_name = 'Cookies In Store'
+        unique_together = [['size', 'cookie']]
     
     
     
