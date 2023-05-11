@@ -26,7 +26,7 @@ values
   (5, 'Epic large snickerdoodle goodness', '1/2 cup unsalted butter, softened, 3/4 cup creamy peanut butter, 1/3 cup granulated sugar, 1/3 cup packed brown sugar, 1 large egg, 2 tablespoons milk, 1 teaspoon vanilla extract, 1 1/2 cups all-purpose flour, 1 teaspoon baking soda', '1. Preheat the oven to 375°F (190°C). 2. In a large bowl, cream together the butter, peanut butter, granulated sugar, and brown sugar until smooth. 3. Beat in the egg, milk, and vanilla extract until well combined. 4. In a separate bowl, combine the flour and baking soda. Gradually add this mixture to the butter mixture and mix well. 5. Shape the dough into 1-inch balls and roll in granulated sugar. 6. Place the balls on ungreased baking sheets and bake for 8 to 10 minutes', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5, 1);
 
 insert into
-  bakery_storage (id, title)
+  bakery_location (id, title)
 values
   (1, 'Kitchen Fridge'),
   (2, 'Storage Fridge'),
@@ -34,21 +34,13 @@ values
   (4, 'Kitchen Freezer'),
   (5, 'Pantry');
 
-insert into
-  bakery_shelf (id, type, storage_id)
-values
-  (1, 'top', 1),
-  (2, 'middle', 1),
-  (3, 'bottom', 1),
-  (4, 'top', 5),
-  (5, 'bottom', 5);
 
 INSERT INTO bakery_dough (
   id,
   quantity,
   date_added,
   cookie_id,
-  shelf_id
+  location_id
 )
 VALUES
   (1, 5, CURRENT_TIMESTAMP, 2, 3),
@@ -70,7 +62,7 @@ insert into
     quantity,
     date_added,
     cookie_id,
-    shelf_id
+    location_id
   )
 values
   (1, 'mini', 5, CURRENT_TIMESTAMP, 2, 3),
@@ -91,7 +83,7 @@ insert into
     title,
     quantity,
     description,
-    shelf_id,
+    location_id,
     order_link
   )
 values

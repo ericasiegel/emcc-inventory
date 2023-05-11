@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 SIZE_CHOICES = (
     ('mini', 'Mini'),
@@ -33,32 +33,17 @@ class Recipe(models.Model):
         ordering = ['cookie']
     
     
-class Storage(models.Model):
+class Location(models.Model):
     title = models.CharField(max_length=100)
     
     def __str__(self):
         return self.title
     
-class Shelf(models.Model):
-    SHELF_CHOICES = (
-    ('top', 'Top Shelf'),
-    ('middle', 'Middle Shelf'),
-    ('bottom', 'Bottom Shelf'),
-    )
-    
-    type = models.CharField(max_length=50, choices=SHELF_CHOICES)
-    storage = models.ForeignKey(Storage, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.type
-    
-    class Meta:
-        ordering = ['storage']
 
 class Dough(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0)
-    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -71,7 +56,7 @@ class BakedCookie(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
     size = models.CharField(max_length=50, choices=SIZE_CHOICES)
     quantity = models.PositiveIntegerField(default=0)
-    shelf = models.ForeignKey(Shelf, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -84,7 +69,7 @@ class Grocery(models.Model):
     title = models.CharField(max_length=100)
     quantity = models.PositiveIntegerField(default=0)
     description = models.TextField(null=True)
-    shelf = models.ForeignKey(Shelf, on_delete=models.PROTECT)
+    location = models.ForeignKey(Location, on_delete=models.PROTECT)
     order_link = models.URLField(max_length=250)
     
     def __str__(self):
