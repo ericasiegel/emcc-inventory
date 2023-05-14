@@ -39,3 +39,7 @@ class DoughViewSet(ModelViewSet):
 class BakedCookieViewSet(ModelViewSet):
     queryset = BakedCookie.objects.select_related('cookie').all()
     serializer_class = BakedCookieSerializer
+    
+class StoreViewSet(ModelViewSet):
+    queryset = Store.objects.select_related('cookie', 'updated_by').all()
+    serializer_class = StoreSerializer

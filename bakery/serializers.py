@@ -35,7 +35,6 @@ class DisplayChoiceField(serializers.ChoiceField):
         """
         return self.choices.get(value, value)
 
-
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
@@ -115,3 +114,18 @@ class BakedCookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dough
         fields = ['id', 'cookie', 'cookie_name', 'size', 'quantity', 'location', 'date_added']
+
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']
+
+class StoreSerializer(serializers.ModelSerializer):
+    cookie = CookieNameSerializer(read_only=True)
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    size = DisplayChoiceField(choices=SIZE_CHOICES)
+    updated_by = UserNameSerializer(read_only=True)
+    class Meta:
+        model = Store
+        fields = ['id', 'cookie', 'cookie_name', 'size', 'quantity', 'last_updated', 'updated_by']
+        
