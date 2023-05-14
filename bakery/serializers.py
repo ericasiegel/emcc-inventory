@@ -2,9 +2,41 @@ from rest_framework import serializers
 from django.db.models import Prefetch, Sum, Count, Q
 from .models import *
 
+class DisplayChoiceField(serializers.ChoiceField):
+    """
+    A custom choice field for serializers that displays the choice label instead of the value.
+
+    This field extends the base `ChoiceField` provided by the `serializers` module.
+    It overrides the `to_representation` method to display the choice label instead of the value.
+
+    Args:
+        choices (iterable): A dictionary-like object containing the choices.
+        **kwargs: Additional keyword arguments to pass to the base `ChoiceField` constructor.
+    """
+
+    def __init__(self, choices, **kwargs):
+        super().__init__(choices, **kwargs)
+        self.choice_strings_to_values = {
+            key: key for key, value in self.choices.items()
+        }
+
+    def to_representation(self, value):
+        """
+        Converts the given value to its representation.
+
+        This method overrides the base `ChoiceField` implementation.
+        It returns the choice label instead of the value, if available.
+
+        Args:
+            value: The value to be converted.
+
+        Returns:
+            The representation of the value (choice label or original value).
+        """
+        return self.choices.get(value, value)
+
+
 class CookieSerializer(serializers.ModelSerializer):
-    
-    
     class Meta:
         model = Cookie
         fields = ['id', 'name']
@@ -70,7 +102,16 @@ class CookieNameSerializer(serializers.ModelSerializer):
 
 class DoughSerializer(serializers.ModelSerializer):
     cookie = CookieNameSerializer(read_only=True)
-    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     class Meta:
         model = Dough
-        fields = ['id', 'cookie', 'cookie_id', 'quantity', 'location', 'date_added']
+        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'location', 'date_added']
+
+class BakedCookieSerializer(serializers.ModelSerializer):
+    cookie = CookieNameSerializer(read_only=True)
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    size = DisplayChoiceField(choices=SIZE_CHOICES)
+    
+    class Meta:
+        model = Dough
+        fields = ['id', 'cookie', 'cookie_name', 'size', 'quantity', 'location', 'date_added']
