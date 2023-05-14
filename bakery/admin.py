@@ -1,9 +1,9 @@
+from django import forms
 from django.contrib import admin
 from django.db.models import Case, F, IntegerField, Q, Sum, Value, When
 from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
-from django import forms
 
 from .models import *
 

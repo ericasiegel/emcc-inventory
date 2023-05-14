@@ -1,6 +1,10 @@
 from django.urls import path
-from . import views
+from rest_framework.routers import SimpleRouter
+from .views import *
+from .models import  *
 
-urlpatterns = [
-    path('', views.index, name='index')
-]
+router = SimpleRouter()
+router.register('cookies', CookieViewSet)
+
+
+urlpatterns = router.urls

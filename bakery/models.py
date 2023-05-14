@@ -41,7 +41,7 @@ class Location(models.Model):
     
 
 class Dough(models.Model):
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name= 'dough_set')
     quantity = models.PositiveIntegerField(default=0)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -53,7 +53,7 @@ class Dough(models.Model):
         ordering = ['cookie', 'date_added']
 
 class BakedCookie(models.Model):
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name= 'bakedcookie_set')
     size = models.CharField(max_length=50, choices=SIZE_CHOICES)
     quantity = models.PositiveIntegerField(default=0)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
@@ -82,7 +82,7 @@ class Grocery(models.Model):
     
 
 class Store(models.Model):
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE , related_name= 'store_set')
     size = models.CharField(max_length=50, choices=SIZE_CHOICES)
     quantity = models.PositiveIntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
