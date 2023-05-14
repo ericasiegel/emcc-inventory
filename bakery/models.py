@@ -64,6 +64,8 @@ class BakedCookie(models.Model):
     
     class Meta:
         ordering = ['cookie', 'size', 'date_added']
+        
+        
     
 class Grocery(models.Model):
     title = models.CharField(max_length=100)

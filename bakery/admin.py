@@ -137,6 +137,7 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ['cookie__name__icontains']
     list_filter = ['last_updated', 'cookie']
     exclude = ['modified_by']
+    autocomplete_fields = ['cookie']
 
 
 @admin.register(Location)
@@ -152,6 +153,7 @@ class DoughAdmin(BaseAdmin):
     list_per_page = 10
     search_fields = ['cookie__name__icontains', 'location__title__icontains']
     list_filter = ['date_added', 'location']
+    autocomplete_fields = ['cookie', 'location']
 
 
 @admin.register(BakedCookie)
@@ -161,6 +163,8 @@ class BakedCookieAdmin(BaseAdmin):
     list_per_page = 10
     search_fields = ['cookie__name__icontains', 'location__title__icontains', 'size__icontains']
     list_filter = ['date_added', 'size', 'location']
+    autocomplete_fields = ['cookie', 'location']
+
     
 @admin.register(Grocery)
 class GroceryAdmin(BaseAdmin):
@@ -168,6 +172,7 @@ class GroceryAdmin(BaseAdmin):
     list_per_page = 10
     search_fields = ['title__icontains', 'location__title__icontains']
     list_filter = ['location']
+    autocomplete_fields = ['location']
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
@@ -176,3 +181,5 @@ class StoreAdmin(admin.ModelAdmin):
     list_select_related = ['cookie', 'updated_by']
     search_fields = ['cookie__name__icontains', 'size__icontains']
     list_filter = ['last_updated', 'size']
+    exclude = ['updated_by']
+    autocomplete_fields = ['cookie']
