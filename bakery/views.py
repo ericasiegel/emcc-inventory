@@ -13,7 +13,8 @@ from .serializers import *
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
-    queryset = Cookie.objects.all()
+    # queryset = Cookie.objects.all().prefetch_related('dough_set', 'bakedcookie_set', 'store_set')
+    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
     serializer_class = CookieSerializer
     
     def get_serializer_context(self):

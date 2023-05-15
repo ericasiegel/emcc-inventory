@@ -18,7 +18,7 @@ class Cookie(models.Model):
     
     
 class Recipe(models.Model):
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='recipe_set')
     description = models.TextField(null=True, blank=True)
     ingredients = models.TextField()
     instructions = models.TextField()
@@ -65,7 +65,20 @@ class BakedCookie(models.Model):
     class Meta:
         ordering = ['cookie', 'size', 'date_added']
         
-        
+class Store(models.Model):
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE , related_name= 'store_set')
+    size = models.CharField(max_length=50, choices=SIZE_CHOICES)
+    quantity = models.PositiveIntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    
+    def __str__(self):
+        return self.cookie.name
+    
+    class Meta:
+        ordering = ['cookie', 'size']
+        verbose_name = 'Cookies In Store'
+        unique_together = [['size', 'cookie']]
     
 class Grocery(models.Model):
     title = models.CharField(max_length=100)
@@ -81,20 +94,7 @@ class Grocery(models.Model):
         ordering = ['title']
     
 
-class Store(models.Model):
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE , related_name= 'store_set')
-    size = models.CharField(max_length=50, choices=SIZE_CHOICES)
-    quantity = models.PositiveIntegerField(default=0)
-    last_updated = models.DateTimeField(auto_now=True)
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    
-    def __str__(self):
-        return self.cookie.name
-    
-    class Meta:
-        ordering = ['cookie', 'size']
-        verbose_name = 'Cookies In Store'
-        unique_together = [['size', 'cookie']]
+
     
     
     
