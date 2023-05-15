@@ -141,7 +141,8 @@ class BakedCookieSerializer(serializers.ModelSerializer):
             'id', 
             'cookie', 
             'cookie_name', 
-            'size', 'quantity', 
+            'size', 
+            'quantity', 
             'location', 
             'location_name',
             'date_added'
@@ -159,7 +160,8 @@ class StoreSerializer(serializers.ModelSerializer):
             'id', 
             'cookie', 
             'cookie_name', 
-            'size', 'quantity', 
+            'size', 
+            'quantity', 
             'last_updated', 
             'updated_by'
             ]

@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import *
 from .serializers import *
@@ -10,6 +12,8 @@ from .serializers import *
 class CookieViewSet(ModelViewSet):
     queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
     serializer_class = CookieSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['name']
     
     def get_serializer_context(self):
         return {'request': self.request}
@@ -30,14 +34,26 @@ class CookieViewSet(ModelViewSet):
 class DoughViewSet(ModelViewSet):
     queryset = Dough.objects.select_related('cookie', 'location').all()
     serializer_class = DoughSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id', 'location']
+    search_fields = ['cookie__name']
+    ordering_fields = ['date_added', 'location']
     
 class BakedCookieViewSet(ModelViewSet):
     queryset = BakedCookie.objects.select_related('cookie', 'location').all()
     serializer_class = BakedCookieSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id', 'size', 'location']
+    search_fields = ['cookie__name', 'size']
+    ordering_fields = ['date_added', 'size', 'location']
     
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()
     serializer_class = StoreSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id', 'size']
+    search_fields = ['cookie__name', 'size']
+    ordering_fields = ['last_updated', 'size', 'location']
     
 class LocationViewSet(ModelViewSet):
     queryset = Location.objects.all()
@@ -46,9 +62,17 @@ class LocationViewSet(ModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.select_related('cookie', 'modified_by').all()
     serializer_class = RecipeSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id']
+    search_fields = ['cookie__name']
+    ordering_fields = ['created_at', 'last_updated']
     
 class GroceryViewSet(ModelViewSet):
     queryset = Grocery.objects.select_related('location').all()
     serializer_class = GrocerySerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['location']
+    search_fields = ['title', 'location']
+    ordering_fields = ['location']
     
     
