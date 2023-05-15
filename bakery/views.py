@@ -1,10 +1,5 @@
-from django.db.models import Prefetch
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
 from rest_framework import status
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from .models import *
@@ -13,7 +8,6 @@ from .serializers import *
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
-    # queryset = Cookie.objects.all().prefetch_related('dough_set', 'bakedcookie_set', 'store_set')
     queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
     serializer_class = CookieSerializer
     

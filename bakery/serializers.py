@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from django.db.models import Prefetch, Sum, Count, Q
+
 from .models import *
+
 
 # Method Classes
 class DisplayChoiceField(serializers.ChoiceField):
@@ -42,44 +43,67 @@ class UserNameSerializer(serializers.ModelSerializer):
         fields = ['username']
         
         
-# Serializer Classes
+# Serializer Classes to display on API
 class CookieSerializer(serializers.ModelSerializer):
-    # class Meta:
-    #     model = Cookie
-    #     fields = ['id', 'name']
-        
+    counts = serializers.SerializerMethodField(method_name='calculate_totals')
+
     class Meta:
         model = Cookie
         fields = ['id', 'name', 'counts']
     
-    counts = serializers.SerializerMethodField(method_name='calculate_totals')
-
     def calculate_totals(self, cookie: Cookie):
-            baked_queryset = cookie.bakedcookie_set.all()
-            dough_queryset = cookie.dough_set.all()
-            store_queryset = cookie.store_set.all()
+        """
+        Calculates the totals of doughs, baked cookies, and cookies in store for the given cookie.
 
-            dough_total = sum(dough.quantity for dough in dough_queryset)
+        Args:
+            cookie (Cookie): The cookie instance for which the totals are calculated.
 
-            baked_cookies = {'mega': 0, 'mini': 0}
-            for baked in baked_queryset:
-                if baked.size == 'mega':
-                    baked_cookies['mega'] += baked.quantity
-                elif baked.size == 'mini':
-                    baked_cookies['mini'] += baked.quantity
+        Returns:
+            dict: A dictionary containing the totals of doughs, baked cookies, and cookies in store.
+                The dictionary structure is as follows:
+                {
+                    'doughs': int,
+                    'baked_cookies': {
+                        'mega': int,
+                        'mini': int
+                    },
+                    'total_in_store': {
+                        'mega': int,
+                        'mini': int
+                    }
+                }
+        """
 
-            store_cookies = {'mega': 0, 'mini': 0}
-            for store in store_queryset:
-                if store.size == 'mega':
-                    store_cookies['mega'] += store.quantity
-                elif store.size == 'mini':
-                    store_cookies['mini'] += store.quantity
+        # Retrieve all related baked cookies, doughs, and cookies in store for the given cookie
+        baked_queryset = cookie.bakedcookie_set.all()
+        dough_queryset = cookie.dough_set.all()
+        store_queryset = cookie.store_set.all()
 
-            return {
-                'doughs': dough_total,
-                'baked_cookies': baked_cookies,
-                'total_in_store': store_cookies
-            }
+        # Calculate the total quantity of doughs
+        dough_total = sum(dough.quantity for dough in dough_queryset)
+
+        # Count the quantity of baked cookies by size
+        baked_cookies = {'mega': 0, 'mini': 0}
+        for baked in baked_queryset:
+            if baked.size == 'mega':
+                baked_cookies['mega'] += baked.quantity
+            elif baked.size == 'mini':
+                baked_cookies['mini'] += baked.quantity
+
+        # Count the quantity of cookies in store by size
+        store_cookies = {'mega': 0, 'mini': 0}
+        for store in store_queryset:
+            if store.size == 'mega':
+                store_cookies['mega'] += store.quantity
+            elif store.size == 'mini':
+                store_cookies['mini'] += store.quantity
+
+        # Return a dictionary with the calculated totals
+        return {
+            'doughs': dough_total,
+            'baked_cookies': baked_cookies,
+            'total_in_store': store_cookies
+        }
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
