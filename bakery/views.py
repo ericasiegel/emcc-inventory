@@ -12,8 +12,9 @@ from .serializers import *
 class CookieViewSet(ModelViewSet):
     queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
     serializer_class = CookieSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name']
+    ordering_fields = ['id']
     
     def get_serializer_context(self):
         return {'request': self.request}
@@ -37,7 +38,7 @@ class DoughViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id', 'location']
     search_fields = ['cookie__name']
-    ordering_fields = ['date_added', 'location']
+    ordering_fields = ['id', 'cookie__name', 'date_added', 'location']
     
 class BakedCookieViewSet(ModelViewSet):
     queryset = BakedCookie.objects.select_related('cookie', 'location').all()
@@ -45,7 +46,7 @@ class BakedCookieViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id', 'size', 'location']
     search_fields = ['cookie__name', 'size']
-    ordering_fields = ['date_added', 'size', 'location']
+    ordering_fields = ['id', 'cookie__name', 'date_added', 'size', 'location']
     
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()
@@ -53,11 +54,14 @@ class StoreViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id', 'size']
     search_fields = ['cookie__name', 'size']
-    ordering_fields = ['last_updated', 'size', 'location']
+    ordering_fields = ['id', 'cookie__name', 'last_updated', 'size', 'location']
     
 class LocationViewSet(ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    search_fields = ['title']
+    ordering_fields = ['id', 'title']
       
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.select_related('cookie', 'modified_by').all()
@@ -65,7 +69,7 @@ class RecipeViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id']
     search_fields = ['cookie__name']
-    ordering_fields = ['created_at', 'last_updated']
+    ordering_fields = ['id', 'cookie__name', 'created_at', 'last_updated']
     
 class GroceryViewSet(ModelViewSet):
     queryset = Grocery.objects.select_related('location').all()
@@ -73,6 +77,6 @@ class GroceryViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['location']
     search_fields = ['title', 'location']
-    ordering_fields = ['location']
+    ordering_fields = ['id', 'title', 'location']
     
     
