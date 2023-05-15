@@ -33,13 +33,27 @@ class CookieViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 class DoughViewSet(ModelViewSet):
-    queryset = Dough.objects.select_related('cookie').all()
+    queryset = Dough.objects.select_related('cookie', 'location').all()
     serializer_class = DoughSerializer
     
 class BakedCookieViewSet(ModelViewSet):
-    queryset = BakedCookie.objects.select_related('cookie').all()
+    queryset = BakedCookie.objects.select_related('cookie', 'location').all()
     serializer_class = BakedCookieSerializer
     
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()
     serializer_class = StoreSerializer
+    
+class LocationViewSet(ModelViewSet):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
+      
+class RecipeViewSet(ModelViewSet):
+    queryset = Recipe.objects.select_related('cookie', 'modified_by').all()
+    serializer_class = RecipeSerializer
+    
+class GroceryViewSet(ModelViewSet):
+    queryset = Grocery.objects.select_related('location').all()
+    serializer_class = GrocerySerializer
+    
+    

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.db.models import Prefetch, Sum, Count, Q
 from .models import *
 
+# Method Classes
 class DisplayChoiceField(serializers.ChoiceField):
     """
     A custom choice field for serializers that displays the choice label instead of the value.
@@ -35,6 +36,13 @@ class DisplayChoiceField(serializers.ChoiceField):
         """
         return self.choices.get(value, value)
 
+class UserNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username']
+        
+        
+# Serializer Classes
 class CookieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cookie
@@ -94,38 +102,101 @@ class CookieSerializer(serializers.ModelSerializer):
     #         'total_in_store': {'mega': store_mega_quantity, 'mini': store_mini_quantity}
     #     }
 
-class CookieNameSerializer(serializers.ModelSerializer):
+class LocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cookie
-        fields = ['name']
+        model = Location
+        fields = ['id', 'title']
 
 class DoughSerializer(serializers.ModelSerializer):
-    cookie = CookieNameSerializer(read_only=True)
+    cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    location = serializers.StringRelatedField(read_only=True)
+    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+
     class Meta:
         model = Dough
-        fields = ['id', 'cookie', 'cookie_name', 'quantity', 'location', 'date_added']
+        fields = [
+            'id',
+            'cookie', 
+            'cookie_name', 
+            'quantity', 
+            'location',
+            'location_name',
+            'date_added'
+            ]
 
 class BakedCookieSerializer(serializers.ModelSerializer):
-    cookie = CookieNameSerializer(read_only=True)
+    cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     size = DisplayChoiceField(choices=SIZE_CHOICES)
+    location = serializers.StringRelatedField(read_only=True)
+    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
     
     class Meta:
         model = Dough
-        fields = ['id', 'cookie', 'cookie_name', 'size', 'quantity', 'location', 'date_added']
-
-class UserNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['username']
+        fields = [
+            'id', 
+            'cookie', 
+            'cookie_name', 
+            'size', 'quantity', 
+            'location', 
+            'location_name',
+            'date_added'
+            ]
 
 class StoreSerializer(serializers.ModelSerializer):
-    cookie = CookieNameSerializer(read_only=True)
+    cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     size = DisplayChoiceField(choices=SIZE_CHOICES)
     updated_by = UserNameSerializer(read_only=True)
+    
     class Meta:
         model = Store
-        fields = ['id', 'cookie', 'cookie_name', 'size', 'quantity', 'last_updated', 'updated_by']
+        fields = [
+            'id', 
+            'cookie', 
+            'cookie_name', 
+            'size', 'quantity', 
+            'last_updated', 
+            'updated_by'
+            ]
+        
+class RecipeSerializer(serializers.ModelSerializer):
+    cookie = serializers.StringRelatedField(read_only=True)
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    modified_by = UserNameSerializer(read_only=True)
+    
+    class Meta:
+        model = Recipe
+        fields = [
+            'id', 
+            'cookie', 
+            'cookie_name', 
+            'description', 
+            'ingredients', 
+            'instructions', 
+            'created_at',
+            'last_updated',
+            'modified_by'
+            ]
+           
+class GrocerySerializer(serializers.ModelSerializer):
+    location = serializers.StringRelatedField(read_only=True)
+    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+
+    class Meta:
+        model = Grocery
+        fields = [
+            'id',
+            'title',
+            'quantity',
+            'description',
+            'location',
+            'location_name',
+            'order_link'
+        ]
+        
+        
+        
+        
         
