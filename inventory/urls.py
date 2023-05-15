@@ -24,6 +24,8 @@ admin.site.index_title = 'Bakery Inventory'
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('bakery/', include('bakery.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('bakery/', include('bakery.urls'))
 ]
