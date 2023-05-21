@@ -1,11 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from .models import *
 from .serializers import *
+from .permissions import IsAdminOrReadOnly
 
 
 # Create your views here.
@@ -70,6 +72,7 @@ class RecipeViewSet(ModelViewSet):
     filterset_fields = ['cookie_id']
     search_fields = ['cookie__name']
     ordering_fields = ['id', 'cookie__name', 'created_at', 'last_updated']
+    permission_classes = [IsAdminOrReadOnly]
     
 class GroceryViewSet(ModelViewSet):
     queryset = Grocery.objects.select_related('location').all()
@@ -79,4 +82,7 @@ class GroceryViewSet(ModelViewSet):
     search_fields = ['title', 'location']
     ordering_fields = ['id', 'title', 'location']
     
-    
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
