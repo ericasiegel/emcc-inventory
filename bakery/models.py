@@ -1,10 +1,18 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
+
 
 SIZE_CHOICES = (
     ('mini', 'Mini'),
     ('mega', 'Mega')
 )
+
+def validate_file_size(file):
+    max_size_kb = 50
+    if file.size > max_size_kb * 1024:
+        raise ValidationError(f'Files can not be larger than {max_size_kb}KB!')
+    
 
 # Create your models here.
 class Cookie(models.Model):
@@ -18,7 +26,10 @@ class Cookie(models.Model):
         
 class CookieImage(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='bakery/images')
+    image = models.ImageField(
+        upload_to='bakery/images',
+        validators=[validate_file_size]
+        )
     
     
 class Recipe(models.Model):
