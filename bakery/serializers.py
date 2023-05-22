@@ -46,12 +46,22 @@ class UserNameSerializer(serializers.ModelSerializer):
         
         
 # Serializer Classes to display on API
+class CookieImageSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        cookie_id = self.context['cookie_id']
+        return CookieImage.objects.create(cookie_id=cookie_id, **validated_data)
+    
+    class Meta:
+        model = CookieImage
+        fields = ['id', 'image']
+        
+
 class CookieSerializer(serializers.ModelSerializer):
     counts = serializers.SerializerMethodField(method_name='calculate_totals')
-
+    images = CookieImageSerializer(many=True, read_only=True)
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'counts']
+        fields = ['id', 'name', 'counts', 'images']
     
     def calculate_totals(self, cookie: Cookie):
         """
@@ -224,4 +234,4 @@ class UserSerializer(BaseUserSerializer):
             'first_name',
             'last_name'
         ]        
-        
+    

@@ -13,7 +13,7 @@ from .permissions import IsAdminOrReadOnly
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
-    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
+    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set', 'images').all()
     serializer_class = CookieSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['name']
@@ -99,4 +99,12 @@ class UserViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+class CookieImageViewSet(ModelViewSet):
+    serializer_class = CookieImageSerializer
     
+    def get_serializer_context(self):
+        return {'cookie_id': self.kwargs['cookie_pk']}
+    
+    def get_queryset(self):
+        return CookieImage.objects.filter(cookie_id=self.kwargs['cookie_pk'])

@@ -14,8 +14,8 @@ router.register('locations', LocationViewSet)
 router.register('recipes', RecipeViewSet)
 router.register('groceries', GroceryViewSet)
 
-# cookies_router = routers.NestedDefaultRouter(router, 'cookies', lookup ='cookie')
-# cookies_router.register('recipe', RecipeViewSet, basename='cookie_recipe')
+cookies_router = routers.NestedDefaultRouter(router, 'cookies', lookup ='cookie')
+cookies_router.register('images', CookieImageViewSet, basename='cookie-images')
 
 
-urlpatterns = router.urls
+urlpatterns = router.urls + cookies_router.urls
