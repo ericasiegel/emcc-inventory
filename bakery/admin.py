@@ -97,29 +97,29 @@ class CookieAdmin(admin.ModelAdmin):
         return queryset.only('id').annotate(
             baked_quantity=Sum(
                 Case(
-                    When(Q(bakedcookie__size='mega') | Q(name='cookie_name'), then=F('bakedcookie__quantity')),
+                    When(Q(bakedcookie_set__size='mega') | Q(name='cookie_name'), then=F('bakedcookie_set__quantity')),
                     default=0,
                     output_field=IntegerField()
                 )
             ),
             mini_quantity=Sum(
                 Case(
-                    When(Q(bakedcookie__size='mini') | Q(name='cookie_name'), then=F('bakedcookie__quantity')),
+                    When(Q(bakedcookie_set__size='mini') | Q(name='cookie_name'), then=F('bakedcookie_set__quantity')),
                     default=0,
                     output_field=IntegerField()
                 )
             ),
-            dough_quantity=Sum('dough__quantity'),
+            dough_quantity=Sum('dough_set__quantity'),
             store_mega=Sum(
                 Case(
-                    When(Q(store__size='mega') | Q(name='cookie_name'), then=F('store__quantity')),
+                    When(Q(store_set__size='mega') | Q(name='cookie_name'), then=F('store_set__quantity')),
                     default=0,
                     output_field=IntegerField()
                 )
             ),
             store_mini=Sum(
                 Case(
-                    When(Q(store__size='mini') | Q(name='cookie_name'), then=F('store__quantity')),
+                    When(Q(store_set__size='mini') | Q(name='cookie_name'), then=F('store_set__quantity')),
                     default=0,
                     output_field=IntegerField()
                 )
