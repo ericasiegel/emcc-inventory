@@ -9,6 +9,12 @@ from .models import *
 
 class CookieImageInline(admin.TabularInline):
     model = CookieImage
+    readonly_fields = ['thumbnail']
+    
+    def thumbnail(self, instance):
+        if instance.image.name != '':
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
+        return ''
 
 class BaseAdmin(admin.ModelAdmin):
     list_editable = ['quantity']
@@ -18,6 +24,7 @@ class BaseAdmin(admin.ModelAdmin):
 class CookieAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
+    inlines = [CookieImageInline]
     
     def mega_quantity(self, cookie):
         """
@@ -128,7 +135,10 @@ class CookieAdmin(admin.ModelAdmin):
             ),
         )
     
-
+    class Media:
+        css = {
+            'all': ['/static/bakery/styles.css']
+        }
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
