@@ -7,6 +7,8 @@ from django.utils.html import format_html, urlencode
 
 from .models import *
 
+class CookieImageInline(admin.TabularInline):
+    model = CookieImage
 
 class BaseAdmin(admin.ModelAdmin):
     list_editable = ['quantity']
