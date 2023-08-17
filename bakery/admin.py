@@ -1,10 +1,7 @@
-from django import forms
 from django.contrib import admin
-from django.db.models import Case, F, IntegerField, Q, Sum, Value, When
-from django.db.models.query import QuerySet
+from django.db.models import Case, F, IntegerField, Q, Sum, When
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
-
 from .models import *
 
 class CookieImageInline(admin.TabularInline):
@@ -25,75 +22,33 @@ class CookieAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
     inlines = [CookieImageInline]
-    
-    def mega_quantity(self, cookie):
+
+    def _formatted_link(self, cookie, app_name, model_name, attribute_name, size=None):
         """
-        Returns a formatted HTML link to the changelist view of 'BakedCookie' objects with the specified 'cookie' and size 'mega'.
+        Returns a formatted HTML link to the changelist view of specified objects with specified criteria.
         """
-        url = (
-            reverse('admin:bakery_bakedcookie_changelist')
-            + '?'
-            + urlencode({
-                'cookie__id':str(cookie.id),
-                'size': 'mega'
-            })
-        )
-        return format_html('<a href="{}">{}</a>', url, cookie.baked_quantity)
-    
-    def mini_quantity(self, cookie):
-        """
-        Returns a formatted HTML link to the changelist view of 'BakedCookie' objects with the specified 'cookie' and size 'mini'.
-        """
-        url = (
-            reverse('admin:bakery_bakedcookie_changelist')
-            + '?'
-            + urlencode({
-                'cookie__id':str(cookie.id),
-                'size': 'mini'
-            })
-        )
-        return format_html('<a href="{}">{}</a>', url, cookie.mini_quantity)
-    
+        filters = {'cookie__id': str(cookie.id)}
+        if size:
+            filters['size'] = size
+        
+        url = reverse(f'admin:{app_name}_{model_name}_changelist') + '?' + urlencode(filters)
+        
+        return format_html('<a href="{}">{}</a>', url, getattr(cookie, attribute_name))
+
     def dough_quantity(self, cookie):
-        """
-        Returns a formatted HTML link to the changelist view of 'Dough' objects with the specified 'cookie'.
-        """
-        url = (
-            reverse('admin:bakery_dough_changelist')
-            + '?'
-            + urlencode({
-                'cookie__id':str(cookie.id)
-            })
-        )
-        return format_html('<a href="{}">{}</a>', url, cookie.dough_quantity)
-    
+        return self._formatted_link(cookie, app_name="bakery", model_name="dough", attribute_name="dough_quantity")
+
+    def mega_quantity(self, cookie):
+        return self._formatted_link(cookie, app_name="bakery", model_name="bakedcookie", attribute_name="baked_quantity", size="mega")
+
+    def mini_quantity(self, cookie):
+        return self._formatted_link(cookie, app_name="bakery", model_name="bakedcookie", attribute_name="mini_quantity", size="mini")
+
     def mega_in_store(self, cookie):
-        """
-        Returns a formatted HTML link to the changelist view of 'Store' objects with the specified 'cookie' and size 'mega'.
-        """
-        url = (
-            reverse('admin:bakery_store_changelist')
-            + '?'
-            + urlencode({
-                'cookie__id':str(cookie.id),
-                'size': 'mega'
-            })
-        )
-        return format_html('<a href="{}">{}</a>', url, cookie.store_mega)
-    
+        return self._formatted_link(cookie, app_name="bakery", model_name="store", attribute_name="store_mega", size="mega")
+
     def mini_in_store(self, cookie):
-        """
-        Returns a formatted HTML link to the changelist view of 'Store' objects with the specified 'cookie' and size 'mini'.
-        """
-        url = (
-            reverse('admin:bakery_store_changelist')
-            + '?'
-            + urlencode({
-                'cookie__id':str(cookie.id),
-                'size': 'mini'
-            })
-        )
-        return format_html('<a href="{}">{}</a>', url, cookie.store_mini)
+        return self._formatted_link(cookie, app_name="bakery", model_name="store", attribute_name="store_mini", size="mini")
 
     def get_queryset(self, request):
         """
@@ -104,41 +59,31 @@ class CookieAdmin(admin.ModelAdmin):
         )  
 
         return queryset.only('id').annotate(
-            baked_quantity=Sum(
-                Case(
-                    When(Q(bakedcookie_set__size='mega') | Q(name='cookie_name'), then=F('bakedcookie_set__quantity')),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            ),
-            mini_quantity=Sum(
-                Case(
-                    When(Q(bakedcookie_set__size='mini') | Q(name='cookie_name'), then=F('bakedcookie_set__quantity')),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            ),
+            baked_quantity=self._calculate_sum('bakedcookie_set', 'mega'),
+            mini_quantity=self._calculate_sum('bakedcookie_set', 'mini'),
             dough_quantity=Sum('dough_set__quantity'),
-            store_mega=Sum(
-                Case(
-                    When(Q(store_set__size='mega') | Q(name='cookie_name'), then=F('store_set__quantity')),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            ),
-            store_mini=Sum(
-                Case(
-                    When(Q(store_set__size='mini') | Q(name='cookie_name'), then=F('store_set__quantity')),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            ),
+            store_mega=self._calculate_sum('store_set', 'mega'),
+            store_mini=self._calculate_sum('store_set', 'mini'),
         )
-    
+
+    @staticmethod
+    def _calculate_sum(relation, size):
+        """
+        Calculate the annotated sum based on the relationship and size.
+        """
+        return Sum(
+            Case(
+                When(Q(**{f'{relation}__size': size}) | Q(name='cookie_name'), then=F(f'{relation}__quantity')),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
+
     class Media:
         css = {
             'all': ['/static/bakery/styles.css']
         }
+
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
