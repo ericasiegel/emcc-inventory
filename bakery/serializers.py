@@ -148,7 +148,7 @@ class BakedCookieSerializer(serializers.ModelSerializer):
     location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
     
     class Meta:
-        model = Dough
+        model = BakedCookie
         fields = [
             'id', 
             'cookie', 
