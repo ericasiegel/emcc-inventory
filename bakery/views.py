@@ -5,7 +5,6 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
 from .models import *
 from .permissions import IsAdminOrReadOnly
 from .serializers import *
