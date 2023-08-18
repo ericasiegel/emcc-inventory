@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status
+from rest_framework import status, viewsets, mixins
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -42,13 +42,28 @@ class DoughViewSet(ModelViewSet):
     search_fields = ['cookie__name']
     ordering_fields = ['id', 'cookie__name', 'date_added', 'location']
     
-class BakedCookieViewSet(ModelViewSet):
+class BakedCookieViewSet(mixins.RetrieveModelMixin,
+                                        mixins.ListModelMixin,
+                                        mixins.CreateModelMixin,
+                                        mixins.DestroyModelMixin,
+                                        mixins.UpdateModelMixin, # This is needed for the partial_update method
+                                        viewsets.GenericViewSet):
     queryset = BakedCookie.objects.select_related('cookie', 'location').all()
     serializer_class = BakedCookieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id', 'size', 'location']
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'date_added', 'size', 'location']
+    
+    def partial_update(self, request, *args, **kwargs):
+        # Check if any fields other than 'quantity' and 'location_name' are present in the request data
+        for key in request.data.keys():
+            if key not in ['quantity', 'location']:
+                return Response({"detail": f"Field '{key}' is not allowed to be updated."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        # If only 'quantity' and 'location_name' are present, proceed with the update
+        return super(BakedCookieViewSet, self).partial_update(request, *args, **kwargs)
     
 class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()

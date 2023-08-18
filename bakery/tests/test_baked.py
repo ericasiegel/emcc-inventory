@@ -19,7 +19,7 @@ def cookie_data():
         
 
 @pytest.mark.django_db
-class TestBakedCookie:
+class TestCreateBakedCookie:
     def test_if_user_is_anonymous_returns_401(self, cookie_data):
         
         client = APIClient()
@@ -53,8 +53,23 @@ class TestBakedCookie:
         # Create a Cookie and Location object (or whatever your models are named)
         response = client.post('/bakery/bakedcookies/', cookie_data)
         
-        print(response.data)
         
         assert response.status_code == status.HTTP_201_CREATED
+
+@pytest.mark.django_db
+class TestUpdateBakedCookie:
+    def test_update_location_and_quantity_returns_200(self, cookie_data):
+        client = APIClient()
+        test_user = User.objects.create_user(username='testuser', password='testpassword')
+        client.force_authenticate(user=test_user)
         
-    def test_
+        # Create the BakedCookie instance with the data from cookie_data fixture
+        response_initial = client.post('/bakery/bakedcookies/', cookie_data)
+
+        # Get the ID of location_name from cookie_data
+        location_name_id = cookie_data["location_name"]
+        
+        # Now, try to update it
+        response = client.patch(f'/bakery/bakedcookies/{response_initial.data["id"]}/', {'quantity': 8, 'location': location_name_id})
+
+        assert response.status_code == status.HTTP_200_OK

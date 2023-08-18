@@ -159,6 +159,12 @@ class BakedCookieSerializer(serializers.ModelSerializer):
             'location_name',
             'date_added'
             ]
+    
+    def update(self, instance, validated_data):
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.location = validated_data.get('location', instance.location)
+        instance.save()
+        return instance
 
 class StoreSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
