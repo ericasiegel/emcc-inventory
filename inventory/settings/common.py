@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     'rest_framework',
+    'rest_framework.authtoken',
     "djoser",
     'debug_toolbar',
     "bakery",
