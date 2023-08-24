@@ -1,7 +1,7 @@
 .DS_Store
-inventory/settings/dev.py
+server/inventory/settings/dev.py
 static/
-media/
+server/media/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
