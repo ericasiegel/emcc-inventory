@@ -42,6 +42,16 @@ class DoughViewSet(ModelViewSet):
     search_fields = ['cookie__name']
     ordering_fields = ['id', 'cookie__name', 'date_added', 'location']
     
+    def partial_update(self, request, *args, **kwargs):
+        # Check if any fields other than 'quantity' and 'location_name' are present in the request data
+        for key in request.data.keys():
+            if key not in ['quantity', 'location']:
+                return Response({"detail": f"Field '{key}' is not allowed to be updated."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        # If only 'quantity' and 'location_name' are present, proceed with the update
+        return super(DoughViewSet, self).partial_update(request, *args, **kwargs)
+    
 class BakedCookieViewSet(mixins.RetrieveModelMixin,
                                         mixins.ListModelMixin,
                                         mixins.CreateModelMixin,
