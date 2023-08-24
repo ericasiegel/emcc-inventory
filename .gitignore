@@ -2,7 +2,7 @@
 server/inventory/settings/dev.py
 static/
 server/media/
-server/.vscode
+server/.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
