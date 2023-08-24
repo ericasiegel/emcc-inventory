@@ -83,6 +83,16 @@ class StoreViewSet(ModelViewSet):
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'last_updated', 'size', 'location']
     
+    def partial_update(self, request, *args, **kwargs):
+        # Check if any fields other than 'quantity' and 'location_name' are present in the request data
+        for key in request.data.keys():
+            if key not in ['quantity']:
+                return Response({"detail": f"Field '{key}' is not allowed to be updated."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        # If only 'quantity' and 'location_name' are present, proceed with the update
+        return super(StoreViewSet, self).partial_update(request, *args, **kwargs)
+    
 class LocationViewSet(ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
