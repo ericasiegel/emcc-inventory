@@ -44,6 +44,12 @@ class TestCreateCookie:
         print(cookie_data)
         assert response.status_code == status.HTTP_201_CREATED
         
+    def test_for_duplicate_cookie_returns_400(self, client, cookie_data):
+        client.post('/bakery/cookies/', cookie_data)
+        cookieTwo_response = client.post('/bakery/cookies/', cookie_data)
+        
+        assert cookieTwo_response.status_code == status.HTTP_400_BAD_REQUEST
+        
 
 @pytest.mark.django_db
 class TestUpdateCookie:
