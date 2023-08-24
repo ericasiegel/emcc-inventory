@@ -1,6 +1,6 @@
 .DS_Store
 server/inventory/settings/dev.py
-static/
+server/static/
 server/media/
 server/.vscode/
 
