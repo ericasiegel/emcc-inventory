@@ -6,7 +6,7 @@ const NavBar = () => {
   return (
     <HStack>
         <Image src={logo} boxSize='100px' />
-        <Text>Nav Bar</Text>
+        <Text color='white'>Nav Bar</Text>
     </HStack>
   )
 }
