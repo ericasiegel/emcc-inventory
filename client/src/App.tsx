@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
+import CookieGrid from "./components/CookieGrid";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
-        main
+        <CookieGrid />
       </GridItem>
     </Grid>
   );
