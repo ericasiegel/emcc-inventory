@@ -1,28 +1,10 @@
-import { useEffect, useState } from "react";
-import apiClient from "../services/api-client";
+
 import { Text } from "@chakra-ui/layout";
+import useCookies from "../hooks/useCookies";
 
-interface Cookie {
-  id: number;
-  name: string;
-}
-
-interface fetchCookiesResponse {
-  count: number;
-  results: Cookie[];
-}
 
 const CookieGrid = () => {
-  const [cookies, setCookies] = useState<Cookie[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    apiClient
-      .get<fetchCookiesResponse>("cookies/")
-      .then((res) => setCookies(res.data.results))
-      .catch((err) => setError(err.message));
-  }, []);
-
+  const {cookies, error} = useCookies();
   return (
     <>
       <Text>{error}</Text>
