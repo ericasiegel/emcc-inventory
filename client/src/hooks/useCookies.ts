@@ -3,9 +3,15 @@ import apiClient from "../services/api-client";
 import { CanceledError } from "axios";
 
 
-interface Cookie {
+interface Image {
+  id: number;
+  image: string;
+}
+
+export interface Cookie {
     id: number;
     name: string;
+    images: Image[];
   }
   
   interface fetchCookiesResponse {
