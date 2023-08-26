@@ -9,7 +9,7 @@ const CookieGrid = () => {
   return (
     <>
       <Text>{error}</Text>
-      <SimpleGrid columns={{sm: 1, md: 2, lg:3, xl: 4}} padding={3} spacing={10}>
+      <SimpleGrid columns={{sm: 1, md: 2, lg:3, xl: 4}} padding={3} spacing={5}>
         {cookies.map((cookie) => (
           <CookieCard key={cookie.id} cookie={cookie} />
         ))}
