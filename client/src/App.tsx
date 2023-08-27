@@ -2,6 +2,7 @@ import { Grid, GridItem } from "@chakra-ui/layout";
 import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
+import BakeryList from "./components/BakeryList";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" bg="#f8a5c2">
-          aside
+          <BakeryList />
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
