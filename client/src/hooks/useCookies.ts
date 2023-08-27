@@ -23,7 +23,7 @@ export interface Counts {
 export interface Cookie {
     id: number;
     name: string;
-    counts?: Counts;
+    counts: Counts;
     images?: Image[];
   }
   
@@ -35,22 +35,28 @@ export interface Cookie {
 const useCookies = () => {
     const [cookies, setCookies] = useState<Cookie[]>([]);
     const [error, setError] = useState("");
+    const [isLoading, setLoading] = useState(false)
   
     useEffect(() => {
         const controller = new AbortController();
 
+      setLoading(true);
       apiClient
         .get<fetchCookiesResponse>("cookies/", { signal: controller.signal })
-        .then((res) => setCookies(res.data.results))
+        .then((res) => {
+          setCookies(res.data.results)
+          setLoading(false);
+        })
         .catch((err) => {
-            if (err instanceof CanceledError) return;
-            setError(err.message)
+          if (err instanceof CanceledError) return;
+          setError(err.message)
+          setLoading(false);
         });
 
         return () => controller.abort();
     }, []);
 
-    return { cookies, error }
+    return { cookies, error, isLoading }
 }
 
 export default useCookies
