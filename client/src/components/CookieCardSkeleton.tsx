@@ -1,9 +1,8 @@
-import { Card, CardBody } from '@chakra-ui/card'
-import { Skeleton, SkeletonText } from '@chakra-ui/skeleton'
+import { Card, CardBody, Skeleton, SkeletonText } from '@chakra-ui/react'
 
 const CookieCardSkeleton = () => {
   return (
-    <Card width='350px' borderRadius={10} backgroundColor='#f78fb3' boxShadow='dark-lg' overflow='hidden'>
+    <Card backgroundColor='inherit'>
         <Skeleton height='200px' />
         <CardBody>
             <SkeletonText />

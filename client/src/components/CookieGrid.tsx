@@ -2,6 +2,7 @@ import { SimpleGrid, Text } from "@chakra-ui/layout";
 import useCookies from "../hooks/useCookies";
 import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
+import CookieCardContainer from "./CookieCardContainer";
 
 const CookieGrid = () => {
   const { cookies, error, isLoading } = useCookies();
@@ -16,9 +17,15 @@ const CookieGrid = () => {
         spacing={5}
       >
         {isLoading &&
-          skeletons.map((skeleton) => <CookieCardSkeleton key={skeleton} />)}
+          skeletons.map((skeleton) => (
+            <CookieCardContainer key={skeleton}>
+              <CookieCardSkeleton />
+            </CookieCardContainer>
+          ))}
         {cookies.map((cookie) => (
-          <CookieCard key={cookie.id} cookie={cookie} />
+          <CookieCardContainer key={cookie.id}>
+            <CookieCard cookie={cookie} />
+          </CookieCardContainer>
         ))}
       </SimpleGrid>
     </>
