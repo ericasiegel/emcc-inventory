@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import apiClient from "../services/api-client";
-import { CanceledError } from "axios";
+import useData from "./useData";
 
 
 interface Image {
@@ -27,36 +25,7 @@ export interface Cookie {
     images?: Image[];
   }
   
-  interface fetchCookiesResponse {
-    count: number;
-    results: Cookie[];
-  }
 
-const useCookies = () => {
-    const [cookies, setCookies] = useState<Cookie[]>([]);
-    const [error, setError] = useState("");
-    const [isLoading, setLoading] = useState(false)
-  
-    useEffect(() => {
-        const controller = new AbortController();
-
-      setLoading(true);
-      apiClient
-        .get<fetchCookiesResponse>("cookies/", { signal: controller.signal })
-        .then((res) => {
-          setCookies(res.data.results)
-          setLoading(false);
-        })
-        .catch((err) => {
-          if (err instanceof CanceledError) return;
-          setError(err.message)
-          setLoading(false);
-        });
-
-        return () => controller.abort();
-    }, []);
-
-    return { cookies, error, isLoading }
-}
+const useCookies = () => useData<Cookie>('/cookies');
 
 export default useCookies

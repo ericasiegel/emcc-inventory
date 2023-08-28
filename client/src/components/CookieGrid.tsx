@@ -5,7 +5,7 @@ import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 
 const CookieGrid = () => {
-  const { cookies, error, isLoading } = useCookies();
+  const { data, error, isLoading } = useCookies();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   return (
@@ -22,7 +22,7 @@ const CookieGrid = () => {
               <CookieCardSkeleton />
             </CookieCardContainer>
           ))}
-        {cookies.map((cookie) => (
+        {data.map((cookie) => (
           <CookieCardContainer key={cookie.id}>
             <CookieCard cookie={cookie} />
           </CookieCardContainer>
