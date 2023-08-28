@@ -12,7 +12,7 @@ const CookieCard = ({ cookie }: Props) => {
   return (
     <Card backgroundColor='inherit'>
         {cookie.images && cookie.images.length > 0 && <Image src={cookie.images[0].image} />}
-        <CardBody>
+        <CardBody paddingX={3}>
             <Heading as='em' color='#941c3e' fontSize='3xl'>{cookie.name}</Heading>
             <CookieCounts counts={cookie.counts} />
         </CardBody>

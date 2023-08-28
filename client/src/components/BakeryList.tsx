@@ -1,12 +1,15 @@
-import { Text } from "@chakra-ui/layout";
+import { HStack, List, ListItem, Text } from "@chakra-ui/layout";
+import { FaCookie } from 'react-icons/fa'
 
 const BakeryList = () => {
   return (
     <>
-      <Text>Cookies List</Text>
-      <Text>Baked Cookies</Text>
-      <Text>Doughs</Text>
-      <Text>Cookies In Store</Text>
+    <List>
+      <ListItem paddingY={2}><HStack><FaCookie color='#941c3e' size='30px' /><Text>Cookies List</Text></HStack></ListItem>
+      <ListItem paddingY={2}><HStack><FaCookie color='#941c3e' size='30px' /><Text>Baked Cookies</Text></HStack></ListItem>
+      <ListItem paddingY={2}><HStack><FaCookie color='#941c3e' size='30px' /><Text>Doughs</Text></HStack></ListItem>
+      <ListItem paddingY={2}><HStack><FaCookie color='#941c3e' size='30px' /><Text>Cookies In Store</Text></HStack></ListItem>
+    </List>
     </>
   );
 };
