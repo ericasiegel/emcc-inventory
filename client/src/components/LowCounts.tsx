@@ -4,13 +4,11 @@ import {
   Box,
   Center,
   Container,
-  HStack,
   Heading,
   List,
-  ListItem,
   Text,
 } from "@chakra-ui/react";
-import { LiaCookieBiteSolid } from "react-icons/lia";
+import LowCountListItem from "./LowCountListItem";
 
 const lowCountThreshold = 5;
 
@@ -64,15 +62,7 @@ const BakeryLowItems = () => {
           {lowCookieCounts
             .filter((cookie) => cookie.counts.doughs <= lowCountThreshold)
             .map((cookie) => (
-              <ListItem key={cookie.id}>
-                <HStack spacing={2}>
-                  <LiaCookieBiteSolid color="#941c3e" size="28px" />
-                  <Text>{cookie.name}: </Text>
-                  <Text as="b" color="red">
-                    {cookie.counts.doughs}
-                  </Text>
-                </HStack>
-              </ListItem>
+                <LowCountListItem key={cookie.id} name={cookie.name} count={cookie.counts.doughs} />
             ))}
         </List>
       </Box>
@@ -98,15 +88,7 @@ const BakeryLowItems = () => {
               (cookie) => cookie.counts.baked_cookies.mega <= lowCountThreshold
             )
             .map((cookie) => (
-              <ListItem paddingX={1} key={cookie.id}>
-                <HStack spacing={2}>
-                  <LiaCookieBiteSolid color="#941c3e" size="28px" />
-                  <Text>{cookie.name}: </Text>
-                  <Text as="b" color="red">
-                    {cookie.counts.doughs}
-                  </Text>
-                </HStack>
-              </ListItem>
+                <LowCountListItem key={cookie.id} name={cookie.name} count={cookie.counts.baked_cookies.mega} />
             ))}
         </List>
         <Heading fontSize="lg" as="b">
@@ -118,15 +100,7 @@ const BakeryLowItems = () => {
               (cookie) => cookie.counts.baked_cookies.mini <= lowCountThreshold
             )
             .map((cookie) => (
-              <ListItem paddingX={1} key={cookie.id}>
-                <HStack spacing={2}>
-                  <LiaCookieBiteSolid color="#941c3e" size="28px" />
-                  <Text>{cookie.name}: </Text>
-                  <Text as="b" color="red">
-                    {cookie.counts.baked_cookies.mini}
-                  </Text>
-                </HStack>
-              </ListItem>
+              <LowCountListItem key={cookie.id} name={cookie.name} count={cookie.counts.baked_cookies.mini} />
             ))}
         </List>
       </Box>
@@ -147,15 +121,7 @@ const BakeryLowItems = () => {
               (cookie) => cookie.counts.total_in_store.mega <= lowCountThreshold
             )
             .map((cookie) => (
-              <ListItem paddingX={1} key={cookie.id}>
-                <HStack spacing={2}>
-                  <LiaCookieBiteSolid color="#941c3e" size="28px" />
-                  <Text>{cookie.name}: </Text>
-                  <Text as="b" color="red">
-                    {cookie.counts.total_in_store.mega}
-                  </Text>
-                </HStack>
-              </ListItem>
+              <LowCountListItem key={cookie.id} name={cookie.name} count={cookie.counts.total_in_store.mega} />
             ))}
         </List>
         <Heading fontSize="lg" as="b">
@@ -167,15 +133,7 @@ const BakeryLowItems = () => {
               (cookie) => cookie.counts.total_in_store.mini <= lowCountThreshold
             )
             .map((cookie) => (
-              <ListItem paddingX={1} key={cookie.id}>
-                <HStack spacing={2}>
-                  <LiaCookieBiteSolid color="#941c3e" size="28px" />
-                  <Text>{cookie.name}: </Text>
-                  <Text as="b" color="red">
-                    {cookie.counts.total_in_store.mini}
-                  </Text>
-                </HStack>
-              </ListItem>
+              <LowCountListItem key={cookie.id} name={cookie.name} count={cookie.counts.total_in_store.mini} />
             ))}
         </List>
       </Box>

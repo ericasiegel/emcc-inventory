@@ -1,6 +1,6 @@
 import { List } from "@chakra-ui/layout";
 import BakeryListItem from "./BakeryListItem";
-import BakeryLowItems from "./BakeryLowItems";
+import BakeryLowItems from "./LowCounts";
 
 const BakeryList = () => {
   const menu = ["Cookies List", "Baked Cookies", "Doughs", "Cookies In Store"];
