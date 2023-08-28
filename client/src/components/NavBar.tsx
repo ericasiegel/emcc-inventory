@@ -7,7 +7,7 @@ const NavBar = () => {
     <HStack>
         <Image margin={3} src={logo} boxSize='100px' />
         <Heading color='#f9dfe8'>Cookie Inventory</Heading>
-        <Text color='white'>nav bar</Text>
+        {/* <Text color='white'>nav bar</Text> */}
     </HStack>
   )
 }
