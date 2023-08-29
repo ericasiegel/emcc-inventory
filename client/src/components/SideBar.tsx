@@ -1,18 +1,18 @@
 import { List } from "@chakra-ui/layout";
 import BakeryListItem from "./BakeryListItem";
-import BakeryLowItems from "./LowCounts";
+import LowCountsSidebar from "./LowCountsSidebar";
 
 const BakeryList = () => {
   const menu = ["Cookies List", "Baked Cookies", "Doughs", "Cookies In Store"];
 
   return (
     <>
-      <List>
+      <List p={5}>
         {menu.map((label) => (
           <BakeryListItem key={label} label={label} />
         ))}
       </List>
-        <BakeryLowItems />
+      <LowCountsSidebar />
     </>
   );
 };

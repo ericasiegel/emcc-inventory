@@ -2,7 +2,7 @@ import { Grid, GridItem } from "@chakra-ui/layout";
 import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
-import BakeryList from "./components/BakeryList";
+import BakeryList from "./components/SideBar";
 
 function App() {
   return (

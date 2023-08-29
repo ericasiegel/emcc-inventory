@@ -8,7 +8,7 @@ interface BakeryListItemProps {
 
 const BakeryListItem = ({ label }: BakeryListItemProps) => {
   return (
-    <ListItem paddingY={2}>
+    <ListItem paddingY={1}>
       <HStack>
         <FaCookie color="#941c3e" size="28px" />
         <Button
