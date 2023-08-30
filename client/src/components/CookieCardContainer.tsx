@@ -8,7 +8,8 @@ interface Props {
 const CookieCardContainer = ({ children }: Props) => {
   return (
     <Box
-      width="100%"
+      maxWidth="300px"
+      height="100%"
       borderRadius={10}
       backgroundColor='#f99abb'
       boxShadow="dark-lg"
