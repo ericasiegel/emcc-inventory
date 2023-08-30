@@ -3,9 +3,12 @@ import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
 import BakeryList from "./components/SideBar";
+import { useState } from "react";
+// import { Cookie } from "./hooks/useCookies";
 
 
 function App() {
+  const [active, setSelectedActive] = useState<boolean | null>(null);
 
   return (
     <Grid
@@ -20,11 +23,11 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" bg="#f8a5c2" paddingX={3}>
-          <BakeryList />
+          <BakeryList onSelectActive={setSelectedActive} />
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
-        <CookieGrid />
+        <CookieGrid activeCookie={active} />
       </GridItem>
     </Grid>
   );

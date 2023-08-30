@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
-import useCookies, { Cookie } from "../hooks/useCookies";
-import { Box, Center, Container, Heading, Spinner, Text } from "@chakra-ui/react";
+import { Cookie } from "../hooks/useCookies";
+import { Box, Center, Container, Heading, Spinner } from "@chakra-ui/react";
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
 
 const lowCountThreshold = 5;
 
-const LowCountsSidebar = () => {
-  const { data, isLoading, error } = useCookies();
-  const [lowCookieCounts, setLowCookieCounts] = useState<Cookie[]>([]);
-  
-  
+const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) => {
+  const [isLoadingLocal, setIsLoadingLocal] = useState(false);
+  const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
+
   useEffect(() => {
-    if (data && !isLoading) {
-      const lowCounts = data.filter((cookie) => {
+    if (lowCookieCounts.length > 0) {
+      const lowCounts = lowCookieCounts.filter((cookie) => {
         const { doughs, baked_cookies, total_in_store } = cookie.counts;
         return (
           doughs <= lowCountThreshold ||
@@ -22,15 +21,20 @@ const LowCountsSidebar = () => {
           baked_cookies.mini <= lowCountThreshold ||
           total_in_store.mega <= lowCountThreshold ||
           total_in_store.mini <= lowCountThreshold
-          );
-        });
-        setLowCookieCounts(lowCounts);
-      }
-    }, [data, isLoading]);
-    
-    if (error) return null;
+        );
+      });
+      
+      // Processed the low counts data
+      setProcessedLowCounts(lowCounts);
+      setIsLoadingLocal(false); // Set loading state to false when data is processed
+    }
+  }, [lowCookieCounts]);
   
-    if (isLoading) return <Spinner />;
+  // Handle error and loading states here
+  
+  if (isLoadingLocal) {
+    return <Spinner />;
+  }
 
   return (
     <Container
@@ -41,7 +45,6 @@ const LowCountsSidebar = () => {
     >
       <Center paddingY={6}>
         <Heading fontSize="3xl">Low Counts</Heading>
-        <Text color="red">{error}</Text>
       </Center>
       <Box borderBottom="1px solid #941c3e" w="100%" />
       <LowCountsTitleBox title="Dough">

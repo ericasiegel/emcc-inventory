@@ -27,6 +27,17 @@ export interface Cookie {
   }
   
 
-const useCookies = () => useData<Cookie>('/cookies');
+const useCookies = (isActive: boolean | null) => {
+    const { data, error, isLoading } = useData<Cookie>('/cookies');
+    const filteredCookies = data.filter(cookie => {
+      if (isActive === null) return true;
+      return cookie.is_active === isActive;
+    });
+  return {
+    data: filteredCookies,
+    error, 
+    isLoading
+  };
+};
 
 export default useCookies
