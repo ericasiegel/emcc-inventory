@@ -4,7 +4,9 @@ import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
 import BakeryList from "./components/SideBar";
 
+
 function App() {
+
   return (
     <Grid
       templateAreas={{

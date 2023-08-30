@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const apiToken = localStorage.getItem('apiToken')
-const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNDQyODUxLCJpYXQiOjE2OTMzNTY0NTEsImp0aSI6Ijk1ZGRlMWE4YmYzODRlMTNiZTkxODc5MzlhYWQ4ZWE4IiwidXNlcl9pZCI6MX0.h6S54U1qvZ9XH8LUItLV90HIwNycOIV71NBoYbpIVgQ'
+const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkzNTA0NTAxLCJpYXQiOjE2OTM0MTgxMDEsImp0aSI6IjE0ZmQxOTM1ZTc2ZjQ4NzhhZmE5NDg1YmQxNGZjY2Y3IiwidXNlcl9pZCI6MX0.3uQ8wrK-GG-R714qZkdX3WC5AMfFCGawUnNd0acaFhM'
 
 export default axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery',

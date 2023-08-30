@@ -1,28 +1,35 @@
 import { HStack, ListItem } from "@chakra-ui/layout";
-import { Button } from "@chakra-ui/react";
+import { Button, List } from "@chakra-ui/react";
 import { FaCookie } from "react-icons/fa";
 
-interface BakeryListItemProps {
-  label: string;
-}
+const BakeryListItem = () => {
+  const menu = [
+    "Active Cookies List",
+    "Baked Cookies",
+    "Doughs",
+    "Cookies In Store",
+    "Inactive Cookies",
+  ];
 
-const BakeryListItem = ({ label }: BakeryListItemProps) => {
-  const labelOpacity = label === 'Inactive Cookies' ? '60%' : '100%';
   return (
-    <ListItem paddingY={1}>
-      <HStack>
-        <FaCookie color="#941c3e" size="28px" opacity={labelOpacity} />
-        <Button
-          onClick={() => console.log({ label })}
-          color='black'
-          opacity={labelOpacity}
-          fontSize="lg"
-          variant="link"
-        >
-          {label}
-        </Button>
-      </HStack>
-    </ListItem>
+    <List p={5}>
+      {menu.map((label) => (
+        <ListItem paddingY={1} key={label}>
+          <HStack>
+            <FaCookie color="#941c3e" size="28px" opacity={label == "Inactive Cookies" ? "60%" : "100%"} />
+            <Button
+              onClick={() => console.log(label)}
+              color="black"
+              opacity={label == "Inactive Cookies" ? "60%" : "100%"}
+              fontSize="lg"
+              variant="link"
+            >
+              {label}
+            </Button>
+          </HStack>
+        </ListItem>
+      ))}
+    </List>
   );
 };
 

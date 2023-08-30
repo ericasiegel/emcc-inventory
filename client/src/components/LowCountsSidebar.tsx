@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useCookies, { Cookie } from "../hooks/useCookies";
-import { Box, Center, Container, Heading, Text } from "@chakra-ui/react";
+import { Box, Center, Container, Heading, Spinner, Text } from "@chakra-ui/react";
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
@@ -10,7 +10,8 @@ const lowCountThreshold = 5;
 const LowCountsSidebar = () => {
   const { data, isLoading, error } = useCookies();
   const [lowCookieCounts, setLowCookieCounts] = useState<Cookie[]>([]);
-
+  
+  
   useEffect(() => {
     if (data && !isLoading) {
       const lowCounts = data.filter((cookie) => {
@@ -21,11 +22,15 @@ const LowCountsSidebar = () => {
           baked_cookies.mini <= lowCountThreshold ||
           total_in_store.mega <= lowCountThreshold ||
           total_in_store.mini <= lowCountThreshold
-        );
-      });
-      setLowCookieCounts(lowCounts);
-    }
-  }, [data, isLoading]);
+          );
+        });
+        setLowCookieCounts(lowCounts);
+      }
+    }, [data, isLoading]);
+    
+    if (error) return null;
+  
+    if (isLoading) return <Spinner />;
 
   return (
     <Container
