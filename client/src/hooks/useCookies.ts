@@ -21,6 +21,7 @@ export interface Counts {
 export interface Cookie {
     id: number;
     name: string;
+    is_active: boolean;
     counts: Counts;
     images?: Image[];
   }

@@ -19,7 +19,7 @@ class BaseAdmin(admin.ModelAdmin):
 
 @admin.register(Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
+    list_display = ['id', 'name', 'is_active', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
     inlines = [CookieImageInline]
 

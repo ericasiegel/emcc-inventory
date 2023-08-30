@@ -3,7 +3,7 @@ import BakeryListItem from "./BakeryListItem";
 import LowCountsSidebar from "./LowCountsSidebar";
 
 const BakeryList = () => {
-  const menu = ["Cookies List", "Baked Cookies", "Doughs", "Cookies In Store"];
+  const menu = ["Active Cookies List", "Baked Cookies", "Doughs", "Cookies In Store", "Inactive Cookies"];
 
   return (
     <>

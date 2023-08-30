@@ -9,7 +9,7 @@ SIZE_CHOICES = (
 )
 
 def validate_file_size(file):
-    max_size_kb = 300
+    max_size_kb = 400
     if file.size > max_size_kb * 1024:
         raise ValidationError(f'Files can not be larger than {max_size_kb}KB!')
     
@@ -17,6 +17,7 @@ def validate_file_size(file):
 # Create your models here.
 class Cookie(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    is_active = models.BooleanField(default=True)
     
     def __str__(self):
         return self.name

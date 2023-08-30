@@ -11,8 +11,9 @@ interface Props {
 
 const CookieCard = ({ cookie }: Props) => {
   const imgUrl = cookie.images && cookie.images?.length > 0 ? cookie.images[0].image : noImage;
+  const inactiveCookie = !cookie.is_active ? '40%' : '100%';
   return (
-    <Card backgroundColor='inherit'>
+    <Card backgroundColor='inherit' opacity={inactiveCookie}>
         <Image src={imgUrl} alt={cookie.name} />
         <CardBody paddingX={3}>
             <Heading as='em' color='#941c3e' fontSize='3xl'>{cookie.name}</Heading>
