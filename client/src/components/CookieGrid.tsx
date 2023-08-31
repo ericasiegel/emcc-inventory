@@ -4,8 +4,11 @@ import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 
+interface Props {
+  activeCookie: boolean | null
+}
 
-const CookieGrid = ({ activeCookie }: { activeCookie: boolean | null }) => {
+const CookieGrid = ({ activeCookie }: Props) => {
   const { data, error, isLoading } = useCookies(activeCookie);
   const skeletons = [1, 2, 3, 4, 5, 6];
 

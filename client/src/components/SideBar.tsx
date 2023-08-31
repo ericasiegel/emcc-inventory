@@ -1,27 +1,24 @@
 import { List, ListItem, HStack, Button } from "@chakra-ui/react";
 import { FaCookie } from "react-icons/fa";
-// import BakeryListItem from "./BakeryListItem";
 import LowCountsSidebar from "./LowCountsSidebar";
 import useCookies from "../hooks/useCookies";
-// import { Cookie } from "../hooks/useCookies";
-// import { useState } from "react";
+import BakeryListItem from "./BakeryListItem";
+
 
 interface Props {
-  onSelectActive: (is_active: boolean) => void;
+  onSelectActive: (is_active: boolean | null) => void;
 }
 
 const BakeryList = ({ onSelectActive }: Props) => {
   const menu = [
-    {label: "Active Cookies List", is_active: true},
-    // "Baked Cookies",
-    // "Doughs",
-    // "Cookies In Store",
+    {label: "All Cookies", is_active: null},
+    {label: "Active Cookies", is_active: true},
     {label: "Inactive Cookies", is_active: false},
   ];
 
   const { data } = useCookies(null);
 
-  const handleButtonClick = (is_active: boolean) => {
+  const handleButtonClick = (is_active: boolean | null) => {
     onSelectActive(is_active);
   };
 
@@ -39,11 +36,12 @@ const BakeryList = ({ onSelectActive }: Props) => {
               />
               <Button
                 onClick={() => handleButtonClick(item.is_active)}
-                // onClick={() => onSelectActive(cookie)}
                 color="black"
                 opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
                 fontSize="lg"
                 variant="link"
+                whiteSpace='normal'
+                textAlign='left'
               >
                 {item.label}
               </Button>
@@ -51,6 +49,7 @@ const BakeryList = ({ onSelectActive }: Props) => {
           </ListItem>
         ))}
       </List>
+      <BakeryListItem />
       <LowCountsSidebar lowCookieCounts={data} />
     </>
   );

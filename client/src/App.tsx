@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
 import BakeryList from "./components/SideBar";
 import { useState } from "react";
-// import { Cookie } from "./hooks/useCookies";
+
 
 
 function App() {
