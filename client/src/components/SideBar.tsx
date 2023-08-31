@@ -1,8 +1,8 @@
-import { List, ListItem, HStack, Button } from "@chakra-ui/react";
-import { FaCookie } from "react-icons/fa";
+
 import LowCountsSidebar from "./LowCountsSidebar";
+import BakeryListNav from "./BakeryListNav";
+import ActiveCookiesNav from "./ActiveCookiesNav";
 import useCookies from "../hooks/useCookies";
-import BakeryListItem from "./BakeryListItem";
 
 
 interface Props {
@@ -10,51 +10,15 @@ interface Props {
   setSelectedlabel: (label: string) => void;
 }
 
-const BakeryList = ({ onSelectActive, setSelectedlabel }: Props) => {
-  const menu = [
-    {label: "All Cookies", is_active: null},
-    {label: "Active Cookies", is_active: true},
-    {label: "Inactive Cookies", is_active: false},
-  ];
-
+const SideBar = ({ onSelectActive, setSelectedlabel }: Props) => {
   const { data } = useCookies(null);
-
-  const handleButtonClick = (is_active: boolean | null, label: string) => {
-    onSelectActive(is_active);
-    setSelectedlabel(label);
-  };
-
-
   return (
     <>
-      <List p={5}>
-        {menu.map((item) => (
-          <ListItem paddingY={1} key={item.label}>
-            <HStack>
-              <FaCookie
-                color="#941c3e"
-                size="28px"
-                opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
-              />
-              <Button
-                onClick={() => handleButtonClick(item.is_active, item.label)}
-                color="black"
-                opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
-                fontSize="lg"
-                variant="link"
-                whiteSpace='normal'
-                textAlign='left'
-              >
-                {item.label}
-              </Button>
-            </HStack>
-          </ListItem>
-        ))}
-      </List>
-      <BakeryListItem />
+      <ActiveCookiesNav onSelectActive={onSelectActive} setSelectedlabel={setSelectedlabel} />
+      <BakeryListNav />
       <LowCountsSidebar lowCookieCounts={data} />
     </>
   );
 };
 
-export default BakeryList;
+export default SideBar;

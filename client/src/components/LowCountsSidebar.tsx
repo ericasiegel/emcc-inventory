@@ -8,7 +8,7 @@ import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
 const lowCountThreshold = 5;
 
 const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) => {
-  const [isLoadingLocal, setIsLoadingLocal] = useState(false);
+  const [isLoadingLocal, setIsLoadingLocal] = useState(true);
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
   useEffect(() => {

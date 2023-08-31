@@ -6,7 +6,7 @@ import { FaCookie } from "react-icons/fa";
 //   onHeadingClick: (label: string) => void;
 // }
 
-const BakeryListItem = () => {
+const BakeryListNav = () => {
   const menu = ["Baked Cookies", "Doughs", "Cookies In Store"];
 
   // const handleHeadingClick = (label: string) => {
@@ -41,4 +41,4 @@ const BakeryListItem = () => {
   );
 };
 
-export default BakeryListItem;
+export default BakeryListNav;
