@@ -25,12 +25,12 @@ const BakeryListNav = () => {
             />
             <Button
               onClick={() => console.log(label)}
-              color="black"
-              opacity={label == "Inactive Cookies" ? "60%" : "100%"}
+              color="#941c3e"
               fontSize="lg"
               variant="link"
               whiteSpace="normal"
               textAlign="left"
+              fontWeight='normal'
             >
               {label}
             </Button>
