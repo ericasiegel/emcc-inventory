@@ -1,14 +1,17 @@
-import { Grid, GridItem } from "@chakra-ui/layout";
+import { Grid, GridItem, Box } from "@chakra-ui/layout";
 import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
 import BakeryList from "./components/SideBar";
 import { useState } from "react";
+import CookieHeading from "./components/CookieHeading";
 
 
 
 function App() {
   const [active, setSelectedActive] = useState<boolean | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string>('All Cookies')
+
 
   return (
     <Grid
@@ -23,10 +26,13 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" bg="#f8a5c2" paddingX={3}>
-          <BakeryList onSelectActive={setSelectedActive} />
+          <BakeryList onSelectActive={setSelectedActive} setSelectedlabel={setSelectedLabel} />
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
+        <Box paddingLeft={4}>
+        <CookieHeading label={selectedLabel} />
+        </Box>
         <CookieGrid activeCookie={active} />
       </GridItem>
     </Grid>

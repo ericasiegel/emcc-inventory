@@ -7,9 +7,10 @@ import BakeryListItem from "./BakeryListItem";
 
 interface Props {
   onSelectActive: (is_active: boolean | null) => void;
+  setSelectedlabel: (label: string) => void;
 }
 
-const BakeryList = ({ onSelectActive }: Props) => {
+const BakeryList = ({ onSelectActive, setSelectedlabel }: Props) => {
   const menu = [
     {label: "All Cookies", is_active: null},
     {label: "Active Cookies", is_active: true},
@@ -18,8 +19,9 @@ const BakeryList = ({ onSelectActive }: Props) => {
 
   const { data } = useCookies(null);
 
-  const handleButtonClick = (is_active: boolean | null) => {
+  const handleButtonClick = (is_active: boolean | null, label: string) => {
     onSelectActive(is_active);
+    setSelectedlabel(label);
   };
 
 
@@ -35,7 +37,7 @@ const BakeryList = ({ onSelectActive }: Props) => {
                 opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
               />
               <Button
-                onClick={() => handleButtonClick(item.is_active)}
+                onClick={() => handleButtonClick(item.is_active, item.label)}
                 color="black"
                 opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
                 fontSize="lg"

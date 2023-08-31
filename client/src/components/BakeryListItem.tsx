@@ -2,8 +2,16 @@ import { HStack, ListItem } from "@chakra-ui/layout";
 import { Button, List } from "@chakra-ui/react";
 import { FaCookie } from "react-icons/fa";
 
+// interface Props {
+//   onHeadingClick: (label: string) => void;
+// }
+
 const BakeryListItem = () => {
   const menu = ["Baked Cookies", "Doughs", "Cookies In Store"];
+
+  // const handleHeadingClick = (label: string) => {
+  //   onHeadingClick(label)
+  // }
 
   return (
     <List px={5}>
