@@ -1,5 +1,5 @@
 import { Image } from '@chakra-ui/image'
-import { HStack, Heading, Text } from '@chakra-ui/layout'
+import { HStack, Heading} from '@chakra-ui/layout'
 import logo from '../assets/emcc-logo-white_1024x1024.webp';
 
 const NavBar = () => {
