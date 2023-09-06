@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import apiClient, { FetchResponse } from "../services/api-client";
+import APIClient from "../services/api-client";
+
+const apiClient = new APIClient<Cookie>('/cookies')
 
 
 interface Image {
@@ -30,8 +32,7 @@ export interface Cookie {
 
   const useCookies = (isActive: boolean | null) => {
     const queryKey = ['cookies', isActive]; // Define the query key
-    const queryFn = () =>
-      apiClient.get<FetchResponse<Cookie>>('/cookies').then((res) => res.data);
+    const queryFn = apiClient.getAll
   
     const { data: cookiesData, error: queryError , isLoading } = useQuery(queryKey, queryFn);
 
