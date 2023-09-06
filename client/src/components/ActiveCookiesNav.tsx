@@ -32,13 +32,10 @@ const ActiveCookiesNav = ({ onSelectActive }: Props) => {
               <FaCookie
                 color='#941c3e'
                 size="28px"
-                // opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
               />
               <Button
                 onClick={() => handleButtonClick(item.is_active, item.label)}
                 color='#941c3e' 
-                // color={ selectedButton === item.label ? 'Black' : '#941c3e' }
-                // opacity={item.label == "Inactive Cookies" ? "60%" : "100%"}
                 fontSize={ selectedButton === item.label ? 'xl' : 'lg' }
                 variant="link"
                 whiteSpace='normal'
