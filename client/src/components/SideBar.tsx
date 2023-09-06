@@ -4,17 +4,18 @@ import BakeryListNav from "./BakeryListNav";
 import ActiveCookiesNav from "./ActiveCookiesNav";
 import useCookies from "../hooks/useCookies";
 
-
 interface Props {
-  onSelectActive: (is_active: boolean | null) => void;
-  setSelectedlabel: (label: string) => void;
+  updateCookieQuery: (selectedActive: boolean | null, selectedLabel: string) => void; // Define the prop type
 }
 
-const SideBar = ({ onSelectActive, setSelectedlabel }: Props) => {
+
+const SideBar = ({ updateCookieQuery }: Props) => {
   const { data } = useCookies(null);
+
+
   return (
     <>
-      <ActiveCookiesNav onSelectActive={onSelectActive} setSelectedlabel={setSelectedlabel} />
+      <ActiveCookiesNav onSelectActive={updateCookieQuery} />
       <BakeryListNav />
       <LowCountsSidebar lowCookieCounts={data} />
     </>

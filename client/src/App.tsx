@@ -2,16 +2,25 @@ import { Grid, GridItem, Box } from "@chakra-ui/layout";
 import { Show } from "@chakra-ui/media-query";
 import NavBar from "./components/NavBar";
 import CookieGrid from "./components/CookieGrid";
-import BakeryList from "./components/SideBar";
 import { useState } from "react";
 import CookieHeading from "./components/CookieHeading";
+import SideBar from "./components/SideBar";
 
-
+interface CookieQuery {
+  selectedActive: boolean | null;
+  selectedLabel: string;
+}
 
 function App() {
-  const [active, setSelectedActive] = useState<boolean | null>(null);
-  const [selectedLabel, setSelectedLabel] = useState<string>('All Cookies')
+  const [cookieQuery, setCookieQuery] = useState<CookieQuery>({
+    selectedActive: null,
+    selectedLabel: "All Cookies"
+  })
 
+  const updateCookieQuery = (selectedActive: boolean | null, selectedLabel: string) => {
+    setCookieQuery({ selectedActive, selectedLabel });
+  };
+  
 
   return (
     <Grid
@@ -26,14 +35,14 @@ function App() {
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" bg="#f8a5c2" paddingX={3}>
-          <BakeryList onSelectActive={setSelectedActive} setSelectedlabel={setSelectedLabel} />
+          <SideBar updateCookieQuery={updateCookieQuery} />
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
         <Box paddingLeft={4}>
-        <CookieHeading label={selectedLabel} />
+        <CookieHeading label={cookieQuery.selectedLabel} />
         </Box>
-        <CookieGrid activeCookie={active} />
+        <CookieGrid activeCookie={cookieQuery.selectedActive} />
       </GridItem>
     </Grid>
   );

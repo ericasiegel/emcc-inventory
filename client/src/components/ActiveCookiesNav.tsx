@@ -4,11 +4,10 @@ import { FaCookie } from "react-icons/fa";
 
 
 interface Props {
-  onSelectActive: (is_active: boolean | null) => void;
-  setSelectedlabel: (label: string) => void;
+  onSelectActive: (is_active: boolean | null, label: string) => void;
 }
 
-const ActiveCookiesNav = ({ onSelectActive, setSelectedlabel }: Props) => {
+const ActiveCookiesNav = ({ onSelectActive }: Props) => {
   const [selectedButton, setSelectedButton] = useState('All Cookies')
 
   const menu = [
@@ -18,8 +17,7 @@ const ActiveCookiesNav = ({ onSelectActive, setSelectedlabel }: Props) => {
   ];
 
   const handleButtonClick = (is_active: boolean | null, label: string) => {
-    onSelectActive(is_active);
-    setSelectedlabel(label);
+    onSelectActive(is_active, label);
     setSelectedButton(label)
   };
 
