@@ -23,7 +23,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
           total_in_store.mini <= lowCountThreshold
         );
       });
-      
+      // console.log(processedLowCounts)
       // Processed the low counts data
       setProcessedLowCounts(lowCounts);
       setIsLoadingLocal(false); // Set loading state to false when data is processed
@@ -51,7 +51,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       <LowCountsTitleBox title="Dough">
         <LowCountsBox>
           <LowCounts
-            cookies={lowCookieCounts}
+            cookies={processedLowCounts}
             filterCriteria={(cookie) =>
               cookie.counts.doughs <= lowCountThreshold
             }
@@ -63,7 +63,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       <LowCountsTitleBox title="Baked Cookies">
       <LowCountsBox subTitle="Mega">
         <LowCounts
-          cookies={lowCookieCounts}
+          cookies={processedLowCounts}
           filterCriteria={(cookie) =>
             cookie.counts.baked_cookies.mega <= lowCountThreshold
           }
@@ -72,7 +72,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       </LowCountsBox>
       <LowCountsBox subTitle="Mini">
         <LowCounts
-          cookies={lowCookieCounts}
+          cookies={processedLowCounts}
           filterCriteria={(cookie) =>
             cookie.counts.baked_cookies.mini <= lowCountThreshold
           }
@@ -84,7 +84,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       <LowCountsTitleBox title="Total In Store">
       <LowCountsBox subTitle="Mega">
         <LowCounts
-          cookies={lowCookieCounts}
+          cookies={processedLowCounts}
           filterCriteria={(cookie) =>
             cookie.counts.total_in_store.mega <= lowCountThreshold
           }
@@ -93,7 +93,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       </LowCountsBox>
       <LowCountsBox subTitle="Mini">
         <LowCounts
-          cookies={lowCookieCounts}
+          cookies={processedLowCounts}
           filterCriteria={(cookie) =>
             cookie.counts.total_in_store.mini <= lowCountThreshold
           }
