@@ -3,14 +3,16 @@ import LowCountsSidebar from "./LowCountsSidebar";
 import BakeryListNav from "./BakeryListNav";
 import ActiveCookiesNav from "./ActiveCookiesNav";
 import useCookies from "../hooks/useCookies";
+import { CookieQuery } from "../App";
 
 interface Props {
-  updateCookieQuery: (selectedActive: boolean | null, selectedLabel: string) => void; // Define the prop type
+  updateCookieQuery: (selectedActive: boolean | null, selectedLabel: string) => void; 
+  cookieQuery: CookieQuery
 }
 
 
-const SideBar = ({ updateCookieQuery }: Props) => {
-  const { data } = useCookies(null);
+const SideBar = ({ updateCookieQuery, cookieQuery }: Props) => {
+  const { data } = useCookies(cookieQuery);
 
 
   return (

@@ -6,9 +6,10 @@ import { useState } from "react";
 import CookieHeading from "./components/CookieHeading";
 import SideBar from "./components/SideBar";
 
-interface CookieQuery {
+export interface CookieQuery {
   selectedActive: boolean | null;
   selectedLabel: string;
+  searchText?: string;
 }
 
 function App() {
@@ -31,18 +32,18 @@ function App() {
       templateColumns={{ base: "1fr", lg: '270px 1fr'}}
     >
       <GridItem area="nav" bg="#cf6a87">
-        <NavBar />
+        <NavBar onSearch={(searchText) => setCookieQuery({...cookieQuery, searchText })} />
       </GridItem>
       <Show above="lg">
         <GridItem area="aside" bg="#f8a5c2" paddingX={3}>
-          <SideBar updateCookieQuery={updateCookieQuery} />
+          <SideBar updateCookieQuery={updateCookieQuery} cookieQuery={cookieQuery} />
         </GridItem>
       </Show>
       <GridItem area="main" bg="#f8a5c2">
         <Box paddingLeft={4}>
         <CookieHeading label={cookieQuery.selectedLabel} />
         </Box>
-        <CookieGrid activeCookie={cookieQuery.selectedActive} />
+        <CookieGrid cookieQuery={cookieQuery} />
       </GridItem>
     </Grid>
   );

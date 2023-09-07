@@ -32,9 +32,10 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
   
   // Handle error and loading states here
   
-  if (isLoadingLocal) {
-    return <Spinner />;
+  if (lowCookieCounts === null || isLoadingLocal) {
+    return <Spinner />; // Render a loading state or fallback
   }
+
 
   return (
     <Container

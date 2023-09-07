@@ -1,3 +1,4 @@
+import { CookieQuery } from './../App';
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
 
@@ -30,28 +31,36 @@ export interface Cookie {
   }
   
 
-  const useCookies = (isActive: boolean | null) => {
-    const queryKey = ['cookies', isActive]; // Define the query key
-    const queryFn = apiClient.getAll
+  const useCookies = (cookieQuery: CookieQuery) => {
+    // Create a queryKey and queryFn outside of conditionals
+    const queryKey = ['cookies', cookieQuery.selectedActive];
+    const queryFn = apiClient.getAll;
   
-    const { data: cookiesData, error: queryError , isLoading } = useQuery(queryKey, queryFn);
-
+    // Use useQuery unconditionally
+    const { data: cookiesData, error: queryError, isLoading } = useQuery(
+      queryKey,
+      queryFn
+    );
+  
+    // Conditionally process the data based on cookieQuery
     const filteredCookies = cookiesData?.results.filter((cookie) => {
-      if (isActive === null) return true;
-      return cookie.is_active === isActive;
+      if (cookieQuery.selectedActive === null) return true;
+      return cookie.is_active === cookieQuery.selectedActive;
     }) || [];
 
+  
     let error: string | null = null;
-
-  if (queryError) {
-    error = "An error occurred while fetching data."; // Set a generic error message
-  }
-
+  
+    if (queryError) {
+      error = "An error occurred while fetching data."; // Set a generic error message
+    }
+  
     return {
       data: filteredCookies,
       error,
       isLoading,
     };
   };
+  
 
 export default useCookies

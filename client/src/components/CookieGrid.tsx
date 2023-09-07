@@ -3,13 +3,15 @@ import useCookies from "../hooks/useCookies";
 import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
+import { CookieQuery } from "../App";
 
 interface Props {
-  activeCookie: boolean | null
+  cookieQuery: CookieQuery
+  // activeCookie: boolean | null
 }
 
-const CookieGrid = ({ activeCookie }: Props) => {
-  const { data, error, isLoading } = useCookies(activeCookie);
+const CookieGrid = ({ cookieQuery }: Props) => {
+  const { data, error, isLoading } = useCookies(cookieQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   if (error) return <Text>{error}</Text>;
