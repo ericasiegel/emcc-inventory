@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-import { Cookie } from "../hooks/useCookies";
-import { Box, Center, Container, Heading, Spinner } from "@chakra-ui/react";
+import useCookies, { Cookie } from "../hooks/useCookies";
+import { Box, Center, Container, Heading, Spinner, Text } from "@chakra-ui/react";
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
+import { CookieQuery } from "../App.tsx";
 
 const lowCountThreshold = 5;
 
-const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) => {
-  const [isLoadingLocal, setIsLoadingLocal] = useState(true);
+interface Props {
+  lowCookieCounts: Cookie[];
+  cookieQuery: CookieQuery;
+}
+
+const LowCountsSidebar = ({ lowCookieCounts, cookieQuery }: Props) => {
+  const { query } = useCookies(cookieQuery)
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
   useEffect(() => {
@@ -26,16 +32,10 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       // console.log(processedLowCounts)
       // Processed the low counts data
       setProcessedLowCounts(lowCounts);
-      setIsLoadingLocal(false); // Set loading state to false when data is processed
     }
   }, [lowCookieCounts]);
   
-  // Handle error and loading states here
-  
-  if (lowCookieCounts === null || isLoadingLocal) {
-    return <Spinner />; // Render a loading state or fallback
-  }
-
+  if (query.error) return <Text>{query.error.message}</Text>;
 
   return (
     <Container
@@ -44,6 +44,7 @@ const LowCountsSidebar = ({ lowCookieCounts }: { lowCookieCounts: Cookie[] }) =>
       padding={0}
       my={3}
     >
+      {query.isLoading && <Spinner />}
       <Center paddingY={6}>
         <Heading fontSize="3xl">Low Counts</Heading>
       </Center>

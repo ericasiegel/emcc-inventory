@@ -19,7 +19,7 @@ const SideBar = ({ updateCookieQuery, cookieQuery }: Props) => {
     <>
       <ActiveCookiesNav onSelectActive={updateCookieQuery} />
       <BakeryListNav />
-      <LowCountsSidebar lowCookieCounts={data} />
+      <LowCountsSidebar lowCookieCounts={data} cookieQuery={cookieQuery} />
     </>
   );
 };

@@ -11,10 +11,10 @@ interface Props {
 }
 
 const CookieGrid = ({ cookieQuery }: Props) => {
-  const { data, error, isLoading } = useCookies(cookieQuery);
+  const { data, query } = useCookies(cookieQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
 
-  if (error) return <Text>{error}</Text>;
+  if (query.error) return <Text>{query.error.message}</Text>;
 
   return (
       <SimpleGrid
@@ -22,7 +22,7 @@ const CookieGrid = ({ cookieQuery }: Props) => {
         padding={3}
         spacing={5}
       >
-        {isLoading &&
+        {query.isLoading &&
           skeletons.map((skeleton) => (
             <CookieCardContainer key={skeleton}>
               <CookieCardSkeleton />
