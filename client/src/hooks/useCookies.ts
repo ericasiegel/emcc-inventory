@@ -33,8 +33,14 @@ export interface Cookie {
 
   const useCookies = (cookieQuery: CookieQuery) => {
     // Create a queryKey and queryFn outside of conditionals
-    const queryKey = ['cookies', cookieQuery.selectedActive];
-    const queryFn = apiClient.getAll;
+    const queryKey = ['cookies', cookieQuery];
+    // const queryFn = apiClient.getAll;
+    const queryFn = () =>
+      apiClient.getAll({
+        params:{
+          search: cookieQuery.searchText
+        }
+      })
   
     // Use useQuery unconditionally
     const { data: cookiesData, error: queryError, isLoading } = useQuery(
