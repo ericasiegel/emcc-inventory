@@ -1,6 +1,6 @@
 import { FetchResponse } from './../services/api-client';
 import { CookieQuery } from './../App';
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
 
 const apiClient = new APIClient<Cookie>('/cookies')
@@ -33,19 +33,25 @@ export interface Cookie {
   
 
   const useCookies = (cookieQuery: CookieQuery) => {
-    const query = useQuery<FetchResponse<Cookie>, Error>({
+    const query = useInfiniteQuery<FetchResponse<Cookie>, Error>({
       queryKey: ['cookies', cookieQuery],
-      queryFn: () =>
+      queryFn: ({ pageParam = 1}) =>
         apiClient
           .getAll({
             params: { 
-              search: cookieQuery.searchText 
-            }
-          })
+              search: cookieQuery.searchText,
+              page: pageParam 
+            },
+          }),
+          getNextPageParam: (lastPage, allPages) => {
+            return lastPage.next ? allPages.length + 1 : undefined;
+          }
     })
+
+    const currentPageData = query.data?.pages[0] ? query.data.pages[0].results : [];
     
   
-    const filteredCookies = query.data?.results.filter((cookie) => {
+    const filteredCookies = currentPageData.filter((cookie) => {
       if (cookieQuery.selectedActive === null) return true;
       return cookie.is_active === cookieQuery.selectedActive;
     }) || [];
