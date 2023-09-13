@@ -8,15 +8,17 @@ from rest_framework.viewsets import ModelViewSet
 from .models import *
 from .permissions import IsAdminOrReadOnly
 from .serializers import *
+from .filters import CookieFilter
 
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
     queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set', 'images').all()
     serializer_class = CookieSerializer
-    filter_backends = [SearchFilter, OrderingFilter]
+    filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name']
     ordering_fields = ['id', 'is_active']
+    filterset_class = CookieFilter
     
     def get_serializer_context(self):
         return {'request': self.request}
