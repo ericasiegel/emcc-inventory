@@ -9,33 +9,32 @@ import { CookieQuery } from "../App.tsx";
 const lowCountThreshold = 5;
 
 interface Props {
-  lowCookieCounts: Cookie[];
   cookieQuery: CookieQuery;
 }
 
-const LowCountsSidebar = ({ lowCookieCounts, cookieQuery }: Props) => {
-  const { query } = useCookies(cookieQuery)
+const LowCountsSidebar = ({ cookieQuery }: Props) => {
+  const { data, isLoading, error } = useCookies(cookieQuery)
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
   useEffect(() => {
-    if (lowCookieCounts.length > 0) {
-      const lowCounts = lowCookieCounts.filter((cookie) => {
-        const { doughs, baked_cookies, total_in_store } = cookie.counts;
-        return (
-          doughs <= lowCountThreshold ||
-          baked_cookies.mega <= lowCountThreshold ||
-          baked_cookies.mini <= lowCountThreshold ||
-          total_in_store.mega <= lowCountThreshold ||
-          total_in_store.mini <= lowCountThreshold
-        );
-      });
-      // console.log(processedLowCounts)
-      // Processed the low counts data
+    if (data && data.pages) {
+      const lowCounts = data.pages
+        .flatMap((page) => page.results)
+        .filter((cookie) => {
+          const { doughs, baked_cookies, total_in_store } = cookie.counts;
+          return (
+            doughs <= lowCountThreshold ||
+            baked_cookies.mega <= lowCountThreshold ||
+            baked_cookies.mini <= lowCountThreshold ||
+            total_in_store.mega <= lowCountThreshold ||
+            total_in_store.mini <= lowCountThreshold
+          );
+        });
       setProcessedLowCounts(lowCounts);
     }
-  }, [lowCookieCounts]);
+  }, [data]);
   
-  if (query.error) return <Text>{query.error.message}</Text>;
+  if (error) return <Text>{error.message}</Text>;
 
   return (
     <Container
@@ -44,7 +43,7 @@ const LowCountsSidebar = ({ lowCookieCounts, cookieQuery }: Props) => {
       padding={0}
       my={3}
     >
-      {query.isLoading && <Spinner />}
+      {isLoading && <Spinner />}
       <Center paddingY={6}>
         <Heading fontSize="3xl">Low Counts</Heading>
       </Center>

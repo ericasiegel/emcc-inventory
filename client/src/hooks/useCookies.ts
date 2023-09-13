@@ -33,33 +33,21 @@ export interface Cookie {
   
 
   const useCookies = (cookieQuery: CookieQuery) => {
-    const query = useInfiniteQuery<FetchResponse<Cookie>, Error>({
+    return useInfiniteQuery<FetchResponse<Cookie>, Error>({
       queryKey: ['cookies', cookieQuery],
       queryFn: ({ pageParam = 1}) =>
         apiClient
           .getAll({
             params: { 
               search: cookieQuery.searchText,
-              page: pageParam 
+              page: pageParam,
+              is_active: cookieQuery.selectedActive !== null ? cookieQuery.selectedActive : null
             },
           }),
           getNextPageParam: (lastPage, allPages) => {
             return lastPage.next ? allPages.length + 1 : undefined;
           }
     })
-
-    const currentPageData = query.data?.pages[0] ? query.data.pages[0].results : [];
-    
-  
-    const filteredCookies = currentPageData.filter((cookie) => {
-      if (cookieQuery.selectedActive === null) return true;
-      return cookie.is_active === cookieQuery.selectedActive;
-    }) || [];
-  
-    return {
-      query,
-      data: filteredCookies,
-    };
   };
   
   export default useCookies;
