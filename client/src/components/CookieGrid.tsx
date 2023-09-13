@@ -36,7 +36,7 @@ const CookieGrid = ({ cookieQuery }: Props) => {
         )}
       </SimpleGrid>
       {hasNextPage && (
-        <Button marginY={5} onClick={() => fetchNextPage()}>
+        <Button colorScheme="facebook" variant='outline' marginY={5} onClick={() => fetchNextPage()}>
           {isFetchingNextPage ? "Loading..." : "Load More"}
         </Button>
       )}
