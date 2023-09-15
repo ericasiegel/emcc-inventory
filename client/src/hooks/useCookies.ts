@@ -2,6 +2,7 @@ import { FetchResponse } from './../services/api-client';
 import { CookieQuery } from './../App';
 import { useInfiniteQuery } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
+import ms from 'ms';
 
 const apiClient = new APIClient<Cookie>('/cookies')
 
@@ -47,7 +48,7 @@ export interface Cookie {
           getNextPageParam: (lastPage, allPages) => {
             return lastPage.next ? allPages.length + 1 : undefined;
           },
-          staleTime: 24 * 60 * 60 * 1000 //24hr
+          staleTime: ms('24h')
     });
   };
   
