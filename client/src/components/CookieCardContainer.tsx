@@ -11,7 +11,8 @@ const CookieCardContainer = ({ children }: Props) => {
       height="100%"
       borderRadius={10}
       backgroundColor='#f99abb'
-      boxShadow="dark-lg"
+      outline='1px'
+      boxShadow="xl"
       overflow="hidden"
     >
         {children}

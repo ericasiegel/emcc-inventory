@@ -4,23 +4,40 @@ import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 import { CookieQuery } from "../App";
-import { Box, Button } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Props {
   cookieQuery: CookieQuery;
-  // activeCookie: boolean | null
 }
 
 const CookieGrid = ({ cookieQuery }: Props) => {
-  const { data, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useCookies(cookieQuery);
+  const {
+    data,
+    error,
+    isLoading,
+    // isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useCookies(cookieQuery);
   const skeletons = [1, 2, 3, 4, 5, 6];
-  // const { isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = query;
 
   if (error) return <Text>{error.message}</Text>;
+  const fetchedCookiesCount =
+    data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
 
   return (
-    <Box padding={3}>
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3, xl: 4 }} spacing={5}>
+    <InfiniteScroll
+      dataLength={fetchedCookiesCount}
+      hasMore={!!hasNextPage}
+      next={() => fetchNextPage()}
+      loader={<Spinner />}
+    >
+      <SimpleGrid
+        columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+        spacing={5}
+        padding={5}
+      >
         {isLoading &&
           skeletons.map((skeleton) => (
             <CookieCardContainer key={skeleton}>
@@ -35,12 +52,7 @@ const CookieGrid = ({ cookieQuery }: Props) => {
           ))
         )}
       </SimpleGrid>
-      {hasNextPage && (
-        <Button colorScheme="facebook" variant='outline' marginY={5} onClick={() => fetchNextPage()}>
-          {isFetchingNextPage ? "Loading..." : "Load More"}
-        </Button>
-      )}
-    </Box>
+    </InfiniteScroll>
   );
 };
 

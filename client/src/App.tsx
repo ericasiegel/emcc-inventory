@@ -35,11 +35,11 @@ function App() {
         <NavBar onSearch={(searchText) => setCookieQuery({...cookieQuery, searchText })} />
       </GridItem>
       <Show above="lg">
-        <GridItem area="aside" bg="#f8a5c2" paddingX={3}>
+        <GridItem area="aside" bg="#f7afc8" paddingX={3}>
           <SideBar updateCookieQuery={updateCookieQuery} cookieQuery={cookieQuery} />
         </GridItem>
       </Show>
-      <GridItem area="main" bg="#f8a5c2">
+      <GridItem area="main" bg="#f7afc8">
         <Box paddingLeft={4}>
         <CookieHeading label={cookieQuery.selectedLabel} />
         </Box>
