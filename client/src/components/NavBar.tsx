@@ -4,11 +4,8 @@ import logo from '../assets/emcc-logo-white_1024x1024.webp';
 import SearchInput from './SearchInput';
 import { Box } from '@chakra-ui/react';
 
-interface Props {
-  onSearch: (searchText: string) => void;
-}
 
-const NavBar = ({onSearch}: Props) => {
+const NavBar = () => {
   return (
     <Box paddingBottom={{base: '3', sm: "3", md: "0"}}>
       <HStack
@@ -20,7 +17,7 @@ const NavBar = ({onSearch}: Props) => {
           <Image margin={3} src={logo} boxSize="100px" />
           <Heading color="#f9dfe8">Cookie Inventory</Heading>
         </HStack>
-        <SearchInput onSearch={onSearch} />
+        <SearchInput />
       </HStack>
     </Box>
   );

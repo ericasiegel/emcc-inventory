@@ -2,20 +2,15 @@
 import LowCountsSidebar from "./LowCountsSidebar";
 import BakeryListNav from "./BakeryListNav";
 import ActiveCookiesNav from "./ActiveCookiesNav";
-import { CookieQuery } from "../App";
 
-interface Props {
-  updateCookieQuery: (selectedActive: boolean | null, selectedLabel: string) => void; 
-  cookieQuery: CookieQuery
-}
 
-const SideBar = ({ updateCookieQuery, cookieQuery }: Props) => {
+const SideBar = () => {
 
   return (
     <>
-      <ActiveCookiesNav onSelectActive={updateCookieQuery} />
+      <ActiveCookiesNav />
       <BakeryListNav />
-      <LowCountsSidebar cookieQuery={cookieQuery} />
+      <LowCountsSidebar />
     </>
   );
 };

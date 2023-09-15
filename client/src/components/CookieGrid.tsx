@@ -3,15 +3,12 @@ import useCookies from "../hooks/useCookies";
 import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
-import { CookieQuery } from "../App";
 import { Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import useCookieQueryStore from "../store";
 
-interface Props {
-  cookieQuery: CookieQuery;
-}
-
-const CookieGrid = ({ cookieQuery }: Props) => {
+const CookieGrid = () => {
+  const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
   const {
     data,
     error,

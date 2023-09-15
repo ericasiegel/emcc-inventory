@@ -4,15 +4,13 @@ import { Box, Center, Container, Heading, Spinner, Text } from "@chakra-ui/react
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
-import { CookieQuery } from "../App.tsx";
+import useCookieQueryStore from "../store.ts";
 
 const lowCountThreshold = 5;
 
-interface Props {
-  cookieQuery: CookieQuery;
-}
 
-const LowCountsSidebar = ({ cookieQuery }: Props) => {
+const LowCountsSidebar = () => {
+  const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
   const { data, isLoading, error } = useCookies(cookieQuery)
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
