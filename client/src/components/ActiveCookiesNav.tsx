@@ -1,11 +1,12 @@
 import { List, ListItem, HStack, Button } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaCookie } from "react-icons/fa";
 import useCookieQueryStore from "../store";
 
 
 const ActiveCookiesNav = () => {
   const onSelectActive = useCookieQueryStore(s => s.setSelectedActive)
+  const setSearchText = useCookieQueryStore(s => s.setSearchText)
   const searchText = useCookieQueryStore(s => s.cookieQuery.searchText)
   const [selectedButton, setSelectedButton] = useState('All Cookies')
 
@@ -16,16 +17,14 @@ const ActiveCookiesNav = () => {
   ];
 
   const handleButtonClick = (is_active: boolean | null, label: string) => {
+    if (searchText) {
+      setSearchText('')
+    }
     onSelectActive(is_active, label);
     setSelectedButton(label)
 
   };
 
-  // useEffect(() => {
-  //   if (searchText !== '') {
-  //     setSelectedButton('')
-  //   }
-  // }, [searchText]);
 
   return (
     <>

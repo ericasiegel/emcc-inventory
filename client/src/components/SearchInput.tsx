@@ -7,14 +7,7 @@ import useCookieQueryStore from "../store";
 const SearchInput = () => {
   const ref = useRef<HTMLInputElement>(null);
   const setSearchText = useCookieQueryStore(s => s.setSearchText);
-
-  // const setSelectedActive = useCookieQueryStore((s) => s.setSelectedActive);
-
-  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const searchText = event.target.value;
-  //   setSearchText(searchText);
-  //   setSelectedActive(null, "All Cookies"); // Clear active selection
-  // };
+  
   
   return (
     <Box marginX={3}>
@@ -22,7 +15,6 @@ const SearchInput = () => {
         onSubmit={(event) => {
           event.preventDefault();
           if (ref.current) setSearchText(ref.current.value);
-          
         }}
       >
         <InputGroup ml="auto">
@@ -33,7 +25,6 @@ const SearchInput = () => {
             borderRadius={20}
             placeholder="Search Cookies..."
             variant="filled"
-            // onChange={handleInputChange}
           />
         </InputGroup>
       </form>
