@@ -21,6 +21,7 @@ class BaseAdmin(admin.ModelAdmin):
 class CookieAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'is_active', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
+    exclude = ['slug']
     inlines = [CookieImageInline]
 
     def _formatted_link(self, cookie, app_name, model_name, attribute_name, size=None):

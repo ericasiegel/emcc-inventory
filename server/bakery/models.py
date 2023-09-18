@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 from django.db import models
 
 
@@ -17,6 +18,7 @@ def validate_file_size(file):
 # Create your models here.
 class Cookie(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True)
     is_active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -24,6 +26,11 @@ class Cookie(models.Model):
     
     class Meta:
         ordering = ['name']
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Cookie, self).save(*args, **kwargs)
         
 class CookieImage(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='images')

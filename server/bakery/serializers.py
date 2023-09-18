@@ -61,7 +61,7 @@ class CookieSerializer(serializers.ModelSerializer):
     images = CookieImageSerializer(many=True, read_only=True)
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'is_active', 'counts', 'images']
+        fields = ['id', 'name', 'slug', 'is_active', 'counts', 'images']
     
     def calculate_totals(self, cookie: Cookie):
         """
