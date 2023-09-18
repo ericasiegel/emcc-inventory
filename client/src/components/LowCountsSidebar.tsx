@@ -12,13 +12,11 @@ import {
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
-import useCookieQueryStore from "../store.ts";
 
 const lowCountThreshold = 5;
 
 const LowCountsSidebar = () => {
-  const cookieQuery = useCookieQueryStore((s) => s.cookieQuery);
-  const { data, isLoading, error } = useCookies(cookieQuery);
+  const { data, isLoading, error } = useCookies();
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
   useEffect(() => {

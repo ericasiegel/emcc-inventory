@@ -5,10 +5,8 @@ import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 import { Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useCookieQueryStore from "../store";
 
 const CookieGrid = () => {
-  const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
   const {
     data,
     error,
@@ -16,7 +14,7 @@ const CookieGrid = () => {
     // isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useCookies(cookieQuery);
+  } = useCookies();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
   if (error) return <Text>{error.message}</Text>;
