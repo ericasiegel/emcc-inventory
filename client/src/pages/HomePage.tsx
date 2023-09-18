@@ -14,11 +14,11 @@ const HomePage = () => {
     templateColumns={{ base: "1fr", lg: '270px 1fr'}}
   >
     <Show above="lg">
-      <GridItem area="aside" bg="#f7afc8" paddingX={3}>
+      <GridItem area="aside" paddingX={3}>
         <SideBar />
       </GridItem>
     </Show>
-    <GridItem area="main" bg="#f7afc8">
+    <GridItem area="main">
       <Box paddingLeft={4}>
       <CookieHeading />
       </Box>
