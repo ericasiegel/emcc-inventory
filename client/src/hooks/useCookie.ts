@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
-import { Cookie } from "./useCookies";
+import { Cookie } from '../entities/Cookie';
 
 const apiClient = new APIClient<Cookie>('/cookies');
 

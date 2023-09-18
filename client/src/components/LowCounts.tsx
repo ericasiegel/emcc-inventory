@@ -1,5 +1,4 @@
-
-import { Cookie } from "../hooks/useCookies";
+import { Cookie } from "../entities/Cookie";
 import LowCountListItem from "./LowCountListItem";
 
 interface Props {

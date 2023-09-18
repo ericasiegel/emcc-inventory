@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
-import useCookies, { Cookie } from "../hooks/useCookies";
-import { Box, Center, Container, Heading, Spinner, Text } from "@chakra-ui/react";
+import useCookies from "../hooks/useCookies";
+import { Cookie } from "../entities/Cookie.ts";
+import {
+  Box,
+  Center,
+  Container,
+  Heading,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import LowCountsBox from "./LowCountsBox";
 import LowCounts from "./LowCounts";
 import LowCountsTitleBox from "./LowCountsTitleBox.tsx";
@@ -8,10 +16,9 @@ import useCookieQueryStore from "../store.ts";
 
 const lowCountThreshold = 5;
 
-
 const LowCountsSidebar = () => {
-  const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
-  const { data, isLoading, error } = useCookies(cookieQuery)
+  const cookieQuery = useCookieQueryStore((s) => s.cookieQuery);
+  const { data, isLoading, error } = useCookies(cookieQuery);
   const [processedLowCounts, setProcessedLowCounts] = useState<Cookie[]>([]);
 
   useEffect(() => {
@@ -31,16 +38,11 @@ const LowCountsSidebar = () => {
       setProcessedLowCounts(lowCounts);
     }
   }, [data]);
-  
+
   if (error) return <Text>{error.message}</Text>;
 
   return (
-    <Container
-      color="#941c3e"
-      width="100%"
-      padding={0}
-      my={3}
-    >
+    <Container color="#941c3e" width="100%" padding={0} my={3}>
       {isLoading && <Spinner />}
       <Center paddingY={6}>
         <Heading fontSize="3xl">Low Counts</Heading>
@@ -59,45 +61,45 @@ const LowCountsSidebar = () => {
       </LowCountsTitleBox>
 
       <LowCountsTitleBox title="Baked Cookies">
-      <LowCountsBox subTitle="Mega">
-        <LowCounts
-          cookies={processedLowCounts}
-          filterCriteria={(cookie) =>
-            cookie.counts.baked_cookies.mega <= lowCountThreshold
-          }
-          displayData={(cookie) => cookie.counts.baked_cookies.mega}
-        />
-      </LowCountsBox>
-      <LowCountsBox subTitle="Mini">
-        <LowCounts
-          cookies={processedLowCounts}
-          filterCriteria={(cookie) =>
-            cookie.counts.baked_cookies.mini <= lowCountThreshold
-          }
-          displayData={(cookie) => cookie.counts.baked_cookies.mini}
-        />
-      </LowCountsBox>
+        <LowCountsBox subTitle="Mega">
+          <LowCounts
+            cookies={processedLowCounts}
+            filterCriteria={(cookie) =>
+              cookie.counts.baked_cookies.mega <= lowCountThreshold
+            }
+            displayData={(cookie) => cookie.counts.baked_cookies.mega}
+          />
+        </LowCountsBox>
+        <LowCountsBox subTitle="Mini">
+          <LowCounts
+            cookies={processedLowCounts}
+            filterCriteria={(cookie) =>
+              cookie.counts.baked_cookies.mini <= lowCountThreshold
+            }
+            displayData={(cookie) => cookie.counts.baked_cookies.mini}
+          />
+        </LowCountsBox>
       </LowCountsTitleBox>
 
       <LowCountsTitleBox title="Total In Store">
-      <LowCountsBox subTitle="Mega">
-        <LowCounts
-          cookies={processedLowCounts}
-          filterCriteria={(cookie) =>
-            cookie.counts.total_in_store.mega <= lowCountThreshold
-          }
-          displayData={(cookie) => cookie.counts.total_in_store.mega}
-        />
-      </LowCountsBox>
-      <LowCountsBox subTitle="Mini">
-        <LowCounts
-          cookies={processedLowCounts}
-          filterCriteria={(cookie) =>
-            cookie.counts.total_in_store.mini <= lowCountThreshold
-          }
-          displayData={(cookie) => cookie.counts.total_in_store.mini}
-        />
-      </LowCountsBox>
+        <LowCountsBox subTitle="Mega">
+          <LowCounts
+            cookies={processedLowCounts}
+            filterCriteria={(cookie) =>
+              cookie.counts.total_in_store.mega <= lowCountThreshold
+            }
+            displayData={(cookie) => cookie.counts.total_in_store.mega}
+          />
+        </LowCountsBox>
+        <LowCountsBox subTitle="Mini">
+          <LowCounts
+            cookies={processedLowCounts}
+            filterCriteria={(cookie) =>
+              cookie.counts.total_in_store.mini <= lowCountThreshold
+            }
+            displayData={(cookie) => cookie.counts.total_in_store.mini}
+          />
+        </LowCountsBox>
       </LowCountsTitleBox>
     </Container>
   );

@@ -5,7 +5,6 @@ import { Heading, Spinner } from "@chakra-ui/react";
 const CookieDetailPage = () => {
   const { slug } = useParams();
   const { data: cookie, isLoading, error } = useCookie(slug!);
-  console.log(cookie);
   
 
   if (isLoading) return <Spinner />;
