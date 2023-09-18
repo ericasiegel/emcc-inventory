@@ -17,4 +17,4 @@ const useDoughs = ( id: number | undefined) => {
     })
 }
 
-export default useDoughs
+export default useDoughs;
