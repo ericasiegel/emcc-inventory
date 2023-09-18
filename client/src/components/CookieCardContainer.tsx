@@ -14,6 +14,10 @@ const CookieCardContainer = ({ children }: Props) => {
       outline='1px'
       boxShadow="xl"
       overflow="hidden"
+      _hover={{
+        transform: 'scale(1.03)',
+        transition: 'transform .15s ease-in'
+      }}
     >
         {children}
     </Box>

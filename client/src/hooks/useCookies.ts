@@ -1,8 +1,8 @@
 import { FetchResponse } from './../services/api-client';
-import { CookieQuery } from './../App';
 import { useInfiniteQuery } from "@tanstack/react-query";
 import APIClient from "../services/api-client";
 import ms from 'ms';
+import useCookieQueryStore from '../store';
 
 const apiClient = new APIClient<Cookie>('/cookies')
 
@@ -27,13 +27,15 @@ export interface Counts {
 export interface Cookie {
     id: number;
     name: string;
+    slug: string;
     is_active: boolean;
     counts: Counts;
     images?: Image[];
   }
   
 
-  const useCookies = (cookieQuery: CookieQuery) => {
+  const useCookies = () => {
+    const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
     return useInfiniteQuery<FetchResponse<Cookie>, Error>({
       queryKey: ['cookies', cookieQuery],
       queryFn: ({ pageParam = 1}) =>

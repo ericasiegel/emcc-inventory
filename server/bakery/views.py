@@ -19,6 +19,7 @@ class CookieViewSet(ModelViewSet):
     search_fields = ['name']
     ordering_fields = ['id', 'is_active']
     filterset_class = CookieFilter
+    lookup_field = 'slug'
     
     def get_serializer_context(self):
         return {'request': self.request}

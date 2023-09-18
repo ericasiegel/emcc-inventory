@@ -3,6 +3,7 @@ import { Cookie } from '../hooks/useCookies'
 import { Card, CardBody, Heading, Image } from "@chakra-ui/react";
 import CookieCounts from './CookieCounts'
 import noImage from '../assets/no-image-placeholder-6f3882e0.webp'
+import { Link } from 'react-router-dom';
 
 
 interface Props {
@@ -17,7 +18,11 @@ const CookieCard = ({ cookie }: Props) => {
     <Card backgroundColor='inherit' opacity={inactiveCookie} height="100%">
         <Image src={imgUrl} alt={cookie.name} width='100%' height='auto' />
         <CardBody paddingX={3}>
-            <Heading as='em' color='#941c3e' fontSize='3xl'>{cookie.name}</Heading>
+            <Heading as='em' color='#941c3e' fontSize='3xl'>
+              <Link to={'/cookies/' + cookie.slug}>
+              {cookie.name}
+              </Link>
+              </Heading>
             <CookieCounts counts={cookie.counts} />
         </CardBody>
     </Card>

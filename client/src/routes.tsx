@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
         { index: true, element: <HomePage /> },
-        { path: 'cookies/:id', element: <CookieDetailPage /> }
+        { path: 'cookies/:slug', element: <CookieDetailPage /> }
     ],
   },
 ]);
