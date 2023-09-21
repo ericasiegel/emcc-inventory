@@ -10,7 +10,7 @@ const CookieCardContainer = ({ children }: Props) => {
     <Box
       height="100%"
       borderRadius={10}
-      backgroundColor='#f99abb'
+      backgroundColor='#fcc0d5'
       outline='1px'
       boxShadow="xl"
       overflow="hidden"

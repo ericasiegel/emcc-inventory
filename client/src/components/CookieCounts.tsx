@@ -1,7 +1,7 @@
 import { Heading } from "@chakra-ui/layout";
+import { Box, Center } from "@chakra-ui/react";
 import { Counts } from "../entities/Counts";
 import CountBadge from "./CountBadge";
-import { Box, Center } from "@chakra-ui/react";
 
 interface Props {
   counts: Counts;

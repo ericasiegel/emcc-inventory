@@ -1,6 +1,6 @@
 import APIClient, { FetchResponse } from "../services/api-client"
-import { Dough } from "../entities/Dough";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { Dough } from "../entities/Dough";
 
 const apiClient = new APIClient<Dough>('/doughs')
 

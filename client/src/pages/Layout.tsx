@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const Layout = () => {
   const containerStyle: React.CSSProperties = {
-    backgroundColor: "#f7afc8", // Replace 'blue' with the color you want
+    backgroundColor: "#f8a5c2", // Replace 'blue' with the color you want
     minHeight: "100vh", // Ensures the background covers the entire viewport
   };
   return (
