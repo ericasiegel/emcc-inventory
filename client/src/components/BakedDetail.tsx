@@ -1,24 +1,29 @@
-import { Card, CardBody, CardHeader, Heading, ListItem, UnorderedList, Text } from '@chakra-ui/react';
+import { Card, CardBody, CardHeader, Heading, ListItem, UnorderedList, Text, Flex } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import useBaked from '../hooks/useBaked';
+import ColorBadge from './ColorBadge';
+import { Counts } from '../entities/Counts';
 
 interface Props {
     id: number;
     size: string;
+    count: Counts
 }
 
-const BakedDetail = ({ id, size }: Props) => {
+const BakedDetail = ({ id, size, count }: Props) => {
     const { data } = useBaked( id, size);
     const baked = data?.pages.flatMap((page) => page.results)
 
-    let headingSize = 'Mini'
-
-    if (size === 'mega')  headingSize = 'Mega'
+    const headingSize = size === 'mega' ? 'Mega' : 'Mini'
+    const countSize = size === 'mega' ? count.baked_cookies.mega : count.baked_cookies.mini
     
     return (
         <Card backgroundColor="inherit" variant='unstyled' padding={4}>
           <CardHeader>
+            <Flex justifyContent='space-between'>
             <Heading fontSize="3xl">Baked {headingSize} Cookies </Heading>
+            <ColorBadge size='30px' count={countSize} />
+            </Flex>
           </CardHeader>
           <CardBody paddingTop={2}>
             <UnorderedList>

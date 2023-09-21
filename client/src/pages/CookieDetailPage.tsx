@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
 import { Flex, Heading, Spinner } from "@chakra-ui/react";
 import DoughCard from "../components/DoughCard";
-import CookieCounts from "../components/CookieCounts";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import BakedDetail from "../components/BakedDetail";
 
@@ -21,21 +20,17 @@ const CookieDetailPage = () => {
   return (
     <>
       <Heading>{cookie?.name}</Heading>
-      <CookieDetailContainer>
-        <CookieCounts counts={cookie?.counts} />
-      </CookieDetailContainer>
       {/* image to right of counts */}
       <CookieDetailContainer>
-        <DoughCard id={cookie?.id} />
+        <DoughCard id={cookie?.id} counts={cookie?.counts} />
       </CookieDetailContainer>
       <CookieDetailContainer>
         <Flex justifyContent='space-between'>
-          <BakedDetail id={cookie?.id} size="mega" />
-          <BakedDetail id={cookie?.id} size="mini" />
+          <BakedDetail id={cookie?.id} size="mega" count={cookie?.counts} />
+          <BakedDetail id={cookie?.id} size="mini" count={cookie?.counts} />
         </Flex>
       </CookieDetailContainer>
       {/* DISPLAY Store Cookies divided up by size */}
-      {/* DISPLAY image */}
       {/* CREATE recipe box */}
     </>
   );
