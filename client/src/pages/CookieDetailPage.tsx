@@ -5,6 +5,7 @@ import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
 import useDoughs from "../hooks/useDoughs";
 import useBaked from "../hooks/useBaked";
+import useStoreCookies from "../hooks/useStoreCookies";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -47,6 +48,26 @@ const CookieDetailPage = () => {
             countType="baked_cookies"
             dataFetcher={useBaked}
             headingText="Baked Cookies"
+          />
+        </Flex>
+      </CookieDetailContainer>
+      <CookieDetailContainer>
+        <Flex justifyContent="space-between">
+          <DetailCard
+            id={cookie.id}
+            size="mega"
+            count={cookie.counts}
+            countType="total_in_store"
+            dataFetcher={useStoreCookies}
+            headingText="Total Cookies In Store"
+          />
+          <DetailCard
+            id={cookie.id}
+            size="mini"
+            count={cookie.counts}
+            countType="total_in_store"
+            dataFetcher={useStoreCookies}
+            headingText="Total Cookies In Store"
           />
         </Flex>
       </CookieDetailContainer>

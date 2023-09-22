@@ -13,17 +13,27 @@ import ColorBadge from "./ColorBadge";
 import { Counts } from "../entities/Counts";
 import { Baked } from "../entities/Baked";
 import { Dough } from "../entities/Dough";
+import { Store } from "../entities/Store";
 
 interface Props<T> {
-    id: number;
-    size?: string;
-    count: Counts;
-    countType?: "baked_cookies" | "total_in_store";
-    dataFetcher: (id: number, size?: string) => { data?: { pages: { results: T[] }[] } };
-    headingText: string;
-  }
-
-const DetailCard = <T extends Baked | Dough>({
+  id: number;
+  size?: string;
+  count: Counts;
+  countType?: "baked_cookies" | "total_in_store";
+  dataFetcher: (id: number, size?: string) => { data?: { pages: { results: T[] }[] } };
+  headingText: string;
+}
+// Type guard function to check if an object has the 'date_added' property
+function hasDateAddedProperty<T extends object>(
+  obj: T
+): obj is T & { date_added: string } {
+  return "date_added" in obj;
+}
+// Type guard function to check if an object has the 'location' property
+function hasLocationProperty<T>(obj: T): obj is T & { location: string } {
+  return !!obj && typeof obj === "object" && "location" in obj;
+}
+const DetailCard = <T extends Baked | Dough | Store>({
     id,
     size,
     count,
@@ -73,10 +83,19 @@ const DetailCard = <T extends Baked | Dough>({
           {items?.map((item) => (
             <ListItem key={item.id}>
               <Text>
-                <strong>Location: </strong>
-                {item.location} <strong>Quantity: </strong>
-                {item.quantity} <strong>Date: </strong>
-                {format(new Date(item.date_added), "MM/dd/yyyy")}{" "}
+              {hasLocationProperty(item) && (
+                  <>
+                    <strong>Location: </strong>
+                    {item.location}
+                  </>
+                )}
+                <strong>  Quantity: </strong>
+                {item.quantity} 
+                <strong>  Date Added/Updated: </strong>
+                {hasDateAddedProperty(item)
+                  ? format(new Date(item.date_added), "MM/dd/yyyy")
+                  : format(new Date((item as Store).last_updated),"MM/dd/yyyy")  // Cast to Store to access last_updated
+                }
               </Text>
             </ListItem>
           ))}
