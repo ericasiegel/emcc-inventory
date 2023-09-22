@@ -4,7 +4,7 @@ import { Baked } from "../entities/Baked";
 
 const apiClient = new APIClient<Baked>('/bakedcookies')
 
-const useBaked = ( id: number | undefined, size: string) => {
+const useBaked = ( id: number, size?: string) => {
     return useInfiniteQuery<FetchResponse<Baked>, Error>({
         queryKey: ['bakedcookies', id, size],
         queryFn: () =>
@@ -12,7 +12,7 @@ const useBaked = ( id: number | undefined, size: string) => {
         .getAll({
             params: {
                 cookie_id: id,
-                size: size
+                size: size || undefined,
             }
         })
     })

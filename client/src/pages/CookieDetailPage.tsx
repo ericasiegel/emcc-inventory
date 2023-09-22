@@ -1,9 +1,10 @@
 import { useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
 import { Flex, Heading, Spinner } from "@chakra-ui/react";
-import DoughCard from "../components/DoughCard";
 import CookieDetailContainer from "../components/CookieDetailContainer";
-import BakedDetail from "../components/BakedDetail";
+import DetailCard from "../components/DetailCard";
+import useDoughs from "../hooks/useDoughs";
+import useBaked from "../hooks/useBaked";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -22,12 +23,31 @@ const CookieDetailPage = () => {
       <Heading>{cookie?.name}</Heading>
       {/* image to right of counts */}
       <CookieDetailContainer>
-        <DoughCard id={cookie?.id} counts={cookie?.counts} />
+        <DetailCard
+          id={cookie.id}
+          count={cookie.counts}
+          dataFetcher={useDoughs}
+          headingText="Doughs"
+        />
       </CookieDetailContainer>
       <CookieDetailContainer>
-        <Flex justifyContent='space-between'>
-          <BakedDetail id={cookie?.id} size="mega" count={cookie?.counts} />
-          <BakedDetail id={cookie?.id} size="mini" count={cookie?.counts} />
+        <Flex justifyContent="space-between">
+          <DetailCard
+            id={cookie.id}
+            size="mega"
+            count={cookie.counts}
+            countType="baked_cookies"
+            dataFetcher={useBaked}
+            headingText="Baked Cookies"
+          />
+          <DetailCard
+            id={cookie.id}
+            size="mini"
+            count={cookie.counts}
+            countType="baked_cookies"
+            dataFetcher={useBaked}
+            headingText="Baked Cookies"
+          />
         </Flex>
       </CookieDetailContainer>
       {/* DISPLAY Store Cookies divided up by size */}

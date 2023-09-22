@@ -4,7 +4,7 @@ import { Dough } from "../entities/Dough";
 
 const apiClient = new APIClient<Dough>('/doughs')
 
-const useDoughs = ( id: number | undefined) => {
+const useDoughs = ( id: number) => {
     return useInfiniteQuery<FetchResponse<Dough>, Error>({
         queryKey: ['doughs', id],
         queryFn: () =>
