@@ -1,11 +1,12 @@
 import { useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
-import { Flex, Heading, Spinner } from "@chakra-ui/react";
+import { Flex, Image, Heading, Spinner, Card, Text } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
 import useDoughs from "../hooks/useDoughs";
 import useBaked from "../hooks/useBaked";
 import useStoreCookies from "../hooks/useStoreCookies";
+import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -18,11 +19,38 @@ const CookieDetailPage = () => {
   if (!cookie) {
     return null; // or display an error message or handle this case as needed
   }
+  const imgUrl =
+    cookie.images && cookie.images?.length > 0
+      ? cookie.images[0].image
+      : noImage;
 
   return (
     <>
-      <Heading>{cookie?.name}</Heading>
-      {/* image to right of counts */}
+      <Flex alignItems="flex-start">
+        <div style={{ flex: 1 }}>
+          <Heading paddingY={3}>{cookie?.name}</Heading>
+          <Card
+            padding={2}
+            border={2}
+            width="100%"
+            height="100%"
+            background="inherit"
+          >
+            <Text>Recipe Here</Text>
+          </Card>
+        </div>
+        <Image
+          margin={4}
+          src={imgUrl}
+          alt={cookie.name}
+          maxW="30%"
+          height="auto"
+          borderRadius="full"
+          overflow="hidden"
+          boxShadow="dark-lg"
+          p="3"
+        />
+      </Flex>
       <CookieDetailContainer>
         <DetailCard
           id={cookie.id}
@@ -71,7 +99,6 @@ const CookieDetailPage = () => {
           />
         </Flex>
       </CookieDetailContainer>
-      {/* DISPLAY Store Cookies divided up by size */}
       {/* CREATE recipe box */}
     </>
   );
