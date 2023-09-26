@@ -1,6 +1,15 @@
 import { useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
-import { Flex, Image, Heading, Spinner, Card, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Image,
+  Heading,
+  Spinner,
+  Card,
+  Text,
+  SimpleGrid,
+  GridItem,
+} from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
 import useDoughs from "../hooks/useDoughs";
@@ -25,82 +34,81 @@ const CookieDetailPage = () => {
       : noImage;
 
   return (
-    <>
-      <Flex alignItems="flex-start">
-        <div style={{ flex: 1 }}>
-          <Heading paddingY={3}>{cookie?.name}</Heading>
-          <Card
-            padding={2}
-            border={2}
-            width="100%"
-            height="100%"
-            background="inherit"
-          >
-            <Text>Recipe Here</Text>
-          </Card>
-        </div>
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
+      <GridItem>
+        <Heading color="#941c3e" size="3xl" paddingY={3}>
+          {cookie?.name}
+        </Heading>
+        <CookieDetailContainer>
+          <DetailCard
+            id={cookie.id}
+            count={cookie.counts}
+            dataFetcher={useDoughs}
+            headingText="Doughs"
+          />
+        </CookieDetailContainer>
+        <CookieDetailContainer>
+          <Flex justifyContent="space-between">
+            <DetailCard
+              id={cookie.id}
+              size="mega"
+              count={cookie.counts}
+              countType="baked_cookies"
+              dataFetcher={useBaked}
+              headingText="Baked Cookies"
+            />
+            <DetailCard
+              id={cookie.id}
+              size="mini"
+              count={cookie.counts}
+              countType="baked_cookies"
+              dataFetcher={useBaked}
+              headingText="Baked Cookies"
+            />
+          </Flex>
+        </CookieDetailContainer>
+        <CookieDetailContainer>
+          <Flex justifyContent="space-between">
+            <DetailCard
+              id={cookie.id}
+              size="mega"
+              count={cookie.counts}
+              countType="total_in_store"
+              dataFetcher={useStoreCookies}
+              headingText="Total Cookies In Store"
+            />
+            <DetailCard
+              id={cookie.id}
+              size="mini"
+              count={cookie.counts}
+              countType="total_in_store"
+              dataFetcher={useStoreCookies}
+              headingText="Total Cookies In Store"
+            />
+          </Flex>
+        </CookieDetailContainer>
+      </GridItem>
+      <GridItem>
         <Image
-          margin={4}
+          margin="0 auto" // Center horizontally using margin auto
+          display="block"
+          padding={4}
           src={imgUrl}
           alt={cookie.name}
-          maxW="30%"
+          maxW="80%"
           height="auto"
           borderRadius="full"
           overflow="hidden"
           boxShadow="dark-lg"
-          p="3"
+          background="#941c3e"
+          p="2"
         />
-      </Flex>
-      <CookieDetailContainer>
-        <DetailCard
-          id={cookie.id}
-          count={cookie.counts}
-          dataFetcher={useDoughs}
-          headingText="Doughs"
-        />
-      </CookieDetailContainer>
-      <CookieDetailContainer>
-        <Flex justifyContent="space-between">
-          <DetailCard
-            id={cookie.id}
-            size="mega"
-            count={cookie.counts}
-            countType="baked_cookies"
-            dataFetcher={useBaked}
-            headingText="Baked Cookies"
-          />
-          <DetailCard
-            id={cookie.id}
-            size="mini"
-            count={cookie.counts}
-            countType="baked_cookies"
-            dataFetcher={useBaked}
-            headingText="Baked Cookies"
-          />
-        </Flex>
-      </CookieDetailContainer>
-      <CookieDetailContainer>
-        <Flex justifyContent="space-between">
-          <DetailCard
-            id={cookie.id}
-            size="mega"
-            count={cookie.counts}
-            countType="total_in_store"
-            dataFetcher={useStoreCookies}
-            headingText="Total Cookies In Store"
-          />
-          <DetailCard
-            id={cookie.id}
-            size="mini"
-            count={cookie.counts}
-            countType="total_in_store"
-            dataFetcher={useStoreCookies}
-            headingText="Total Cookies In Store"
-          />
-        </Flex>
-      </CookieDetailContainer>
+        <Card padding={3} border={2} width="100%" background="inherit">
+          <Text>Recipe Here</Text>
+        </Card>
+      </GridItem>
       {/* CREATE recipe box */}
-    </>
+    </SimpleGrid>
   );
 };
 
