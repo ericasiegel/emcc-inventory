@@ -7,6 +7,7 @@ import {
   UnorderedList,
   Text,
   Flex,
+  HStack,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import ColorBadge from "./ColorBadge";
@@ -14,13 +15,17 @@ import { Counts } from "../entities/Counts";
 import { Baked } from "../entities/Baked";
 import { Dough } from "../entities/Dough";
 import { Store } from "../entities/Store";
+import DeleteButton from "./DeleteButton";
 
 interface Props<T> {
   id: number;
   size?: string;
   count: Counts;
   countType?: "baked_cookies" | "total_in_store";
-  dataFetcher: (id: number, size?: string) => { data?: { pages: { results: T[] }[] } };
+  dataFetcher: (
+    id: number,
+    size?: string
+  ) => { data?: { pages: { results: T[] }[] } };
   headingText: string;
 }
 // Type guard function to check if an object has the 'date_added' property
@@ -34,16 +39,15 @@ function hasLocationProperty<T>(obj: T): obj is T & { location: string } {
   return !!obj && typeof obj === "object" && "location" in obj;
 }
 const DetailCard = <T extends Baked | Dough | Store>({
-    id,
-    size,
-    count,
-    countType,
-    dataFetcher,
-    headingText,
-  }: Props<T>) => {
-
+  id,
+  size,
+  count,
+  countType,
+  dataFetcher,
+  headingText,
+}: Props<T>) => {
   const result = dataFetcher(id, size);
-  const items = (result?.data?.pages.flatMap((page) => page.results) || [])
+  const items = result?.data?.pages.flatMap((page) => page.results) || [];
 
   let countSize =
     countType === "baked_cookies"
@@ -74,7 +78,6 @@ const DetailCard = <T extends Baked | Dough | Store>({
     </Flex>
   );
 
-
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4}>
       <CardHeader>{headerContent}</CardHeader>
@@ -82,21 +85,28 @@ const DetailCard = <T extends Baked | Dough | Store>({
         <UnorderedList>
           {items?.map((item) => (
             <ListItem key={item.id}>
-              <Text>
-              {hasLocationProperty(item) && (
-                  <>
-                    <strong>Location: </strong>
-                    {item.location}
-                  </>
-                )}
-                <strong>  Quantity: </strong>
-                {item.quantity} 
-                <strong>  Date Added/Updated: </strong>
-                {hasDateAddedProperty(item)
-                  ? format(new Date(item.date_added), "MM/dd/yyyy")
-                  : format(new Date((item as Store).last_updated),"MM/dd/yyyy")  // Cast to Store to access last_updated
-                }
-              </Text>
+              <HStack>
+                <Text>
+                  {hasLocationProperty(item) && (
+                    <>
+                      <strong>Location: </strong>
+                      {item.location}
+                    </>
+                  )}
+                  <strong> Quantity: </strong>
+                  {item.quantity}
+                  <strong> Date Added/Updated: </strong>
+                  {
+                    hasDateAddedProperty(item)
+                      ? format(new Date(item.date_added), "MM/dd/yyyy")
+                      : format(
+                          new Date((item as Store).last_updated),
+                          "MM/dd/yyyy"
+                        ) // Cast to Store to access last_updated
+                  }
+                </Text>
+                <DeleteButton />
+              </HStack>
             </ListItem>
           ))}
         </UnorderedList>
