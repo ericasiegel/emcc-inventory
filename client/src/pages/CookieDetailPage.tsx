@@ -36,7 +36,7 @@ const CookieDetailPage = () => {
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
       <GridItem>
-        <Heading color="#941c3e" size="3xl" paddingY={3}>
+        <Heading color="#941c3e" size="2xl" paddingY={3}>
           {cookie?.name}
         </Heading>
         <CookieDetailContainer>
@@ -95,7 +95,7 @@ const CookieDetailPage = () => {
           padding={4}
           src={imgUrl}
           alt={cookie.name}
-          maxW="80%"
+          maxW="85%"
           height="auto"
           borderRadius="full"
           overflow="hidden"
