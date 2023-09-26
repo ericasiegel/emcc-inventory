@@ -27,6 +27,7 @@ interface Props<T> {
     size?: string
   ) => { data?: { pages: { results: T[] }[] } };
   headingText: string;
+  endpoint: string
 }
 // Type guard function to check if an object has the 'date_added' property
 function hasDateAddedProperty<T extends object>(
@@ -45,6 +46,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
   countType,
   dataFetcher,
   headingText,
+  endpoint
 }: Props<T>) => {
   const result = dataFetcher(id, size);
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
@@ -105,7 +107,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
                         ) // Cast to Store to access last_updated
                   }
                 </Text>
-                <DeleteButton />
+                <DeleteButton id={item.id} endpoint={endpoint} />
               </HStack>
             </ListItem>
           ))}

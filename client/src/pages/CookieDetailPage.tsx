@@ -45,6 +45,7 @@ const CookieDetailPage = () => {
             count={cookie.counts}
             dataFetcher={useDoughs}
             headingText="Doughs"
+            endpoint="/doughs"
           />
         </CookieDetailContainer>
         <CookieDetailContainer>
@@ -56,6 +57,7 @@ const CookieDetailPage = () => {
               countType="baked_cookies"
               dataFetcher={useBaked}
               headingText="Baked Cookies"
+              endpoint="/bakedcookies"
             />
             <DetailCard
               id={cookie.id}
@@ -64,6 +66,7 @@ const CookieDetailPage = () => {
               countType="baked_cookies"
               dataFetcher={useBaked}
               headingText="Baked Cookies"
+              endpoint="/bakedcookies"
             />
           </Flex>
         </CookieDetailContainer>
@@ -76,6 +79,7 @@ const CookieDetailPage = () => {
               countType="total_in_store"
               dataFetcher={useStoreCookies}
               headingText="Total Cookies In Store"
+              endpoint="store"
             />
             <DetailCard
               id={cookie.id}
@@ -84,6 +88,7 @@ const CookieDetailPage = () => {
               countType="total_in_store"
               dataFetcher={useStoreCookies}
               headingText="Total Cookies In Store"
+              endpoint="store"
             />
           </Flex>
         </CookieDetailContainer>
