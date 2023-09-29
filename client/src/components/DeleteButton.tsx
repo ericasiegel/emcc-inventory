@@ -1,37 +1,26 @@
-import { IconButton, useToast } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import APIClient from "../services/api-client"
-
+import { useQueryClient } from '@tanstack/react-query';
+import APIClient from '../services/api-client'; // Import your APIClient class
 
 interface Props {
   id: number;
-  endpoint: string; // Specify the endpoint for each type of item (e.g., '/doughs', '/bakedcookies', '/storecookies')
+  endpoint: string;
 }
 
 const DeleteButton = ({ id, endpoint }: Props) => {
-  const toast = useToast();
+  const apiClient = new APIClient<any>(endpoint); // Use 'any' as the type since it's a generic component
+  const queryClient = useQueryClient(); // Access the query client
 
   const handleDelete = async () => {
     try {
-      // Use the APIClient to make the DELETE request
-      const apiClient = new APIClient(endpoint); // Use 'any' as the type since it's a generic component
-      await apiClient.delete(id); // Assuming you have a 'delete' method in your APIClient
+      // Call the API client's delete method
+      await apiClient.delete(id);
 
-      toast({
-        title: 'Item Deleted',
-        description: `Item with ID ${id} has been deleted successfully.`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      // Invalidate the corresponding query to trigger a refetch
+      queryClient.invalidateQueries([endpoint, id]);
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'An error occurred while deleting the item.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+      console.error('Error deleting item:', error);
     }
   };
 
