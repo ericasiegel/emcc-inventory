@@ -28,7 +28,7 @@ const CookieCard = ({ cookie }: Props) => {
         </CardBody>
     </Link>
     <CardFooter>
-      <DeleteCookieButton id={cookie.id} />
+      <DeleteCookieButton endpoint="cookies" id={cookie.id} />
     </CardFooter>
       </Card>
   );

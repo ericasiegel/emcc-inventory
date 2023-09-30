@@ -1,34 +1,40 @@
-import { Button } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { RiDeleteBin6Fill } from "react-icons/ri";
-import { Cookie } from "../entities/Cookie";
+import APIClient from "../services/api-client";
 
 interface Props {
-    id: number
+  endpoint: string;
+  id: number;
 }
 
-const DeleteCookieButton = ({id}: Props) => {
+const DeleteCookieButton = ({ endpoint, id }: Props) => {
+    const apiClient = new APIClient(endpoint);
   const queryClient = useQueryClient();
   const deleteCookie = useMutation({
     mutationFn: (id: number) =>
-      axios
-        .delete<Cookie>(`http://127.0.0.1:8000/bakery/cookies/${id}`)
+      apiClient
+        .delete(id)
         .then((res) => res.data),
     onSuccess: (removedCookie) => {
       console.log(removedCookie);
       queryClient.invalidateQueries({
-        queryKey: ["cookies"],
+        queryKey: [endpoint],
       });
     },
   });
   return (
-    <Button width='100%' colorScheme="red" variant="outline" onClick={event => {
+    <Button
+      width="100%"
+      colorScheme="red"
+      variant="outline"
+      onClick={(event) => {
         event.preventDefault();
-        deleteCookie.mutate(id)
-    }}>
+        deleteCookie.mutate(id);
+      }}
+    >
       <RiDeleteBin6Fill size="20px" />
-      Delete Cookie
+      <Text  paddingLeft={3}>Delete</Text>
     </Button>
   );
 };
