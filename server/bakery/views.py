@@ -36,17 +36,20 @@ class CookieViewSet(ModelViewSet):
             return get_object_or_404(queryset, **{self.lookup_field: lookup_value})
 
     def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
         if (
-            Dough.objects.filter(cookie_id=kwargs['pk']).exists() or
-            BakedCookie.objects.filter(cookie_id=kwargs['pk']).exists() or
-            Store.objects.filter(cookie_id=kwargs['pk']).exists()
+            Dough.objects.filter(cookie_id=instance.pk).exists() or
+            BakedCookie.objects.filter(cookie_id=instance.pk).exists() or
+            Store.objects.filter(cookie_id=instance.pk).exists()
             ):
             return Response(
                 {'error': 'Cookie cannot be deleted because it is associated with a dough, baked cookie, or store cookie.'}, 
                 status=status.HTTP_405_METHOD_NOT_ALLOWED
                 )
 
-        return super().destroy(request, *args, **kwargs)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DoughViewSet(ModelViewSet):
     queryset = Dough.objects.select_related('cookie', 'location').all()
