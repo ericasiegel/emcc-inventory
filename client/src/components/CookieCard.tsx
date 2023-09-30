@@ -20,7 +20,7 @@ const CookieCard = ({ cookie }: Props) => {
     <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
         <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
         <Link to={"/cookies/" + cookie.slug}>
-        <CardBody paddingX={3}>
+        <CardBody paddingX={3} height='100%'>
           <Heading as="em" color="#941c3e" fontSize="3xl">
             {cookie.name}
           </Heading>
@@ -28,7 +28,7 @@ const CookieCard = ({ cookie }: Props) => {
         </CardBody>
     </Link>
     <CardFooter>
-      <DeleteCookieButton endpoint="cookies" id={cookie.id} />
+      <DeleteCookieButton endpoint="cookies" id={cookie.id} label='Cookie' />
     </CardFooter>
       </Card>
   );

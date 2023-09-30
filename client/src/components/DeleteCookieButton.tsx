@@ -6,9 +6,10 @@ import APIClient from "../services/api-client";
 interface Props {
   endpoint: string;
   id: number;
+  label: string;
 }
 
-const DeleteCookieButton = ({ endpoint, id }: Props) => {
+const DeleteCookieButton = ({ endpoint, id, label }: Props) => {
     const apiClient = new APIClient(endpoint);
   const queryClient = useQueryClient();
   const deleteCookie = useMutation({
@@ -27,14 +28,14 @@ const DeleteCookieButton = ({ endpoint, id }: Props) => {
     <Button
       width="100%"
       colorScheme="red"
-      variant="outline"
+      variant='outline'
       onClick={(event) => {
         event.preventDefault();
         deleteCookie.mutate(id);
       }}
     >
-      <RiDeleteBin6Fill size="20px" />
-      <Text  paddingLeft={3}>Delete</Text>
+      <RiDeleteBin6Fill size="25px" />
+      <Text  paddingLeft={3}>Delete {label}</Text>
     </Button>
   );
 };
