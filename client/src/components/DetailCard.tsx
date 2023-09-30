@@ -16,6 +16,7 @@ import { Baked } from "../entities/Baked";
 import { Dough } from "../entities/Dough";
 import { Store } from "../entities/Store";
 import DeleteButton from "./DeleteButton";
+import AddButton from "./AddButton";
 
 interface Props<T> {
   id: number;
@@ -82,7 +83,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
 
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4}>
-      <CardHeader>{headerContent}</CardHeader>
+      <CardHeader>{headerContent}  <AddButton /></CardHeader> 
       <CardBody paddingTop={2}>
         <UnorderedList>
           {items?.map((item) => (

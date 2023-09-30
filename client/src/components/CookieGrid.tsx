@@ -5,6 +5,7 @@ import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 import { Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import AddCookieForm from "./AddCookieForm";
 
 const CookieGrid = () => {
   const {
@@ -22,6 +23,9 @@ const CookieGrid = () => {
     data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
 
   return (
+    <>
+    
+    <AddCookieForm />
     <InfiniteScroll
       dataLength={fetchedCookiesCount}
       hasMore={!!hasNextPage}
@@ -48,6 +52,7 @@ const CookieGrid = () => {
         )}
       </SimpleGrid>
     </InfiniteScroll>
+    </>
   );
 };
 

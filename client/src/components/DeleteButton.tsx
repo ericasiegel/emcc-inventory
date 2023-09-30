@@ -30,7 +30,7 @@ const DeleteButton = ({ id, endpoint }: Props) => {
       marginY={1}
       colorScheme="red"
       aria-label="Delete"
-      icon={<RiDeleteBin6Fill />}
+      icon={<RiDeleteBin6Fill size='20px' />}
       onClick={handleDelete}
     />
   );

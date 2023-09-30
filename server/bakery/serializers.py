@@ -59,6 +59,7 @@ class CookieImageSerializer(serializers.ModelSerializer):
 class CookieSerializer(serializers.ModelSerializer):
     counts = serializers.SerializerMethodField(method_name='calculate_totals')
     images = CookieImageSerializer(many=True, read_only=True)
+    slug = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Cookie
         fields = ['id', 'name', 'slug', 'is_active', 'counts', 'images']

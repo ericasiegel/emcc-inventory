@@ -9,6 +9,7 @@ from .models import *
 from .permissions import IsAdminOrReadOnly
 from .serializers import *
 from .filters import CookieFilter
+from rest_framework.generics import get_object_or_404
 
 
 # Create your views here.
@@ -23,6 +24,16 @@ class CookieViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'request': self.request}
+    
+    def get_object(self):
+        # Try to get the object by slug, if not found, try by ID
+        lookup_value = self.kwargs.get(self.lookup_field)
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if lookup_value.isdigit():  # Check if the lookup value is a digit (ID)
+            return get_object_or_404(queryset, pk=lookup_value)
+        else:
+            return get_object_or_404(queryset, **{self.lookup_field: lookup_value})
 
     def destroy(self, request, *args, **kwargs):
         if (
