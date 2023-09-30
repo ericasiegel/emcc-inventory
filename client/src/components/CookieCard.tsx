@@ -16,15 +16,17 @@ const CookieCard = ({ cookie }: Props) => {
   const inactiveCookie = !cookie.is_active ? "40%" : "100%";
 
   return (
-    <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
-      <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
-      <CardBody paddingX={3}>
-        <Heading as="em" color="#941c3e" fontSize="3xl">
-          <Link to={"/cookies/" + cookie.slug}>{cookie.name}</Link>
-        </Heading>
-        <CookieCounts counts={cookie.counts} />
-      </CardBody>
-    </Card>
+    <Link to={"/cookies/" + cookie.slug}>
+      <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
+        <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
+        <CardBody paddingX={3}>
+          <Heading as="em" color="#941c3e" fontSize="3xl">
+            {cookie.name}
+          </Heading>
+          <CookieCounts counts={cookie.counts} />
+        </CardBody>
+      </Card>
+    </Link>
   );
 };
 

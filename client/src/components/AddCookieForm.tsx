@@ -1,3 +1,4 @@
+import React, { useRef, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -7,7 +8,6 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
 import axios from "axios";
 
 interface AddCookie {
@@ -22,14 +22,20 @@ const AddCookieForm = () => {
       axios
         .post<AddCookie>("http://127.0.0.1:8000/bakery/cookies/", cookie)
         .then((res) => res.data),
-    onSuccess: (savedCookie, newCookie) => {
-        console.log(savedCookie);
-        queryClient.invalidateQueries({
-            queryKey: ['cookies']
-        })
-        
-    }
+    onSuccess: (savedCookie) => {
+      console.log(savedCookie);
+      queryClient.invalidateQueries({
+        queryKey: ["cookies"],
+      });
+      resetForm(); // Call the resetForm function to clear the form
+    },
   });
+
+  const [formData, setFormData] = useState<AddCookie>({
+    name: "",
+    is_active: true,
+  });
+
   const cookieName = useRef<HTMLInputElement>(null);
   const isActive = useRef<HTMLInputElement>(null);
 
@@ -40,16 +46,21 @@ const AddCookieForm = () => {
     const isActiveValue = isActive.current?.checked || false;
 
     // Ensure that cookieName.current?.value is not undefined
-    const nameValue = cookieName.current?.value || ""; // Provide a default value if it's undefined
+    const nameValue = cookieName.current?.value || "";
 
     const cookieData: AddCookie = {
       name: nameValue,
       is_active: isActiveValue,
     };
 
-    // console.log(cookieData);
-    // if (isActive.current && isActive.current.value)
-      addCookie.mutate(cookieData);
+    addCookie.mutate(cookieData);
+  };
+
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      is_active: true,
+    });
   };
 
   return (
@@ -61,8 +72,17 @@ const AddCookieForm = () => {
             ref={cookieName}
             backgroundColor="white"
             placeholder="Cookie Name..."
+            value={formData.name} // Set the input value from formData
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })} // Update formData on input change
           />
-          <Checkbox ref={isActive} defaultChecked>
+          <Checkbox
+            ref={isActive}
+            defaultChecked
+            checked={formData.is_active} // Set the checked state from formData
+            onChange={(e) =>
+              setFormData({ ...formData, is_active: e.target.checked })
+            } // Update formData on checkbox change
+          >
             Active Cookie?
           </Checkbox>
         </HStack>

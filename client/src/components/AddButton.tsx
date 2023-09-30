@@ -1,7 +1,11 @@
 import { IconButton } from '@chakra-ui/react';
 import { IoMdAddCircleOutline } from 'react-icons/io'
 
-const AddButton = () => {
+interface Props {
+    onClick: () => void;
+}
+
+const AddButton = ({ onClick }: Props) => {
   return (
     <IconButton
       size="sm"
@@ -9,6 +13,7 @@ const AddButton = () => {
       colorScheme="green"
       aria-label="Delete"
       icon={<IoMdAddCircleOutline size='25px' />}
+      onClick={onClick}
     />
   )
 }
