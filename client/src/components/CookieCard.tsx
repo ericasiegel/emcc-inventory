@@ -3,7 +3,7 @@ import { Card, CardBody, CardFooter, Heading, Image } from "@chakra-ui/react";
 import CookieCounts from "./CookieCounts";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import { Link } from "react-router-dom";
-import DeleteCookieButton from "./DeleteCookieButton";
+import DeleteButton from "./DeleteButton";
 
 interface Props {
   cookie: Cookie;
@@ -28,7 +28,7 @@ const CookieCard = ({ cookie }: Props) => {
         </CardBody>
     </Link>
     <CardFooter>
-      <DeleteCookieButton endpoint="cookies" id={cookie.id} label='Cookie' />
+      <DeleteButton endpoint="cookies" id={cookie.id} label='Cookie' />
     </CardFooter>
       </Card>
   );

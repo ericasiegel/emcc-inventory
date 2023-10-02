@@ -1,38 +1,42 @@
-import { IconButton } from '@chakra-ui/react';
-import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { useQueryClient } from '@tanstack/react-query';
-import APIClient from '../services/api-client'; // Import your APIClient class
+import { Button, Text } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { RiDeleteBin6Fill } from "react-icons/ri";
+import APIClient from "../services/api-client";
 
 interface Props {
-  id: number;
   endpoint: string;
+  id: number;
+  label: string;
 }
 
-const DeleteButton = ({ id, endpoint }: Props) => {
-  const apiClient = new APIClient<any>(endpoint); // Use 'any' as the type since it's a generic component
-  const queryClient = useQueryClient(); // Access the query client
-
-  const handleDelete = async () => {
-    try {
-      // Call the API client's delete method
-      await apiClient.delete(id);
-
-      // Invalidate the corresponding query to trigger a refetch
-      queryClient.invalidateQueries([endpoint, id]);
-    } catch (error) {
-      console.error('Error deleting item:', error);
-    }
-  };
-
+const DeleteButton = ({ endpoint, id, label }: Props) => {
+    const apiClient = new APIClient(endpoint);
+  const queryClient = useQueryClient();
+  const deleteItem = useMutation({
+    mutationFn: (id: number) =>
+      apiClient
+        .delete(id)
+        .then((res) => res.data),
+    onSuccess: (removedItem) => {
+      console.log(removedItem);
+      queryClient.invalidateQueries({
+        queryKey: [endpoint],
+      });
+    },
+  });
   return (
-    <IconButton
-      size="sm"
-      marginY={1}
+    <Button
+      width="100%"
       colorScheme="red"
-      aria-label="Delete"
-      icon={<RiDeleteBin6Fill size='20px' />}
-      onClick={handleDelete}
-    />
+      variant='outline'
+      onClick={(event) => {
+        event.preventDefault();
+        deleteItem.mutate(id);
+      }}
+    >
+      <RiDeleteBin6Fill size="25px" />
+      <Text  paddingLeft={3}>Delete {label}</Text>
+    </Button>
   );
 };
 
