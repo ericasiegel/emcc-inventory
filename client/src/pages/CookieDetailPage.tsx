@@ -9,6 +9,7 @@ import {
   Text,
   SimpleGrid,
   GridItem,
+  HStack,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
@@ -16,6 +17,7 @@ import useDoughs from "../hooks/useDoughs";
 import useBaked from "../hooks/useBaked";
 import useStoreCookies from "../hooks/useStoreCookies";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
+import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -36,9 +38,17 @@ const CookieDetailPage = () => {
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
       <GridItem>
-        <Heading color="#941c3e" size="2xl" paddingY={3}>
-          {cookie?.name}
-        </Heading>
+        <HStack justifyContent="space-between">
+          <Heading color="#941c3e" size="2xl" paddingY={3}>
+            {cookie?.name}
+          </Heading>
+          <ActiveInactiveSwitch
+            id={cookie.id}
+            name={cookie.name}
+            is_active={cookie.is_active}
+          />
+        </HStack>
+
         <CookieDetailContainer>
           <DetailCard
             id={cookie.id}

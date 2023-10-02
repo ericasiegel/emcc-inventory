@@ -54,7 +54,7 @@ const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
         <Switch
           id="email-alerts"
           colorScheme="pink"
-          isChecked={isActive}
+          isChecked={is_active}
           onChange={handleSwitchChange}
         />
       </FormControl>

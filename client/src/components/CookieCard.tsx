@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
   Flex,
-  HStack,
   Heading,
   Image,
 } from "@chakra-ui/react";
