@@ -1,9 +1,19 @@
 import { Cookie } from "../entities/Cookie";
-import { Card, CardBody, CardFooter, Heading, Image } from "@chakra-ui/react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  HStack,
+  Heading,
+  Image,
+} from "@chakra-ui/react";
 import CookieCounts from "./CookieCounts";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import { Link } from "react-router-dom";
 import DeleteButton from "./DeleteButton";
+import ActiveInactiveSwitch from "./ActiveInactiveSwitch";
 
 interface Props {
   cookie: Cookie;
@@ -18,19 +28,31 @@ const CookieCard = ({ cookie }: Props) => {
 
   return (
     <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
-        <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
+      <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
+      <CardHeader borderBottom="1px" justifyContent="center">
+        <Heading as="em" color="#941c3e" fontSize="3xl">
+          {cookie.name}
+        </Heading>
+        <Flex
+          justifyContent="center" // Center horizontally
+          alignItems="center" // Center vertically
+        >
+          <ActiveInactiveSwitch
+            id={cookie.id}
+            name={cookie.name}
+            is_active={cookie.is_active}
+          />
+        </Flex>
+      </CardHeader>
+      <CardBody paddingX={3} height="100%">
         <Link to={"/cookies/" + cookie.slug}>
-        <CardBody paddingX={3} height='100%'>
-          <Heading as="em" color="#941c3e" fontSize="3xl">
-            {cookie.name}
-          </Heading>
           <CookieCounts counts={cookie.counts} />
-        </CardBody>
-    </Link>
-    <CardFooter>
-      <DeleteButton endpoint="cookies" id={cookie.id} label='Cookie' />
-    </CardFooter>
-      </Card>
+        </Link>
+      </CardBody>
+      <CardFooter>
+        <DeleteButton endpoint="cookies" id={cookie.id} label="Cookie" />
+      </CardFooter>
+    </Card>
   );
 };
 
