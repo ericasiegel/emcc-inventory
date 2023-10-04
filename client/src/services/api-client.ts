@@ -6,6 +6,11 @@ export interface FetchResponse<T> {
     results: T[];
   }
 
+ export interface AddUpdateCookie {
+    name: string;
+    is_active: boolean;
+  }
+
 // const apiToken = localStorage.getItem('apiToken')
 const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NTIyNDk1LCJpYXQiOjE2OTY0MzYwOTUsImp0aSI6IjlhZmYzMzM2MDY4ZTRhZWZhMjA0YmY0NTFjYzg0YTQyIiwidXNlcl9pZCI6MX0.87GhIeZRw0h9aGRFmg9K4_RCXbDZZ_TqnZpt1Vw0dXc'
 
@@ -33,6 +38,18 @@ class APIClient<T> {
         return axiosInstance
             .get<T>(this.endpoint + '/' + id)
             .then(res => res.data);
+    }
+
+    addCookie = (cookie: AddUpdateCookie) => {
+        return axiosInstance
+            .post(this.endpoint, cookie)
+            .then(res => res.data)
+    }
+
+    updateActive = (cookie: AddUpdateCookie, id: number | string) => {
+        return axiosInstance
+            .patch(this.endpoint + id + '/', cookie)
+            .then(res => res.data)
     }
 
     delete = (id: number | string) => {

@@ -6,13 +6,8 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { useState } from "react";
-
-interface ActivateCookie {
-  name: string;
-  is_active: boolean;
-}
+import APIClient, { AddUpdateCookie } from "../services/api-client";
 
 interface Props {
   id: number;
@@ -21,11 +16,12 @@ interface Props {
 }
 
 const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
+  const apiClient = new APIClient('cookies/')
   const queryClient = useQueryClient();
   const activateCookie = useMutation({
-    mutationFn: (cookie: ActivateCookie) =>
-      axios
-        .patch<ActivateCookie>(`http://127.0.0.1:8000/bakery/cookies/${id}/`, cookie)
+    mutationFn: (cookie: AddUpdateCookie) =>
+      apiClient
+        .updateActive(cookie, id)
         .then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({

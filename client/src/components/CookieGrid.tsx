@@ -26,7 +26,7 @@ const CookieGrid = () => {
   return (
     <>
       <Box paddingX={10}>
-        <FormModal header="Add Cookie">
+        <FormModal header="Add A Cookie">
           <AddCookieForm />
         </FormModal>
       </Box>

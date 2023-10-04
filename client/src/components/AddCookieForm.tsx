@@ -9,19 +9,17 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import APIClient, { AddUpdateCookie } from "../services/api-client";
 
-interface AddCookie {
-  name: string;
-  is_active: boolean;
-}
+
 
 const AddCookieForm = () => {
+  const apiClient = new APIClient('cookies/');
   const queryClient = useQueryClient();
   const addCookie = useMutation({
-    mutationFn: (cookie: AddCookie) =>
-      axios
-        .post<AddCookie>("http://127.0.0.1:8000/bakery/cookies/", cookie)
+    mutationFn: (cookie: AddUpdateCookie) =>
+      apiClient
+        .addCookie(cookie)
         .then((res) => res.data),
     onSuccess: (savedCookie) => {
       console.log(savedCookie);
@@ -32,7 +30,7 @@ const AddCookieForm = () => {
     },
   });
 
-  const [formData, setFormData] = useState<AddCookie>({
+  const [formData, setFormData] = useState<AddUpdateCookie>({
     name: "",
     is_active: true,
   });
@@ -49,7 +47,7 @@ const AddCookieForm = () => {
     // Ensure that cookieName.current?.value is not undefined
     const nameValue = cookieName.current?.value || "";
 
-    const cookieData: AddCookie = {
+    const cookieData: AddUpdateCookie = {
       name: nameValue,
       is_active: isActiveValue,
     };
