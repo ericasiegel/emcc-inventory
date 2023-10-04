@@ -1,10 +1,11 @@
 import React, { useRef, useState } from "react";
 import {
+  Box,
   Button,
+  Center,
   Checkbox,
   FormControl,
   FormLabel,
-  HStack,
   Input,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -67,7 +68,7 @@ const AddCookieForm = () => {
     <form onSubmit={handleFormSubmit}>
       <FormControl>
         <FormLabel fontSize="lg">Add Cookie</FormLabel>
-        <HStack>
+        <Box>
           <Input
             ref={cookieName}
             backgroundColor="white"
@@ -76,6 +77,7 @@ const AddCookieForm = () => {
             onChange={(e) => setFormData({ ...formData, name: e.target.value })} // Update formData on input change
           />
           <Checkbox
+            paddingTop={3}
             ref={isActive}
             defaultChecked
             checked={formData.is_active} // Set the checked state from formData
@@ -85,10 +87,12 @@ const AddCookieForm = () => {
           >
             Active Cookie?
           </Checkbox>
-        </HStack>
-        <Button type="submit" colorScheme="blue" marginTop={3}>
-          Add Cookie
-        </Button>
+        </Box>
+        <Center>
+          <Button type="submit" colorScheme="blue" marginTop={3}>
+            Add Cookie
+          </Button>
+        </Center>
       </FormControl>
     </form>
   );

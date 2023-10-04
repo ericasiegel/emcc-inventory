@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { IoAddCircleSharp } from "react-icons/io5";
+import { IoAddCircleOutline } from "react-icons/io5";
 
 interface Props {
   onClick: () => void;
@@ -7,8 +7,8 @@ interface Props {
 
 const AddButton = ({ onClick }: Props) => {
   return (
-    <Button onClick={onClick} variant='outline' colorScheme="pink" marginY={2}>
-      <IoAddCircleSharp size="25px" />
+    <Button onClick={onClick} variant="unstyled" colorScheme="pink" marginY={2}>
+      <IoAddCircleOutline color='purple' size="35px" />
     </Button>
   );
 };

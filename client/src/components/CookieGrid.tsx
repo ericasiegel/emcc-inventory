@@ -6,8 +6,7 @@ import CookieCardContainer from "./CookieCardContainer";
 import { Spinner, Box } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import AddCookieForm from "./AddCookieForm";
-import { useState } from "react";
-import AddButton from "./AddButton";
+import FormModal from "./FormModal";
 
 const CookieGrid = () => {
   const {
@@ -20,9 +19,6 @@ const CookieGrid = () => {
   } = useCookies();
   const skeletons = [1, 2, 3, 4, 5, 6];
 
-  const [formVisible, setFormVisible] = useState(false);
-  const toggleFormVisibility = () => setFormVisible(!formVisible);
-
   if (error) return <Text>{error.message}</Text>;
   const fetchedCookiesCount =
     data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
@@ -30,8 +26,9 @@ const CookieGrid = () => {
   return (
     <>
       <Box paddingX={10}>
-        <AddButton onClick={toggleFormVisibility} />
-        {formVisible && <AddCookieForm />}
+        <FormModal header="Add Cookie">
+          <AddCookieForm />
+        </FormModal>
       </Box>
       <InfiniteScroll
         dataLength={fetchedCookiesCount}
