@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   GridItem,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
@@ -18,6 +19,9 @@ import useBaked from "../hooks/useBaked";
 import useStoreCookies from "../hooks/useStoreCookies";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
+import { id } from "date-fns/locale";
+import AddDoughForm from "../components/AddDoughForm";
+import FormModal from "../components/FormModal";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -55,7 +59,7 @@ const CookieDetailPage = () => {
             count={cookie.counts}
             dataFetcher={useDoughs}
             headingText="Doughs"
-            endpoint="/doughs"
+            endpoint="doughs"
           />
         </CookieDetailContainer>
         <CookieDetailContainer>

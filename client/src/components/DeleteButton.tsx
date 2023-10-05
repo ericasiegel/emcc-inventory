@@ -6,10 +6,9 @@ import APIClient from "../services/api-client";
 interface Props {
   endpoint: string;
   id: number;
-  label: string;
 }
 
-const DeleteButton = ({ endpoint, id, label }: Props) => {
+const DeleteButton = ({ endpoint, id }: Props) => {
     const apiClient = new APIClient(endpoint);
   const queryClient = useQueryClient();
   const deleteItem = useMutation({
@@ -35,7 +34,7 @@ const DeleteButton = ({ endpoint, id, label }: Props) => {
       }}
     >
       <RiDeleteBin6Fill size="25px" />
-      <Text  paddingLeft={3}>Delete {label}</Text>
+      <Text  paddingLeft={3}>Delete</Text>
     </Button>
   );
 };

@@ -11,8 +11,14 @@ export interface FetchResponse<T> {
     is_active: boolean;
   }
 
+  export interface AddUpdateDough {
+    cookie_name: number;
+    location_name: number;
+    quantity?: number;
+  }
+
 // const apiToken = localStorage.getItem('apiToken')
-const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NTIyNDk1LCJpYXQiOjE2OTY0MzYwOTUsImp0aSI6IjlhZmYzMzM2MDY4ZTRhZWZhMjA0YmY0NTFjYzg0YTQyIiwidXNlcl9pZCI6MX0.87GhIeZRw0h9aGRFmg9K4_RCXbDZZ_TqnZpt1Vw0dXc'
+const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NjE2MDQyLCJpYXQiOjE2OTY1Mjk2NDIsImp0aSI6IjZmOGJmMDlkYzIyMzRmOTZhMmQwMTJmZDRlMWNkNWQyIiwidXNlcl9pZCI6MX0.-m_8DjCbGqr_DCfF6SR3e-mJxwKEFj8yKMxaVqS-XVE'
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery',
@@ -43,6 +49,12 @@ class APIClient<T> {
     addCookie = (cookie: AddUpdateCookie) => {
         return axiosInstance
             .post(this.endpoint, cookie)
+            .then(res => res.data)
+    }
+
+    addDough = (dough: AddUpdateDough) => {
+        return axiosInstance
+            .post(this.endpoint, dough)
             .then(res => res.data)
     }
 

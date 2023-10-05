@@ -3,10 +3,8 @@ import useCookies from "../hooks/useCookies";
 import CookieCard from "./CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
-import { Spinner, Box } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import AddCookieForm from "./AddCookieForm";
-import FormModal from "./FormModal";
 
 const CookieGrid = () => {
   const {
@@ -25,11 +23,6 @@ const CookieGrid = () => {
 
   return (
     <>
-      <Box paddingX={10}>
-        <FormModal header="Add A Cookie">
-          <AddCookieForm />
-        </FormModal>
-      </Box>
       <InfiniteScroll
         dataLength={fetchedCookiesCount}
         hasMore={!!hasNextPage}

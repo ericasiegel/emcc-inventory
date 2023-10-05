@@ -1,7 +1,9 @@
-import { Grid, Show, GridItem, Box } from "@chakra-ui/react"
+import { Grid, Show, GridItem, HStack } from "@chakra-ui/react"
 import CookieGrid from "../components/CookieGrid"
 import CookieHeading from "../components/CookieHeading"
 import SideBar from "../components/SideBar"
+import AddCookieForm from "../components/AddCookieForm"
+import FormModal from "../components/FormModal"
 
 
 const HomePage = () => {
@@ -19,9 +21,12 @@ const HomePage = () => {
       </GridItem>
     </Show>
     <GridItem area="main">
-      <Box paddingLeft={4}>
+      <HStack paddingX={4} justifyContent='space-between'>
       <CookieHeading />
-      </Box>
+        <FormModal header="Add A Cookie">
+          <AddCookieForm />
+        </FormModal>
+      </HStack>
       <CookieGrid />
     </GridItem>
   </Grid>

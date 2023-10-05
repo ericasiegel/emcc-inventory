@@ -5,7 +5,7 @@ import {
   Center,
   Checkbox,
   FormControl,
-  FormLabel,
+  // FormLabel,
   Input,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -65,7 +65,6 @@ const AddCookieForm = () => {
   return (
     <form onSubmit={handleFormSubmit}>
       <FormControl>
-        <FormLabel fontSize="lg">Add Cookie</FormLabel>
         <Box>
           <Input
             ref={cookieName}

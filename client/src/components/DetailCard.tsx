@@ -8,6 +8,7 @@ import {
   Text,
   Flex,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import ColorBadge from "./ColorBadge";
@@ -16,7 +17,8 @@ import { Baked } from "../entities/Baked";
 import { Dough } from "../entities/Dough";
 import { Store } from "../entities/Store";
 import DeleteButton from "./DeleteButton";
-import AddButton from "./AddButton";
+import AddDoughForm from "./AddDoughForm";
+import FormModal from "./FormModal";
 
 interface Props<T> {
   id: number;
@@ -28,7 +30,7 @@ interface Props<T> {
     size?: string
   ) => { data?: { pages: { results: T[] }[] } };
   headingText: string;
-  endpoint: string
+  endpoint: string;
 }
 // Type guard function to check if an object has the 'date_added' property
 function hasDateAddedProperty<T extends object>(
@@ -47,7 +49,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
   countType,
   dataFetcher,
   headingText,
-  endpoint
+  endpoint,
 }: Props<T>) => {
   const result = dataFetcher(id, size);
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
@@ -83,7 +85,11 @@ const DetailCard = <T extends Baked | Dough | Store>({
 
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4}>
-      <CardHeader>{headerContent}  <AddButton /></CardHeader> 
+      <CardHeader>{headerContent} 
+      <FormModal header="">
+        <AddDoughForm id={id} />
+      </FormModal>
+      </CardHeader>
       <CardBody paddingTop={2}>
         <UnorderedList>
           {items?.map((item) => (
