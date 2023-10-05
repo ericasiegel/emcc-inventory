@@ -23,7 +23,12 @@ export interface FetchResponse<T> {
     size: string;
     quantity?: number;
   }
-
+  
+  export interface AddUpdateStore {
+    cookie_name: number;
+    size: string;
+    quantity?: number;
+  }
 // const apiToken = localStorage.getItem('apiToken')
 const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NjE2MDQyLCJpYXQiOjE2OTY1Mjk2NDIsImp0aSI6IjZmOGJmMDlkYzIyMzRmOTZhMmQwMTJmZDRlMWNkNWQyIiwidXNlcl9pZCI6MX0.-m_8DjCbGqr_DCfF6SR3e-mJxwKEFj8yKMxaVqS-XVE'
 
@@ -74,6 +79,12 @@ class APIClient<T> {
     addBaked = (baked: AddUpdateBaked) => {
         return axiosInstance
             .post(this.endpoint, baked)
+            .then(res => res.data)
+    }
+    
+    addStore = (store: AddUpdateStore) => {
+        return axiosInstance
+            .post(this.endpoint, store)
             .then(res => res.data)
     }
 
