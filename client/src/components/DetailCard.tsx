@@ -91,7 +91,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
       chooseForm = <AddDoughForm id={id} />;
       break;
     case "bakedcookies":
-      chooseForm = <AddBakedCookiesForm id={id} />;
+      chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;
       break;
     case "store":
       chooseForm = <AddStoreCookiesForm id={id} />;
