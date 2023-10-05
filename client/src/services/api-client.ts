@@ -17,6 +17,13 @@ export interface FetchResponse<T> {
     quantity?: number;
   }
 
+  export interface AddUpdateBaked {
+    cookie_name: number;
+    location_name: number;
+    size: string;
+    quantity?: number;
+  }
+
 // const apiToken = localStorage.getItem('apiToken')
 const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2NjE2MDQyLCJpYXQiOjE2OTY1Mjk2NDIsImp0aSI6IjZmOGJmMDlkYzIyMzRmOTZhMmQwMTJmZDRlMWNkNWQyIiwidXNlcl9pZCI6MX0.-m_8DjCbGqr_DCfF6SR3e-mJxwKEFj8yKMxaVqS-XVE'
 
@@ -51,16 +58,22 @@ class APIClient<T> {
             .post(this.endpoint, cookie)
             .then(res => res.data)
     }
+    
+    updateActive = (cookie: AddUpdateCookie, id: number | string) => {
+        return axiosInstance
+            .patch(this.endpoint + id + '/', cookie)
+            .then(res => res.data)
+    }
 
     addDough = (dough: AddUpdateDough) => {
         return axiosInstance
             .post(this.endpoint, dough)
             .then(res => res.data)
     }
-
-    updateActive = (cookie: AddUpdateCookie, id: number | string) => {
+    
+    addBaked = (baked: AddUpdateBaked) => {
         return axiosInstance
-            .patch(this.endpoint + id + '/', cookie)
+            .post(this.endpoint, baked)
             .then(res => res.data)
     }
 

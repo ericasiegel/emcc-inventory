@@ -8,7 +8,6 @@ import {
   Text,
   Flex,
   HStack,
-  Box,
 } from "@chakra-ui/react";
 import { format } from "date-fns";
 import ColorBadge from "./ColorBadge";
@@ -19,6 +18,8 @@ import { Store } from "../entities/Store";
 import DeleteButton from "./DeleteButton";
 import AddDoughForm from "./AddDoughForm";
 import FormModal from "./FormModal";
+import AddBakedCookiesForm from "./AddBakedCookiesForm";
+import AddStoreCookiesForm from "./AddStoreCookiesForm";
 
 interface Props<T> {
   id: number;
@@ -83,12 +84,28 @@ const DetailCard = <T extends Baked | Dough | Store>({
     </Flex>
   );
 
+  let chooseForm;
+
+  switch (endpoint) {
+    case "doughs":
+      chooseForm = <AddDoughForm id={id} />;
+      break;
+    case "bakedcookies":
+      chooseForm = <AddBakedCookiesForm id={id} />;
+      break;
+    case "store":
+      chooseForm = <AddStoreCookiesForm id={id} />;
+      break;
+    default:
+      chooseForm = null; 
+      break;
+  }
+
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4}>
-      <CardHeader>{headerContent} 
-      <FormModal header="">
-        <AddDoughForm id={id} />
-      </FormModal>
+      <CardHeader>
+        {headerContent}
+        <FormModal header="">{chooseForm}</FormModal>
       </CardHeader>
       <CardBody paddingTop={2}>
         <UnorderedList>
