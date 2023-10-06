@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import useCookie from "../hooks/useCookie";
 import {
-  Flex,
   Image,
   Heading,
   Spinner,
@@ -59,7 +58,6 @@ const CookieDetailPage = () => {
           />
         </CookieDetailContainer>
         <CookieDetailContainer>
-          <Flex justifyContent="space-between">
             <DetailCard
               id={cookie.id}
               size="mega"
@@ -78,10 +76,8 @@ const CookieDetailPage = () => {
               headingText="Baked Cookies"
               endpoint="bakedcookies"
             />
-          </Flex>
         </CookieDetailContainer>
         <CookieDetailContainer>
-          <Flex justifyContent="space-between">
             <DetailCard
               id={cookie.id}
               size="mega"
@@ -100,7 +96,6 @@ const CookieDetailPage = () => {
               headingText="Total Cookies In Store"
               endpoint="store"
             />
-          </Flex>
         </CookieDetailContainer>
       </GridItem>
       <GridItem>

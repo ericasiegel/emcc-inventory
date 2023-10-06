@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 
 const CookieDetailContainer = ({ children }: Props) => {
   return (
-    <Box
+    <Flex
       border="2px"
       borderColor="#c44569"
       backgroundColor="#fcc0d5"
@@ -15,9 +15,12 @@ const CookieDetailContainer = ({ children }: Props) => {
       overflow="hidden"
       marginY={3}
       padding={4}
+      justifyContent='space-between'
+      display="flex"
+      flexDirection={{ base: "column", lg: "row" }}
     >
       {children}
-    </Box>
+    </Flex>
   );
 };
 

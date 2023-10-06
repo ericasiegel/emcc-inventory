@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BsTrash } from "react-icons/bs";
 import APIClient from "../services/api-client";
@@ -36,7 +36,6 @@ const DeleteButton = ({ endpoint, id }: Props) => {
       }}
     >
       <BsTrash size="25px" color='red' />
-      {/* <Text  paddingLeft={3}>Delete</Text> */}
     </Button>
   );
 };

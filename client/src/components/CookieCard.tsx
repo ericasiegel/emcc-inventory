@@ -1,11 +1,9 @@
 import { Cookie } from "../entities/Cookie";
 import {
-  Box,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
-  Center,
   Flex,
   Heading,
   Image,

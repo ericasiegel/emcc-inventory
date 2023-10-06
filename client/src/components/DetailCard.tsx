@@ -108,7 +108,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
       backgroundColor="inherit"
       variant="unstyled"
       padding={4}
-      maxW={endpoint === "doughs" ? "100%" : "50%"}
+      minW={endpoint === "doughs" ? "100%" : "50%"}
     >
       <CardHeader>
         {headerContent}
