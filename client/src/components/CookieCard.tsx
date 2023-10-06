@@ -1,9 +1,11 @@
 import { Cookie } from "../entities/Cookie";
 import {
+  Box,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
+  Center,
   Flex,
   Heading,
   Image,
@@ -48,8 +50,8 @@ const CookieCard = ({ cookie }: Props) => {
           <CookieCounts counts={cookie.counts} />
         </Link>
       </CardBody>
-      <CardFooter>
-        <DeleteButton endpoint="cookies" id={cookie.id} />
+      <CardFooter justifyContent='center'>
+          <DeleteButton endpoint="cookies" id={cookie.id} />
       </CardFooter>
     </Card>
   );

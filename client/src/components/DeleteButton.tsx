@@ -1,6 +1,6 @@
 import { Button, Text } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { BsTrash } from "react-icons/bs";
 import APIClient from "../services/api-client";
 
 interface Props {
@@ -28,16 +28,15 @@ const DeleteButton = ({ endpoint, id }: Props) => {
   });
   return (
     <Button
-      width="100%"
       colorScheme="red"
-      variant='outline'
+      variant='unstyled'
       onClick={(event) => {
         event.preventDefault();
         deleteItem.mutate(id);
       }}
     >
-      <RiDeleteBin6Fill size="25px" />
-      <Text  paddingLeft={3}>Delete</Text>
+      <BsTrash size="25px" color='red' />
+      {/* <Text  paddingLeft={3}>Delete</Text> */}
     </Button>
   );
 };
