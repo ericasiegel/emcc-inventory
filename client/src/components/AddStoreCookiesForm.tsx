@@ -32,6 +32,9 @@ import {
         queryClient.invalidateQueries({
           queryKey: ["store"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["cookies"],
+        });
       },
     });
   

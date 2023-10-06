@@ -88,7 +88,7 @@ const DetailCard = <T extends Baked | Dough | Store>({
 
   switch (endpoint) {
     case "doughs":
-      chooseForm = <AddDoughForm id={id} />;
+      chooseForm = <AddDoughForm id={id} counts={countSize} />;
       break;
     case "bakedcookies":
       chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;

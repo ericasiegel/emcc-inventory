@@ -20,24 +20,29 @@ import { useRef } from "react";
 
 interface Props {
     id: number
+    counts: number
 }
 
-const AddDoughForm = ({id}: Props) => {
+const AddDoughForm = ({ id }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
   const apiClient = new APIClient("doughs/");
   const queryClient = useQueryClient();
+
   const addDough = useMutation({
     mutationFn: (dough: AddUpdateDough) =>
       apiClient.addDough(dough).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["doughs"],
-      });
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["doughs"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["cookies"],
+        });
     },
   });
-
+  
   const locationId = useRef<HTMLSelectElement>(null);
   const doughQuantity = useRef<HTMLInputElement>(null);
   

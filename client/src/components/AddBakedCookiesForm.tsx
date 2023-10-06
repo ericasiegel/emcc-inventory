@@ -36,6 +36,9 @@ import {
         queryClient.invalidateQueries({
           queryKey: ["bakedcookies"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["cookies"],
+        });
       },
     });
   

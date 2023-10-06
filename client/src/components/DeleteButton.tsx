@@ -21,6 +21,9 @@ const DeleteButton = ({ endpoint, id }: Props) => {
       queryClient.invalidateQueries({
         queryKey: [endpoint],
       });
+      queryClient.invalidateQueries({
+          queryKey: ["cookies"],
+        });
     },
   });
   return (
