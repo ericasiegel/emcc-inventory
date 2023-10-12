@@ -29,9 +29,11 @@ const CookieCard = ({ cookie }: Props) => {
     <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
       <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
       <CardHeader borderBottom="1px" justifyContent="center">
-        <Heading as="em" color="#941c3e" fontSize="3xl">
-          {cookie.name}
-        </Heading>
+        <Link to={"/cookies/" + cookie.slug}>
+          <Heading as="em" color="#941c3e" fontSize="3xl">
+            {cookie.name}
+          </Heading>
+        </Link>
         <Flex
           justifyContent="center" // Center horizontally
           alignItems="center" // Center vertically
@@ -48,8 +50,8 @@ const CookieCard = ({ cookie }: Props) => {
           <CookieCounts counts={cookie.counts} />
         </Link>
       </CardBody>
-      <CardFooter justifyContent='center'>
-          <DeleteButton endpoint="cookies" id={cookie.id} />
+      <CardFooter justifyContent="center">
+        <DeleteButton endpoint="cookies" id={cookie.id} />
       </CardFooter>
     </Card>
   );
