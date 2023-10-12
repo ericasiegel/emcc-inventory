@@ -1,4 +1,11 @@
-import { Button } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  Flex,
+} from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BsTrash } from "react-icons/bs";
 import APIClient from "../services/api-client";
@@ -9,32 +16,45 @@ interface Props {
 }
 
 const DeleteButton = ({ endpoint, id }: Props) => {
-    const apiClient = new APIClient(endpoint);
+  const apiClient = new APIClient(endpoint);
   const queryClient = useQueryClient();
   const deleteItem = useMutation({
-    mutationFn: (id: number) =>
-      apiClient
-        .delete(id)
-        .then((res) => res.data),
+    mutationFn: (id: number) => apiClient.delete(id).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [endpoint],
       });
       queryClient.invalidateQueries({
-          queryKey: ["cookies"],
-        });
+        queryKey: ["cookies"],
+      });
     },
   });
+
+  if (deleteItem.isError) {
+    // Display the error message when a 405 error occurs
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        <Flex direction="column">
+          <AlertTitle>Cookie Can't Be Deleted</AlertTitle>
+          <AlertDescription>
+            Delete all associated doughs, baked and store cookies
+          </AlertDescription>
+        </Flex>
+      </Alert>
+    );
+  }
+
   return (
     <Button
       colorScheme="red"
-      variant='unstyled'
+      variant="unstyled"
       onClick={(event) => {
         event.preventDefault();
         deleteItem.mutate(id);
       }}
     >
-      <BsTrash size="25px" color='red' />
+      <BsTrash size="25px" color="red" />
     </Button>
   );
 };
