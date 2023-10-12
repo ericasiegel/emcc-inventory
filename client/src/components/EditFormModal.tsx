@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import AddButton from "./AddButton";
 import {
   Modal,
   ModalBody,
@@ -10,17 +9,18 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import EditButton from "./EditButton";
 
 interface Props {
   children: ReactNode;
   header: string;
 }
 
-const FormModal = ({ children, header }: Props) => {
+const EditFormModal = ({ children, header }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <AddButton onClick={onOpen} />
+      <EditButton onClick={onOpen} />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -35,4 +35,4 @@ const FormModal = ({ children, header }: Props) => {
   );
 };
 
-export default FormModal;
+export default EditFormModal;

@@ -14,18 +14,15 @@ import ColorBadge from "./ColorBadge";
 import { Counts } from "../entities/Counts";
 import { Baked } from "../entities/Baked";
 import { Dough } from "../entities/Dough";
-import { Store } from "../entities/Store";
 import DeleteButton from "./DeleteButton";
 import AddDoughForm from "./AddDoughForm";
-import FormModal from "./FormModal";
+import AddFormModal from "./AddFormModal";
 import AddBakedCookiesForm from "./AddBakedCookiesForm";
-import AddStoreCookiesForm from "./AddStoreCookiesForm";
 
 interface Props<T> {
   id: number;
   size?: string;
   count: Counts;
-  countType?: "baked_cookies" | "total_in_store";
   dataFetcher: (
     id: number,
     size?: string
@@ -33,38 +30,23 @@ interface Props<T> {
   headingText: string;
   endpoint: string;
 }
-// Type guard function to check if an object has the 'date_added' property
-function hasDateAddedProperty<T extends object>(
-  obj: T
-): obj is T & { date_added: string } {
-  return "date_added" in obj;
-}
-// Type guard function to check if an object has the 'location' property
-function hasLocationProperty<T>(obj: T): obj is T & { location: string } {
-  return !!obj && typeof obj === "object" && "location" in obj;
-}
-const DetailCard = <T extends Baked | Dough | Store>({
+
+const DetailCard = <T extends Baked | Dough>({
   id,
   size,
   count,
-  countType,
   dataFetcher,
   headingText,
   endpoint,
 }: Props<T>) => {
   const result = dataFetcher(id, size);
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
+  // console.log(items);
 
   // const getQuantity = <strong> Quantity: </strong>{item.quantity}
 
   let countSize =
-    countType === "baked_cookies"
-      ? size === "mega"
-        ? count.baked_cookies.mega
-        : count.baked_cookies.mini
-      : size === "mega"
-      ? count.total_in_store.mega
-      : count.total_in_store.mini;
+    size === "mega" ? count.baked_cookies.mega : count.baked_cookies.mini;
   // Use count.doughs when size is not specified
   if (!size) {
     countSize = count.doughs;
@@ -95,9 +77,6 @@ const DetailCard = <T extends Baked | Dough | Store>({
     case "bakedcookies":
       chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;
       break;
-    case "store":
-      chooseForm = <AddStoreCookiesForm id={id} cookieSize={size!} />;
-      break;
     default:
       chooseForm = null;
       break;
@@ -112,38 +91,25 @@ const DetailCard = <T extends Baked | Dough | Store>({
     >
       <CardHeader>
         {headerContent}
-        <FormModal header="">{chooseForm}</FormModal>
+        <AddFormModal header="">{chooseForm}</AddFormModal>
       </CardHeader>
       <CardBody paddingTop={2}>
         <UnorderedList>
           {items?.map((item) => (
-            <ListItem key={item.id} flexDirection={{ base: "column", md: "row" }}>
-              <HStack justifyContent='space-between' width='100%'>
+            <ListItem
+              key={item.id}
+              flexDirection={{ base: "column", md: "row" }}
+            >
+              <HStack justifyContent="space-between" width="100%">
                 <Text>
-                  {hasLocationProperty(item) && (
-                    <>
-                      <strong>Location: </strong>
-                      {item.location}
-                    </>
-                  )}
-                  {endpoint !== "store" && (
-                    <div>
-                      <strong> Quantity: </strong>
-                      {item.quantity}
-                    </div>
-                  )}
-                  {hasDateAddedProperty(item) ? (
-                    <div>
-                      <strong> Date Added: </strong>
-                      {format(new Date(item.date_added), "MM/dd/yyyy")}
-                    </div>
-                  ) : (
-                    <div>
-                      <strong> Date Added/Updated: </strong>
-                      {format( new Date((item as Store).last_updated),
-                      "MM/dd/yyyy" )}
-                    </div>
-                  )}
+                  <strong>Location: </strong>
+                  {item.location}
+
+                  <strong> Quantity: </strong>
+                  {item.quantity}
+
+                  <strong> Date Added: </strong>
+                  {format(new Date(item.date_added), "MM/dd/yyyy")}
                 </Text>
                 <DeleteButton id={item.id} endpoint={endpoint} />
               </HStack>

@@ -29,8 +29,11 @@ export interface FetchResponse<T> {
     size: string;
     quantity?: number;
   }
+  export interface EditStore {
+    quantity?: number;
+  }
 // const apiToken = localStorage.getItem('apiToken')
-const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk2Njk5NDAwLCJpYXQiOjE2OTY2MTMwMDAsImp0aSI6IjliOWU0NGQ5YjdkMjRlYTA5ZWEzNzZjN2MzYjlhMGQzIiwidXNlcl9pZCI6MX0.PLWHkbThNiN5yohdJyhtHofnkdjl25JgeJ_iFtZj5sA'
+const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3MjE5NjI4LCJpYXQiOjE2OTcxMzMyMjgsImp0aSI6IjFkMTcwOWRiNmZjYjRjZjNiOWJiZjg1ZmRmYmNkNDEwIiwidXNlcl9pZCI6MX0.60p_ga3ilmDsr5u8D3h2RMPqh6kSv-ukLaoswm-WXEY'
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery',
@@ -85,6 +88,12 @@ class APIClient<T> {
     addStore = (store: AddUpdateStore) => {
         return axiosInstance
             .post(this.endpoint, store)
+            .then(res => res.data)
+    }
+
+    editStore = (store: EditStore, id: number | string) => {
+        return axiosInstance
+            .patch(this.endpoint + id + '/', store)
             .then(res => res.data)
     }
 

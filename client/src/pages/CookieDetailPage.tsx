@@ -14,9 +14,9 @@ import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
 import useDoughs from "../hooks/useDoughs";
 import useBaked from "../hooks/useBaked";
-import useStoreCookies from "../hooks/useStoreCookies";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
+import StoreCookieDetailCard from "../components/StoreCookieDetailCard";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -62,7 +62,6 @@ const CookieDetailPage = () => {
               id={cookie.id}
               size="mega"
               count={cookie.counts}
-              countType="baked_cookies"
               dataFetcher={useBaked}
               headingText="Baked Cookies"
               endpoint="bakedcookies"
@@ -71,30 +70,21 @@ const CookieDetailPage = () => {
               id={cookie.id}
               size="mini"
               count={cookie.counts}
-              countType="baked_cookies"
               dataFetcher={useBaked}
               headingText="Baked Cookies"
               endpoint="bakedcookies"
             />
         </CookieDetailContainer>
         <CookieDetailContainer>
-            <DetailCard
+            <StoreCookieDetailCard
               id={cookie.id}
               size="mega"
               count={cookie.counts}
-              countType="total_in_store"
-              dataFetcher={useStoreCookies}
-              headingText="Total Cookies In Store"
-              endpoint="store"
             />
-            <DetailCard
+            <StoreCookieDetailCard
               id={cookie.id}
               size="mini"
               count={cookie.counts}
-              countType="total_in_store"
-              dataFetcher={useStoreCookies}
-              headingText="Total Cookies In Store"
-              endpoint="store"
             />
         </CookieDetailContainer>
       </GridItem>

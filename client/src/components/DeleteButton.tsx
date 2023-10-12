@@ -16,8 +16,7 @@ const DeleteButton = ({ endpoint, id }: Props) => {
       apiClient
         .delete(id)
         .then((res) => res.data),
-    onSuccess: (removedItem) => {
-      console.log(removedItem);
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [endpoint],
       });
