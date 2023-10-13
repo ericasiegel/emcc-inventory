@@ -55,12 +55,21 @@ class CookieImageViewSet(ModelViewSet):
     serializer_class = CookieImageSerializer
 
     def get_serializer_context(self):
-        print('first', self.kwargs)
-        return {'cookie_slug': self.kwargs['cookie_slug']}
+        # Check if the lookup value is a digit (ID) or a string (slug)
+        lookup_value = self.kwargs.get('cookie_slug')
+        if lookup_value.isdigit():
+            return {'cookie_id': int(lookup_value)}  # Pass the ID
+        else:
+            return {'cookie_slug': lookup_value}  # Pass the slug
     
     def get_queryset(self):
-        print('second', self.kwargs)
-        return CookieImage.objects.filter(cookie__slug=self.kwargs['cookie_slug'])
+        # Check if the lookup value is a digit (ID) or a string (slug)
+        lookup_value = self.kwargs.get('cookie_slug')
+        if lookup_value.isdigit():
+            return CookieImage.objects.filter(cookie_id=int(lookup_value))  # Filter by ID
+        else:
+            return CookieImage.objects.filter(cookie__slug=lookup_value)  # Filter by slug
+
     # def get_serializer_context(self):
     #     print('first', self.kwargs)
     #     return {'cookie_id': self.kwargs['cookie_pk']}
