@@ -1,6 +1,7 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 
 from .models import *
 
@@ -48,8 +49,9 @@ class UserNameSerializer(serializers.ModelSerializer):
 # Serializer Classes to display on API
 class CookieImageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        cookie_id = self.context['cookie_id']
-        return CookieImage.objects.create(cookie_id=cookie_id, **validated_data)
+        cookie_slug = self.context['cookie_slug']
+        cookie = get_object_or_404(Cookie, slug=cookie_slug)
+        return CookieImage.objects.create(cookie=cookie, **validated_data)
     
     class Meta:
         model = CookieImage

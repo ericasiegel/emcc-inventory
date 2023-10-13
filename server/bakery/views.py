@@ -26,14 +26,14 @@ class CookieViewSet(ModelViewSet):
         return {'request': self.request}
     
     def get_object(self):
-        # Try to get the object by slug, if not found, try by ID
         lookup_value = self.kwargs.get(self.lookup_field)
         queryset = self.filter_queryset(self.get_queryset())
 
-        if lookup_value.isdigit():  # Check if the lookup value is a digit (ID)
-            return get_object_or_404(queryset, pk=lookup_value)
-        else:
-            return get_object_or_404(queryset, **{self.lookup_field: lookup_value})
+        # Check if the lookup value is a digit (ID) or a string (slug)
+        if not lookup_value.isdigit():
+            return get_object_or_404(queryset, slug=lookup_value)
+        
+        return get_object_or_404(queryset, pk=lookup_value)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -50,6 +50,24 @@ class CookieViewSet(ModelViewSet):
 
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class CookieImageViewSet(ModelViewSet):
+    serializer_class = CookieImageSerializer
+
+    def get_serializer_context(self):
+        print('first', self.kwargs)
+        return {'cookie_slug': self.kwargs['cookie_slug']}
+    
+    def get_queryset(self):
+        print('second', self.kwargs)
+        return CookieImage.objects.filter(cookie__slug=self.kwargs['cookie_slug'])
+    # def get_serializer_context(self):
+    #     print('first', self.kwargs)
+    #     return {'cookie_id': self.kwargs['cookie_pk']}
+    
+    # def get_queryset(self):
+    #     print('second', self.kwargs)
+    #     return CookieImage.objects.filter(cookie__id=self.kwargs['cookie_pk'])
 
 class DoughViewSet(ModelViewSet):
     queryset = Dough.objects.select_related('cookie', 'location').all()
@@ -151,11 +169,3 @@ class UserViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-class CookieImageViewSet(ModelViewSet):
-    serializer_class = CookieImageSerializer
-    
-    def get_serializer_context(self):
-        return {'cookie_id': self.kwargs['cookie_pk']}
-    
-    def get_queryset(self):
-        return CookieImage.objects.filter(cookie_id=self.kwargs['cookie_pk'])
