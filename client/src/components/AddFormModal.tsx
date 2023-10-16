@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import AddImageButton from "./AddImageButton";
 
 interface Props {
   children: ReactNode;
@@ -20,7 +21,8 @@ const AddFormModal = ({ children, header }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <AddButton onClick={onOpen} />
+    {header === 'Add Image' ? <AddImageButton onClick={onOpen} /> : <AddButton onClick={onOpen} />}
+      
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

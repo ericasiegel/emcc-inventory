@@ -9,6 +9,7 @@ import {
   SimpleGrid,
   GridItem,
   HStack,
+  Flex,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
@@ -17,6 +18,8 @@ import useBaked from "../hooks/useBaked";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
 import StoreCookieDetailCard from "../components/StoreCookieDetailCard";
+import AddFormModal from "../components/AddFormModal";
+import AddImageForm from "../components/AddImageForm";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -58,37 +61,43 @@ const CookieDetailPage = () => {
           />
         </CookieDetailContainer>
         <CookieDetailContainer>
-            <DetailCard
-              id={cookie.id}
-              size="mega"
-              count={cookie.counts}
-              dataFetcher={useBaked}
-              headingText="Baked Cookies"
-              endpoint="bakedcookies"
-            />
-            <DetailCard
-              id={cookie.id}
-              size="mini"
-              count={cookie.counts}
-              dataFetcher={useBaked}
-              headingText="Baked Cookies"
-              endpoint="bakedcookies"
-            />
+          <DetailCard
+            id={cookie.id}
+            size="mega"
+            count={cookie.counts}
+            dataFetcher={useBaked}
+            headingText="Baked Cookies"
+            endpoint="bakedcookies"
+          />
+          <DetailCard
+            id={cookie.id}
+            size="mini"
+            count={cookie.counts}
+            dataFetcher={useBaked}
+            headingText="Baked Cookies"
+            endpoint="bakedcookies"
+          />
         </CookieDetailContainer>
         <CookieDetailContainer>
-            <StoreCookieDetailCard
-              id={cookie.id}
-              size="mega"
-              count={cookie.counts}
-            />
-            <StoreCookieDetailCard
-              id={cookie.id}
-              size="mini"
-              count={cookie.counts}
-            />
+          <StoreCookieDetailCard
+            id={cookie.id}
+            size="mega"
+            count={cookie.counts}
+          />
+          <StoreCookieDetailCard
+            id={cookie.id}
+            size="mini"
+            count={cookie.counts}
+          />
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
+        { cookie.images?.length === 0 && 
+        <Flex justifyContent="flex-end">
+          <AddFormModal header="Add Image">
+            <AddImageForm />
+          </AddFormModal>
+        </Flex>}
         <Image
           margin="0 auto" // Center horizontally using margin auto
           display="block"
