@@ -20,6 +20,7 @@ import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
 import StoreCookieDetailCard from "../components/StoreCookieDetailCard";
 import AddFormModal from "../components/AddFormModal";
 import AddImageForm from "../components/AddImageForm";
+import DeleteImageButton from "../components/DeleteImageButton";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -92,12 +93,17 @@ const CookieDetailPage = () => {
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
-        { cookie.images?.length === 0 && 
-        <Flex justifyContent="flex-end">
-          <AddFormModal header="Add Image">
-            <AddImageForm slug={cookie.slug} />
-          </AddFormModal>
-        </Flex>}
+        {cookie.images?.length === 0 ? (
+          <Flex justifyContent="flex-end">
+            <AddFormModal header="Add Image">
+              <AddImageForm slug={cookie.slug} />
+            </AddFormModal>
+          </Flex>
+        ) : (
+          <Flex justifyContent="flex-end">
+            <DeleteImageButton slug={cookie.slug} id={cookie.images[0].id} />
+          </Flex>
+        )}
         <Image
           margin="0 auto" // Center horizontally using margin auto
           display="block"

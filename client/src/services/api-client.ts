@@ -111,6 +111,15 @@ class APIClient<T> {
             .then(res => res.data)
     }
 
+    deleteImage = (slug: string, id: number | string) => {
+        return axiosInstance
+            .delete(this.endpoint + slug + '/images/' + id)
+            .then(res => res.data)
+            .catch((error) => {
+                throw error
+            })
+    }
+
     delete = (id: number | string) => {
         return axiosInstance
             .delete(this.endpoint + '/' + id)
