@@ -32,6 +32,10 @@ export interface FetchResponse<T> {
   export interface EditStore {
     quantity?: number;
   }
+
+  export interface AddImage {
+    image: File;
+  }
 // const apiToken = localStorage.getItem('apiToken')
 const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NTYwNzU5LCJpYXQiOjE2OTc0NzQzNTksImp0aSI6IjAwZTk4OWM4MzJiMTQ2MmM5ZTA4NzlhNGJmMGVmYmUyIiwidXNlcl9pZCI6MX0.0CZYh8OIxw_wxCfzaaNkxvbqoKJKi56pgdvb7cHtLpA'
 
@@ -47,6 +51,16 @@ class APIClient<T> {
 
     constructor(endpoint: string) {
         this.endpoint = endpoint;
+    }
+
+    uploadImage = (image: AddImage, slug: string) => {
+        return axiosInstance
+            .post(this.endpoint + slug + '/images/', image, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            .then(res => res.data)
     }
 
     getAll = (config: AxiosRequestConfig) => {

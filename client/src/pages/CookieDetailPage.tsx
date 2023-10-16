@@ -95,7 +95,7 @@ const CookieDetailPage = () => {
         { cookie.images?.length === 0 && 
         <Flex justifyContent="flex-end">
           <AddFormModal header="Add Image">
-            <AddImageForm />
+            <AddImageForm slug={cookie.slug} />
           </AddFormModal>
         </Flex>}
         <Image
