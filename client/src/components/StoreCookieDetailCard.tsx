@@ -41,7 +41,9 @@ const StoreCookieDetailCard = ({ id, size, count }: Props) => {
         </Flex>
         {countSize > 0 ? (
           <EditFormModal header="">
-            <EditStoreCookiesForm id={id} cookieSize={size} />
+            {cookieData ? (
+              <EditStoreCookiesForm id={cookieData.id} cookieSize={size} />
+            ) : null}
           </EditFormModal>
         ) : (
           <AddFormModal header="">
@@ -57,7 +59,9 @@ const StoreCookieDetailCard = ({ id, size, count }: Props) => {
               {format(new Date(cookieData.last_updated), "MM/dd/yyyy")}
             </Text>
           </>
-        ) : ( "")}
+        ) : (
+          ""
+        )}
         {cookieData?.id !== undefined && (
           <DeleteButton id={cookieData.id} endpoint="store" />
         )}

@@ -1,7 +1,8 @@
-import { Center, Input, Button, Box } from "@chakra-ui/react";
+import { Center, Input, Button, Box, Alert, AlertIcon } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import APIClient, { AddImage } from "../services/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Image } from "../entities/Image";
 
 interface Props {
   slug: string;
@@ -12,7 +13,7 @@ const AddImageForm = ({ slug }: Props) => {
   const queryClient = useQueryClient();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const uploadImage = useMutation({
+  const uploadImage = useMutation<Image, Error, AddImage>({
     mutationFn: (image: AddImage) =>
       apiClient.uploadImage(image, slug).then((res) => res.data),
     onSuccess: () => {
@@ -34,36 +35,42 @@ const AddImageForm = ({ slug }: Props) => {
   const handleUpload = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedFile) {
-        const addImagePayload: AddImage = {
-            image: selectedFile,
-        }
-        
-      uploadImage.mutate(addImagePayload)
+      const addImagePayload: AddImage = {
+        image: selectedFile,
+      };
+
+      uploadImage.mutate(addImagePayload);
       console.log("Uploading file:", selectedFile.name);
     }
   };
 
   return (
-    <Center>
-      <Box>
-        <form onSubmit={handleUpload}> {/* Wrap the input and button in a <form> */}
-          <Input
-            type="file"
-            accept="image/*"
-            variant="unstyled"
-            onChange={handleFileChange}
-            marginBottom="1rem"
-          />
-          <Button
-            type="submit"
-            colorScheme="teal"
-            isDisabled={!selectedFile}
-          >
-            Upload
-          </Button>
-        </form>
-      </Box>
-    </Center>
+    <>
+      {uploadImage.error && (
+        <Alert status="error">
+          <AlertIcon />
+          {uploadImage.error.message}
+        </Alert>
+      )}
+      <Center>
+        <Box>
+          <form onSubmit={handleUpload}>
+            {" "}
+            {/* Wrap the input and button in a <form> */}
+            <Input
+              type="file"
+              accept="image/*"
+              variant="unstyled"
+              onChange={handleFileChange}
+              marginBottom="1rem"
+            />
+            <Button type="submit" colorScheme="teal" isDisabled={!selectedFile}>
+              Upload
+            </Button>
+          </form>
+        </Box>
+      </Center>
+    </>
   );
 };
 

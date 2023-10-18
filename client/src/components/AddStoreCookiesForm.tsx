@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertIcon,
     Box,
     Button,
     Center,
@@ -15,6 +17,7 @@ import {
   import APIClient, { AddUpdateStore } from "../services/api-client";
   import { useMutation, useQueryClient } from "@tanstack/react-query";
   import { useRef } from "react";
+import { Store } from "../entities/Store";
   
   interface Props {
       id: number
@@ -25,7 +28,7 @@ import {
   
     const apiClient = new APIClient("store/");
     const queryClient = useQueryClient();
-    const addStoreCookies = useMutation({
+    const addStoreCookies = useMutation<Store, Error, AddUpdateStore>({
       mutationFn: (store: AddUpdateStore) =>
         apiClient.addStore(store).then((res) => res.data),
       onSuccess: () => {
@@ -56,6 +59,13 @@ import {
     };
   
     return (
+      <>
+     {addStoreCookies.error && (
+        <Alert status="error">
+          <AlertIcon />
+          {addStoreCookies.error.message}
+        </Alert>
+      )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
           <Heading paddingBottom={2} size='lg'>Add Cookies to Store</Heading>
@@ -78,6 +88,7 @@ import {
           </Center>
         </FormControl>
       </form>
+      </>
     );
   };
   
