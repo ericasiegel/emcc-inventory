@@ -93,8 +93,13 @@ const AddCookieForm = () => {
             </Checkbox>
           </Box>
           <Center>
-            <Button type="submit" colorScheme="blue" marginTop={3}>
-              Add Cookie
+            <Button
+              disabled={addCookie.isLoading}
+              type="submit"
+              colorScheme="blue"
+              marginTop={3}
+            >
+              {addCookie.isLoading ? "Adding Cookie..." : "Add Cookie"}
             </Button>
           </Center>
         </FormControl>

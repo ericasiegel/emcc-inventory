@@ -81,8 +81,8 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
             </HStack>
           </Box>
           <Center>
-            <Button type="submit" colorScheme="blue" marginTop={3}>
-              Edit Cookies
+            <Button disabled={editStoreCookies.isLoading} type="submit" colorScheme="blue" marginTop={3}>
+            {editStoreCookies.isLoading ? "Editing Cookies in Store..." : "Edit Cookies in Store"}
             </Button>
           </Center>
         </FormControl>

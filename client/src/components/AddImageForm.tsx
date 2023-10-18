@@ -64,8 +64,13 @@ const AddImageForm = ({ slug }: Props) => {
               onChange={handleFileChange}
               marginBottom="1rem"
             />
-            <Button type="submit" colorScheme="teal" isDisabled={!selectedFile}>
-              Upload
+            <Button
+              disabled={uploadImage.isLoading}
+              type="submit"
+              colorScheme="teal"
+              isDisabled={!selectedFile}
+            >
+              {uploadImage.isLoading ? "Adding Image..." : "Add Image"}
             </Button>
           </form>
         </Box>

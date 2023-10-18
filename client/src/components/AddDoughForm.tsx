@@ -102,8 +102,13 @@ const AddDoughForm = ({ id }: Props) => {
             </HStack>
           </Box>
           <Center>
-            <Button type="submit" colorScheme="blue" marginTop={3}>
-              Add Dough
+            <Button
+              disabled={addDough.isLoading}
+              type="submit"
+              colorScheme="blue"
+              marginTop={3}
+            >
+              {addDough.isLoading ? "Adding Doughs..." : "Add Doughs"}
             </Button>
           </Center>
         </FormControl>

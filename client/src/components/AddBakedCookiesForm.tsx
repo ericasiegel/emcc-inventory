@@ -67,12 +67,12 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
 
   return (
     <>
-    {addBakedCookies.error && (
-      <Alert status='error'>
-      <AlertIcon />
-      {addBakedCookies.error.message}
-    </Alert>
-    )}
+      {addBakedCookies.error && (
+        <Alert status="error">
+          <AlertIcon />
+          {addBakedCookies.error.message}
+        </Alert>
+      )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
           <Heading paddingBottom={2} size="lg">
@@ -102,8 +102,15 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
             </HStack>
           </Box>
           <Center>
-            <Button type="submit" colorScheme="blue" marginTop={3}>
-              Add Baked Cookies
+            <Button
+              disabled={addBakedCookies.isLoading}
+              type="submit"
+              colorScheme="blue"
+              marginTop={3}
+            >
+              {addBakedCookies.isLoading
+                ? "Adding Baked Cookies..."
+                : "Add Baked Cookies"}
             </Button>
           </Center>
         </FormControl>
