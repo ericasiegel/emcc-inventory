@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import APIClient, { AddUpdateStore } from "../services/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Store } from "../entities/Store";
 
 interface Props {
@@ -37,8 +37,10 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
       queryClient.invalidateQueries({
         queryKey: ["cookies"],
       });
+      resetForm();
     },
   });
+  const [storeQuantityValue, setStoreQuantityValue] = useState(1);
 
   const storeQuantity = useRef<HTMLInputElement>(null);
 
@@ -57,6 +59,8 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     addStoreCookies.mutate(storeData);
   };
 
+  const resetForm = () => setStoreQuantityValue(1);
+
   return (
     <>
       {addStoreCookies.error && (
@@ -73,7 +77,12 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
           <Box>
             <HStack>
               <Text>Quantity: </Text>
-              <NumberInput defaultValue={1} width="100%" ref={storeQuantity}>
+              <NumberInput
+                value={storeQuantityValue}
+                onChange={(value) => setStoreQuantityValue(Number(value))}
+                width="100%"
+                ref={storeQuantity}
+              >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

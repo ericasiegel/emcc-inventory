@@ -18,7 +18,7 @@ import {
 import useLocations from "../hooks/useLocations";
 import APIClient, { AddUpdateDough } from "../services/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Dough } from "../entities/Dough";
 
 interface Props {
@@ -43,8 +43,17 @@ const AddDoughForm = ({ id }: Props) => {
       queryClient.invalidateQueries({
         queryKey: ["cookies"],
       });
+      resetForm();
     },
   });
+  const [doughQantityValue, setDoughQuantityValue] = useState(1);
+
+  const resetForm = () => {
+    if (locationId.current) {
+      locationId.current.value = "";
+    }
+    setDoughQuantityValue(1);
+  };
 
   const locationId = useRef<HTMLSelectElement>(null);
   const doughQuantity = useRef<HTMLInputElement>(null);
@@ -92,7 +101,14 @@ const AddDoughForm = ({ id }: Props) => {
             </Select>
             <HStack>
               <Text>Quantity: </Text>
-              <NumberInput defaultValue={1} width="100%" ref={doughQuantity}>
+              <NumberInput
+                value={doughQantityValue}
+                onChange={(value) =>
+                  setDoughQuantityValue(Number(value))
+                }
+                width="100%"
+                ref={doughQuantity}
+              >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

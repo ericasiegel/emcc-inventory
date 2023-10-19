@@ -18,7 +18,7 @@ import {
 import useLocations from "../hooks/useLocations";
 import APIClient, { AddUpdateBaked } from "../services/api-client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Baked } from "../entities/Baked";
 
 interface Props {
@@ -42,8 +42,11 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
       queryClient.invalidateQueries({
         queryKey: ["cookies"],
       });
+      resetForm();
     },
   });
+
+  const [bakedValue, setBakedValue] = useState(1);
 
   const locationId = useRef<HTMLSelectElement>(null);
   const bakedQuantity = useRef<HTMLInputElement>(null);
@@ -63,6 +66,11 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     };
 
     addBakedCookies.mutate(bakedData);
+  };
+
+  const resetForm = () => {
+    if (locationId.current) locationId.current.value = "";
+    setBakedValue(1);
   };
 
   return (
@@ -92,7 +100,12 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
             </Select>
             <HStack>
               <Text>Quantity: </Text>
-              <NumberInput defaultValue={1} width="100%" ref={bakedQuantity}>
+              <NumberInput
+                value={bakedValue}
+                onChange={(value) => setBakedValue(Number(value))}
+                width="100%"
+                ref={bakedQuantity}
+              >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
                   <NumberIncrementStepper />

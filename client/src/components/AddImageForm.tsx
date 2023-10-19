@@ -43,6 +43,7 @@ const AddImageForm = ({ slug }: Props) => {
       console.log("Uploading file:", selectedFile.name);
     }
   };
+  
 
   return (
     <>
