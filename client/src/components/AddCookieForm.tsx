@@ -10,23 +10,18 @@ import {
   // FormLabel,
   Input,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import APIClient, { AddUpdateCookie } from "../services/api-client";
 import { Cookie } from "../entities/Cookie";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 const AddCookieForm = () => {
   const apiClient = new APIClient("cookies/");
-  const queryClient = useQueryClient();
-  const addCookie = useMutation<Cookie, Error, AddUpdateCookie>({
-    mutationFn: (cookie: AddUpdateCookie) =>
-      apiClient.addCookie(cookie).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
-      resetForm(); // Call the resetForm function to clear the form
-    },
-  });
+  const {mutate: addCookie, error, isLoading} = useMutateCookies<Cookie, Error, AddUpdateCookie>(
+    // apiClient,
+    (cookie: AddUpdateCookie) => apiClient.addCookie(cookie).then((res) => res.data),
+    () => { resetForm()},
+    ['cookies']
+  )
 
   const [formData, setFormData] = useState<AddUpdateCookie>({
     name: "",
@@ -50,7 +45,7 @@ const AddCookieForm = () => {
       is_active: isActiveValue,
     };
 
-    addCookie.mutate(cookieData);
+    addCookie(cookieData);
   };
 
   const resetForm = () => {
@@ -62,10 +57,10 @@ const AddCookieForm = () => {
 
   return (
     <>
-      {addCookie.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {addCookie.error.message}
+          {error.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
@@ -94,12 +89,12 @@ const AddCookieForm = () => {
           </Box>
           <Center>
             <Button
-              disabled={addCookie.isLoading}
+              disabled={isLoading}
               type="submit"
               colorScheme="blue"
               marginTop={3}
             >
-              {addCookie.isLoading ? "Adding Cookie..." : "Add Cookie"}
+              {isLoading ? "Adding Cookie..." : "Add Cookie"}
             </Button>
           </Center>
         </FormControl>
