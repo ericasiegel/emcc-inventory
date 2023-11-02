@@ -16,17 +16,21 @@ import useMutateCookies from "../hooks/useMutateCookies";
 
 const AddCookieForm = () => {
   const apiClient = new APIClient("cookies/");
-  const {mutate: addCookie, error, isLoading} = useMutateCookies<Cookie, Error, AddUpdateCookie>(
-    // apiClient,
-    (cookie: AddUpdateCookie) => apiClient.addCookie(cookie).then((res) => res.data),
-    () => { resetForm()},
-    ['cookies']
-  )
+  const {
+    mutate: addCookie,
+    error,
+    isLoading,
+  } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
+    (cookie: AddUpdateCookie) =>
+      apiClient.addCookie(cookie).then((res) => res.data),
+    () => {
+      resetForm();
+    },
+    ["cookies"]
+  );
 
-  const [formData, setFormData] = useState<AddUpdateCookie>({
-    name: "",
-    is_active: true,
-  });
+  const [activeCookie, setActiveCookie] = useState<boolean>(true);
+  const [name, setName] = useState<string>("");
 
   const cookieName = useRef<HTMLInputElement>(null);
   const isActive = useRef<HTMLInputElement>(null);
@@ -46,13 +50,12 @@ const AddCookieForm = () => {
     };
 
     addCookie(cookieData);
+    // resetForm();
   };
 
   const resetForm = () => {
-    setFormData({
-      name: "",
-      is_active: true,
-    });
+    setName("");
+    setActiveCookie(true);
   };
 
   return (
@@ -70,19 +73,17 @@ const AddCookieForm = () => {
               ref={cookieName}
               backgroundColor="white"
               placeholder="Cookie Name..."
-              value={formData.name} // Set the input value from formData
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              } // Update formData on input change
+              value={name} // Set the input value from formData
+              onChange={(e) => setName(e.target.value)} // Update formData on input change
             />
             <Checkbox
               paddingTop={3}
               ref={isActive}
               defaultChecked
-              checked={formData.is_active} // Set the checked state from formData
-              onChange={(e) =>
-                setFormData({ ...formData, is_active: e.target.checked })
-              } // Update formData on checkbox change
+              checked={activeCookie} // Set the checked state from formData
+              onChange={(e) => {
+                setActiveCookie(e.target.checked); // Update the separate state for the checkbox
+              }}
             >
               Active Cookie?
             </Checkbox>

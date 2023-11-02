@@ -15,9 +15,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import APIClient, { EditStore } from "../services/api-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { Store } from "../entities/Store";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   id: number;
@@ -26,19 +26,19 @@ interface Props {
 
 const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
   const apiClient = new APIClient("store/");
-  const queryClient = useQueryClient();
-  const editStoreCookies = useMutation<Store, Error, EditStore>({
-    mutationFn: (store: EditStore) =>
+
+  const {
+    mutate: editStoreCookies,
+    error,
+    isLoading,
+  } = useMutateCookies<Store, Error, EditStore>(
+    (store: EditStore) =>
       apiClient.editStore(store, id).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["store"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
+    () => {
+      
     },
-  });
+    ["cookies", "store"]
+  );
 
   const storeQuantity = useRef<HTMLInputElement>(null);
 
@@ -52,15 +52,15 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
       quantity: storequantityValue,
     };
 
-    editStoreCookies.mutate(storeData);
+    editStoreCookies(storeData);
   };
 
   return (
     <>
-      {editStoreCookies.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {editStoreCookies.error.message}
+          {error.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
@@ -81,8 +81,8 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
             </HStack>
           </Box>
           <Center>
-            <Button disabled={editStoreCookies.isLoading} type="submit" colorScheme="blue" marginTop={3}>
-            {editStoreCookies.isLoading ? "Editing Cookies in Store..." : "Edit Cookies in Store"}
+            <Button disabled={isLoading} type="submit" colorScheme="blue" marginTop={3}>
+            {isLoading ? "Editing Cookies in Store..." : "Edit Cookies in Store"}
             </Button>
           </Center>
         </FormControl>

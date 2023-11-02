@@ -1,13 +1,8 @@
-import {
-  Text,
-  Flex,
-  FormControl,
-  FormLabel,
-  Switch,
-} from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Text, Flex, FormControl, FormLabel, Switch, Alert, AlertIcon } from "@chakra-ui/react";
 import { useState } from "react";
 import APIClient, { AddUpdateCookie } from "../services/api-client";
+import { Cookie } from "../entities/Cookie";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   id: number;
@@ -16,45 +11,51 @@ interface Props {
 }
 
 const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
-  const apiClient = new APIClient('cookies/')
-  const queryClient = useQueryClient();
-  const activateCookie = useMutation({
-    mutationFn: (cookie: AddUpdateCookie) =>
-      apiClient
-        .updateActive(cookie, id)
-        .then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
-    },
-  });
+  const apiClient = new APIClient("cookies/");
+
+  const {
+    mutate: activateCookie,
+    error,
+  } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
+    (cookie: AddUpdateCookie) =>
+      apiClient.updateActive(cookie, id).then((res) => res.data),
+    () => {},
+    ["cookies"]
+  );
 
   const [isActive, setIsActive] = useState(is_active);
 
   const handleSwitchChange = () => {
     setIsActive(!isActive);
 
-    activateCookie.mutate({
+    activateCookie({
       name,
       is_active: !isActive,
     });
   };
 
   return (
-    <Flex justifyContent="center" alignItems="center">
-      <FormControl paddingTop={4} display="flex" alignItems="center">
-        <FormLabel htmlFor="is_active" mb="0">
-          {is_active ? <Text>Active</Text> : <Text>Inactive</Text>}
-        </FormLabel>
-        <Switch
-          id="email-alerts"
-          colorScheme="green"
-          isChecked={is_active}
-          onChange={handleSwitchChange}
-        />
-      </FormControl>
-    </Flex>
+    <>
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          {error.message}
+        </Alert>
+      )}
+      <Flex justifyContent="center" alignItems="center">
+        <FormControl paddingTop={4} display="flex" alignItems="center">
+          <FormLabel htmlFor="is_active" mb="0">
+            {is_active ? <Text>Active</Text> : <Text>Inactive</Text>}
+          </FormLabel>
+          <Switch
+            id="email-alerts"
+            colorScheme="green"
+            isChecked={is_active}
+            onChange={handleSwitchChange}
+          />
+        </FormControl>
+      </Flex>
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 import { Center, Input, Button, Box, Alert, AlertIcon } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import APIClient, { AddImage } from "../services/api-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Image } from "../entities/Image";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   slug: string;
@@ -10,18 +10,21 @@ interface Props {
 
 const AddImageForm = ({ slug }: Props) => {
   const apiClient = new APIClient("cookies/");
-  const queryClient = useQueryClient();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const uploadImage = useMutation<Image, Error, AddImage>({
-    mutationFn: (image: AddImage) =>
+  const {
+    mutate: uploadImage,
+    error,
+    isLoading,
+  } = useMutateCookies<Image, Error, AddImage>(
+    // apiClient,
+    (image: AddImage) =>
       apiClient.uploadImage(image, slug).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
+    () => {
+      
     },
-  });
+    ["cookies"]
+  );
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -39,7 +42,7 @@ const AddImageForm = ({ slug }: Props) => {
         image: selectedFile,
       };
 
-      uploadImage.mutate(addImagePayload);
+      uploadImage(addImagePayload);
       console.log("Uploading file:", selectedFile.name);
     }
   };
@@ -47,10 +50,10 @@ const AddImageForm = ({ slug }: Props) => {
 
   return (
     <>
-      {uploadImage.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {uploadImage.error.message}
+          {error.message}
         </Alert>
       )}
       <Center>
@@ -66,12 +69,12 @@ const AddImageForm = ({ slug }: Props) => {
               marginBottom="1rem"
             />
             <Button
-              disabled={uploadImage.isLoading}
+              disabled={isLoading}
               type="submit"
               colorScheme="teal"
               isDisabled={!selectedFile}
             >
-              {uploadImage.isLoading ? "Adding Image..." : "Add Image"}
+              {isLoading ? "Adding Image..." : "Add Image"}
             </Button>
           </form>
         </Box>

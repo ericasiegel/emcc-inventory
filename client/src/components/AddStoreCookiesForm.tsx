@@ -15,9 +15,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import APIClient, { AddUpdateStore } from "../services/api-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Store } from "../entities/Store";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   id: number;
@@ -26,20 +26,20 @@ interface Props {
 
 const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
   const apiClient = new APIClient("store/");
-  const queryClient = useQueryClient();
-  const addStoreCookies = useMutation<Store, Error, AddUpdateStore>({
-    mutationFn: (store: AddUpdateStore) =>
-      apiClient.addStore(store).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["store"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
+  const {
+    mutate: addStoreCookies,
+    error,
+    isLoading,
+  } = useMutateCookies<Store, Error, AddUpdateStore>(
+    // apiClient,
+    (cookie: AddUpdateStore) =>
+      apiClient.addStore(cookie).then((res) => res.data),
+    () => {
       resetForm();
     },
-  });
+    ["cookies", "store"]
+  );
+  
   const [storeQuantityValue, setStoreQuantityValue] = useState(1);
 
   const storeQuantity = useRef<HTMLInputElement>(null);
@@ -56,17 +56,17 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
       size: cookieSize,
     };
 
-    addStoreCookies.mutate(storeData);
+    addStoreCookies(storeData);
   };
 
   const resetForm = () => setStoreQuantityValue(1);
 
   return (
     <>
-      {addStoreCookies.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {addStoreCookies.error.message}
+          {error.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
@@ -93,12 +93,12 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
           </Box>
           <Center>
             <Button
-              disabled={addStoreCookies.isLoading}
+              disabled={isLoading}
               type="submit"
               colorScheme="blue"
               marginTop={3}
             >
-              {addStoreCookies.isLoading
+              {isLoading
                 ? "Adding Cookies to Store..."
                 : "Add Cookies to Store"}
             </Button>

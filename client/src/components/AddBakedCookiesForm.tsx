@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
 import APIClient, { AddUpdateBaked } from "../services/api-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Baked } from "../entities/Baked";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   id: number;
@@ -31,20 +31,19 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
   const apiClient = new APIClient("bakedcookies/");
-  const queryClient = useQueryClient();
-  const addBakedCookies = useMutation<Baked, Error, AddUpdateBaked>({
-    mutationFn: (baked: AddUpdateBaked) =>
+  const {
+    mutate: addBakedCookies,
+    error,
+    isLoading,
+  } = useMutateCookies<Baked, Error, AddUpdateBaked>(
+    // apiClient,
+    (baked: AddUpdateBaked) =>
       apiClient.addBaked(baked).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["bakedcookies"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
+    () => {
       resetForm();
     },
-  });
+    ["cookies", "bakedcookies"]
+  );
 
   const [bakedValue, setBakedValue] = useState(1);
 
@@ -65,7 +64,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
       location_name: parseInt(locationIdValue!),
     };
 
-    addBakedCookies.mutate(bakedData);
+    addBakedCookies(bakedData);
   };
 
   const resetForm = () => {
@@ -75,10 +74,10 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
 
   return (
     <>
-      {addBakedCookies.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {addBakedCookies.error.message}
+          {error.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
@@ -116,12 +115,12 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
           </Box>
           <Center>
             <Button
-              disabled={addBakedCookies.isLoading}
+              disabled={isLoading}
               type="submit"
               colorScheme="blue"
               marginTop={3}
             >
-              {addBakedCookies.isLoading
+              {isLoading
                 ? "Adding Baked Cookies..."
                 : "Add Baked Cookies"}
             </Button>

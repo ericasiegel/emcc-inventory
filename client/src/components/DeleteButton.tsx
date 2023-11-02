@@ -6,9 +6,13 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BsTrash } from "react-icons/bs";
 import APIClient from "../services/api-client";
+import useMutateCookies from "../hooks/useMutateCookies";
+import { Cookie } from "../entities/Cookie";
+import { Dough } from "../entities/Dough";
+import { Baked } from "../entities/Baked";
+import { AxiosError } from "axios";
 
 interface Props {
   endpoint: string;
@@ -17,32 +21,44 @@ interface Props {
 
 const DeleteButton = ({ endpoint, id }: Props) => {
   const apiClient = new APIClient(endpoint);
-  const queryClient = useQueryClient();
-  const deleteItem = useMutation({
-    mutationFn: (id: number) => apiClient.delete(id).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [endpoint],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
-    },
-  });
 
-  if (deleteItem.isError) {
-    // Display the error message when a 405 error occurs
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        <Flex direction="column">
-          <AlertTitle>Cookie Can't Be Deleted</AlertTitle>
-          <AlertDescription>
-            Delete all associated doughs, baked and store cookies
-          </AlertDescription>
-        </Flex>
-      </Alert>
-    );
+  const {
+    mutate: deleteItem,
+    error,
+    isLoading,
+  } = useMutateCookies<{data: Cookie | Dough | Baked}, AxiosError, number>(
+    (id: number) => apiClient.delete(id).then((res) => res.data),
+    () => {},
+    ["cookies", endpoint]
+  );
+
+  if (error) {
+    // Check if the error status code is 405
+    if (error.response && error.response.status === 405) {
+      // Display a specific message for a 405 error
+      return (
+        <Alert status="error">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>Cookie Can't Be Deleted</AlertTitle>
+            <AlertDescription>
+              Delete all associated doughs, baked and store cookies
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      );
+    } else {
+      // Display a generic error message for all other errors
+      return (
+        <Alert status="error">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>An error occurred while deleting.</AlertDescription>
+          </Flex>
+        </Alert>
+      );
+    }
   }
 
   return (
@@ -51,10 +67,10 @@ const DeleteButton = ({ endpoint, id }: Props) => {
       variant="unstyled"
       onClick={(event) => {
         event.preventDefault();
-        deleteItem.mutate(id);
+        deleteItem(id);
       }}
     >
-      <BsTrash size="25px" color="red" />
+      {isLoading ? "Deleting..." : <BsTrash size="25px" color="red" />}
     </Button>
   );
 };

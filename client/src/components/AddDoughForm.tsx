@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
 import APIClient, { AddUpdateDough } from "../services/api-client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { Dough } from "../entities/Dough";
+import useMutateCookies from "../hooks/useMutateCookies";
 
 interface Props {
   id: number;
@@ -31,21 +31,18 @@ const AddDoughForm = ({ id }: Props) => {
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
   const apiClient = new APIClient("doughs/");
-  const queryClient = useQueryClient();
-
-  const addDough = useMutation<Dough, Error, AddUpdateDough>({
-    mutationFn: (dough: AddUpdateDough) =>
+  const {
+    mutate: addDough,
+    error,
+    isLoading,
+  } = useMutateCookies<Dough, Error, AddUpdateDough>(
+    (dough: AddUpdateDough) =>
       apiClient.addDough(dough).then((res) => res.data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["doughs"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["cookies"],
-      });
+    () => {
       resetForm();
     },
-  });
+    ["cookies", "doughs"]
+  );
   const [doughQantityValue, setDoughQuantityValue] = useState(1);
 
   const resetForm = () => {
@@ -71,15 +68,15 @@ const AddDoughForm = ({ id }: Props) => {
       location_name: parseInt(locationIdValue!),
     };
 
-    addDough.mutate(doughData);
+    addDough(doughData);
   };
 
   return (
     <>
-      {addDough.error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {addDough.error.message}
+          {error.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
@@ -103,9 +100,7 @@ const AddDoughForm = ({ id }: Props) => {
               <Text>Quantity: </Text>
               <NumberInput
                 value={doughQantityValue}
-                onChange={(value) =>
-                  setDoughQuantityValue(Number(value))
-                }
+                onChange={(value) => setDoughQuantityValue(Number(value))}
                 width="100%"
                 ref={doughQuantity}
               >
@@ -119,12 +114,12 @@ const AddDoughForm = ({ id }: Props) => {
           </Box>
           <Center>
             <Button
-              disabled={addDough.isLoading}
+              disabled={isLoading}
               type="submit"
               colorScheme="blue"
               marginTop={3}
             >
-              {addDough.isLoading ? "Adding Doughs..." : "Add Doughs"}
+              {isLoading ? "Adding Doughs..." : "Add Doughs"}
             </Button>
           </Center>
         </FormControl>
