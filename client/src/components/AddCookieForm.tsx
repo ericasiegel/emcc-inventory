@@ -23,7 +23,7 @@ const AddCookieForm = () => {
     isLoading,
   } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
     (cookie: AddUpdateCookie) =>
-      apiClient.addCookie(cookie).then((res) => res.data),
+      apiClient.post(cookie),
     () => {
       resetForm();
     },

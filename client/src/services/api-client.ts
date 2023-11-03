@@ -53,6 +53,25 @@ class APIClient<T> {
         this.endpoint = endpoint;
     }
 
+    
+    getAll = (config: AxiosRequestConfig) => {
+        return axiosInstance
+        .get<FetchResponse<T>>(this.endpoint, config)
+        .then(res => res.data)
+    };
+    
+    get = (id: number | string) => {
+        return axiosInstance
+        .get<T>(this.endpoint + '/' + id)
+        .then(res => res.data);
+    }
+    
+    post = (data: T) => {
+        return axiosInstance
+        .post(this.endpoint, data)
+        .then(res => res.data);
+    }
+    
     uploadImage = (image: AddImage, slug: string) => {
         return axiosInstance
             .post(this.endpoint + slug + '/images/', image, {
@@ -62,46 +81,10 @@ class APIClient<T> {
             })
             .then(res => res.data)
     }
-
-    getAll = (config: AxiosRequestConfig) => {
-        return axiosInstance
-        .get<FetchResponse<T>>(this.endpoint, config)
-        .then(res => res.data)
-    };
-
-    get = (id: number | string) => {
-        return axiosInstance
-            .get<T>(this.endpoint + '/' + id)
-            .then(res => res.data);
-    }
-
-    addCookie = (cookie: AddUpdateCookie) => {
-        return axiosInstance
-            .post(this.endpoint, cookie)
-            .then(res => res.data)
-    }
     
     updateActive = (cookie: AddUpdateCookie, id: number | string) => {
         return axiosInstance
             .patch(this.endpoint + id + '/', cookie)
-            .then(res => res.data)
-    }
-
-    addDough = (dough: AddUpdateDough) => {
-        return axiosInstance
-            .post(this.endpoint, dough)
-            .then(res => res.data)
-    }
-    
-    addBaked = (baked: AddUpdateBaked) => {
-        return axiosInstance
-            .post(this.endpoint, baked)
-            .then(res => res.data)
-    }
-    
-    addStore = (store: AddUpdateStore) => {
-        return axiosInstance
-            .post(this.endpoint, store)
             .then(res => res.data)
     }
 

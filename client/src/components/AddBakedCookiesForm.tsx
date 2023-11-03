@@ -37,9 +37,8 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     error,
     isLoading,
   } = useMutateCookies<Baked, Error, AddUpdateBaked>(
-    // apiClient,
     (baked: AddUpdateBaked) =>
-      apiClient.addBaked(baked).then((res) => res.data),
+      apiClient.post(baked),
     () => {
       resetForm();
     },

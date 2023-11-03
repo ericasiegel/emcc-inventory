@@ -38,7 +38,7 @@ const AddDoughForm = ({ id }: Props) => {
     isLoading,
   } = useMutateCookies<Dough, Error, AddUpdateDough>(
     (dough: AddUpdateDough) =>
-      apiClient.addDough(dough).then((res) => res.data),
+      apiClient.post(dough),
     () => {
       resetForm();
     },

@@ -34,7 +34,7 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
   } = useMutateCookies<Store, Error, AddUpdateStore>(
     // apiClient,
     (cookie: AddUpdateStore) =>
-      apiClient.addStore(cookie).then((res) => res.data),
+      apiClient.post(cookie),
     () => {
       resetForm();
     },

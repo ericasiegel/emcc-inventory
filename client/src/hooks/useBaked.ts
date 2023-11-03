@@ -9,12 +9,12 @@ const useBaked = ( id: number, size?: string) => {
         queryKey: ['bakedcookies', id, size],
         queryFn: () =>
         apiClient
-        .getAll({
-            params: {
-                cookie_id: id,
-                size: size || undefined,
-            }
-        })
+            .getAll({
+                params: {
+                    cookie_id: id,
+                    size: size || undefined,
+                }
+            })
     })
 }
 
