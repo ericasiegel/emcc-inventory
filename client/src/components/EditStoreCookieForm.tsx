@@ -34,7 +34,7 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
     isLoading,
   } = useMutateCookies<Store, Error, EditStore>(
     (store: EditStore) =>
-      apiClient.editStore(store, id).then((res) => res.data),
+      apiClient.patch(store, id),
     () => {
       
     },

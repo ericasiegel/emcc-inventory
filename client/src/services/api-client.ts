@@ -52,7 +52,6 @@ class APIClient<T> {
     constructor(endpoint: string) {
         this.endpoint = endpoint;
     }
-
     
     getAll = (config: AxiosRequestConfig) => {
         return axiosInstance
@@ -72,6 +71,21 @@ class APIClient<T> {
         .then(res => res.data);
     }
     
+    patch = (data: T, id: number | string) => {
+        return axiosInstance
+        .patch(this.endpoint + id + '/', data)
+        .then(res => res.data)
+    }
+    
+    delete = (id: number | string) => {
+        return axiosInstance
+        .delete(this.endpoint + '/' + id)
+        .then(res => res.data)
+        .catch((error) => {
+            throw error
+        })
+    }
+
     uploadImage = (image: AddImage, slug: string) => {
         return axiosInstance
             .post(this.endpoint + slug + '/images/', image, {
@@ -79,18 +93,6 @@ class APIClient<T> {
                     "Content-Type": "multipart/form-data",
                 }
             })
-            .then(res => res.data)
-    }
-    
-    updateActive = (cookie: AddUpdateCookie, id: number | string) => {
-        return axiosInstance
-            .patch(this.endpoint + id + '/', cookie)
-            .then(res => res.data)
-    }
-
-    editStore = (store: EditStore, id: number | string) => {
-        return axiosInstance
-            .patch(this.endpoint + id + '/', store)
             .then(res => res.data)
     }
 
@@ -103,14 +105,6 @@ class APIClient<T> {
             })
     }
 
-    delete = (id: number | string) => {
-        return axiosInstance
-            .delete(this.endpoint + '/' + id)
-            .then(res => res.data)
-            .catch((error) => {
-                throw error
-            })
-    }
 }
 
 export default APIClient

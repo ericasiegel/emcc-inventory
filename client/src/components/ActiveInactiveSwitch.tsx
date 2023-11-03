@@ -19,7 +19,7 @@ const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
     error,
   } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
     (cookie: AddUpdateCookie) =>
-      apiClient.updateActive(cookie, id).then((res) => res.data),
+      apiClient.patch(cookie, id),
     () => {},
     [CACHE_KEY_COOKIES]
   );
