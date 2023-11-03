@@ -18,6 +18,7 @@ import APIClient, { EditStore } from "../services/api-client";
 import { useRef } from "react";
 import { Store } from "../entities/Store";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   id: number;
@@ -37,7 +38,7 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
     () => {
       
     },
-    ["cookies", "store"]
+    [CACHE_KEY_COOKIES, "store"]
   );
 
   const storeQuantity = useRef<HTMLInputElement>(null);

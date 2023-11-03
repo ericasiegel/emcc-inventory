@@ -20,6 +20,7 @@ import APIClient, { AddUpdateBaked } from "../services/api-client";
 import { useRef, useState } from "react";
 import { Baked } from "../entities/Baked";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   id: number;
@@ -42,7 +43,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     () => {
       resetForm();
     },
-    ["cookies", "bakedcookies"]
+    [CACHE_KEY_COOKIES, "bakedcookies"]
   );
 
   const [bakedValue, setBakedValue] = useState(1);

@@ -13,6 +13,7 @@ import { Cookie } from "../entities/Cookie";
 import { Dough } from "../entities/Dough";
 import { Baked } from "../entities/Baked";
 import { AxiosError } from "axios";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   endpoint: string;
@@ -29,7 +30,7 @@ const DeleteButton = ({ endpoint, id }: Props) => {
   } = useMutateCookies<{data: Cookie | Dough | Baked}, AxiosError, number>(
     (id: number) => apiClient.delete(id).then((res) => res.data),
     () => {},
-    ["cookies", endpoint]
+    [CACHE_KEY_COOKIES, endpoint]
   );
 
   if (error) {

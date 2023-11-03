@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react";
 import APIClient, { AddImage } from "../services/api-client";
 import { Image } from "../entities/Image";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   slug: string;
@@ -23,7 +24,7 @@ const AddImageForm = ({ slug }: Props) => {
     () => {
       
     },
-    ["cookies"]
+    [CACHE_KEY_COOKIES]
   );
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

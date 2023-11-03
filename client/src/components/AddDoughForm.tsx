@@ -20,6 +20,7 @@ import APIClient, { AddUpdateDough } from "../services/api-client";
 import { useRef, useState } from "react";
 import { Dough } from "../entities/Dough";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   id: number;
@@ -41,7 +42,7 @@ const AddDoughForm = ({ id }: Props) => {
     () => {
       resetForm();
     },
-    ["cookies", "doughs"]
+    [CACHE_KEY_COOKIES, "doughs"]
   );
   const [doughQantityValue, setDoughQuantityValue] = useState(1);
 

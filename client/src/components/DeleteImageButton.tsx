@@ -3,6 +3,7 @@ import { FcRemoveImage } from "react-icons/fc";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 import { Cookie } from "../entities/Cookie";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   slug: string;
@@ -18,7 +19,7 @@ const DeleteImageButton = ({ slug, id }: Props) => {
   } = useMutateCookies<Cookie, Error, number>(
     (id: number) => apiClient.deleteImage(slug, id).then((res) => res.data),
     () => {},
-    ["cookies"]
+    [CACHE_KEY_COOKIES]
   );
 
   return (

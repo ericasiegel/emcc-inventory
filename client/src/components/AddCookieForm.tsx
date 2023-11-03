@@ -13,6 +13,7 @@ import {
 import APIClient, { AddUpdateCookie } from "../services/api-client";
 import { Cookie } from "../entities/Cookie";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 const AddCookieForm = () => {
   const apiClient = new APIClient("cookies/");
@@ -26,7 +27,7 @@ const AddCookieForm = () => {
     () => {
       resetForm();
     },
-    ["cookies"]
+    [CACHE_KEY_COOKIES]
   );
 
   const [activeCookie, setActiveCookie] = useState<boolean>(true);

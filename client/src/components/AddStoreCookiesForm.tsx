@@ -18,6 +18,7 @@ import APIClient, { AddUpdateStore } from "../services/api-client";
 import { useRef, useState } from "react";
 import { Store } from "../entities/Store";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   id: number;
@@ -37,7 +38,7 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     () => {
       resetForm();
     },
-    ["cookies", "store"]
+    [CACHE_KEY_COOKIES, "store"]
   );
   
   const [storeQuantityValue, setStoreQuantityValue] = useState(1);

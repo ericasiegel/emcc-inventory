@@ -3,6 +3,7 @@ import { useState } from "react";
 import APIClient, { AddUpdateCookie } from "../services/api-client";
 import { Cookie } from "../entities/Cookie";
 import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
 
 interface Props {
   id: number;
@@ -20,7 +21,7 @@ const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
     (cookie: AddUpdateCookie) =>
       apiClient.updateActive(cookie, id).then((res) => res.data),
     () => {},
-    ["cookies"]
+    [CACHE_KEY_COOKIES]
   );
 
   const [isActive, setIsActive] = useState(is_active);
