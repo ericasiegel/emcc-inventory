@@ -14,9 +14,10 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react";
-import APIClient, { EditStore } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { EditStore } from "../entities/StoreCookie";
 import { useRef } from "react";
-import { Store } from "../entities/Store";
+import { Store } from "../entities/StoreCookie";
 import useMutateCookies from "../hooks/useMutateCookies";
 import { CACHE_KEY_COOKIES } from "../constants";
 
@@ -33,11 +34,8 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
     error,
     isLoading,
   } = useMutateCookies<Store, Error, EditStore>(
-    (store: EditStore) =>
-      apiClient.patch(store, id),
-    () => {
-      
-    },
+    (store: EditStore) => apiClient.patch(store, id),
+    () => {},
     [CACHE_KEY_COOKIES, "store"]
   );
 
@@ -82,8 +80,15 @@ const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
             </HStack>
           </Box>
           <Center>
-            <Button disabled={isLoading} type="submit" colorScheme="blue" marginTop={3}>
-            {isLoading ? "Editing Cookies in Store..." : "Edit Cookies in Store"}
+            <Button
+              disabled={isLoading}
+              type="submit"
+              colorScheme="blue"
+              marginTop={3}
+            >
+              {isLoading
+                ? "Editing Cookies in Store..."
+                : "Edit Cookies in Store"}
             </Button>
           </Center>
         </FormControl>

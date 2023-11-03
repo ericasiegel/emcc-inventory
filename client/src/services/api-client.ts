@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { AddImage } from "../entities/Image";
 
 export interface FetchResponse<T> {
     count: number;
@@ -6,36 +7,6 @@ export interface FetchResponse<T> {
     results: T[];
   }
 
- export interface AddUpdateCookie {
-    name: string;
-    is_active: boolean;
-  }
-
-  export interface AddUpdateDough {
-    cookie_name: number;
-    location_name: number;
-    quantity?: number;
-  }
-
-  export interface AddUpdateBaked {
-    cookie_name: number;
-    location_name: number;
-    size: string;
-    quantity?: number;
-  }
-  
-  export interface AddUpdateStore {
-    cookie_name: number;
-    size: string;
-    quantity?: number;
-  }
-  export interface EditStore {
-    quantity?: number;
-  }
-
-  export interface AddImage {
-    image: File;
-  }
 // const apiToken = localStorage.getItem('apiToken')
 const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MTIyMTY0LCJpYXQiOjE2OTkwMzU3NjQsImp0aSI6IjdmZjIwZmNmOTBiNjQxNTE4NjU4NmRiOWEwZjUxYmQ5IiwidXNlcl9pZCI6MX0.xTnEMJBAYuLYcQB5_ArQ6tBjYUvw8PU0CP_GIbFy1xk'
 

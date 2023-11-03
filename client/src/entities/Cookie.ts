@@ -10,3 +10,9 @@ export interface Cookie {
   counts: Counts;
   images?: Image[];
 }
+
+export interface AddUpdateCookie {
+    name: string;
+    is_active: boolean;
+}
+

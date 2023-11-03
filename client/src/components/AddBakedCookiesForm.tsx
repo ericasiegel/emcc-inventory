@@ -16,7 +16,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
-import APIClient, { AddUpdateBaked } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { AddUpdateBaked } from "../entities/Baked";
 import { useRef, useState } from "react";
 import { Baked } from "../entities/Baked";
 import useMutateCookies from "../hooks/useMutateCookies";
@@ -37,8 +38,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     error,
     isLoading,
   } = useMutateCookies<Baked, Error, AddUpdateBaked>(
-    (baked: AddUpdateBaked) =>
-      apiClient.post(baked),
+    (baked: AddUpdateBaked) => apiClient.post(baked),
     () => {
       resetForm();
     },
@@ -120,9 +120,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
               colorScheme="blue"
               marginTop={3}
             >
-              {isLoading
-                ? "Adding Baked Cookies..."
-                : "Add Baked Cookies"}
+              {isLoading ? "Adding Baked Cookies..." : "Add Baked Cookies"}
             </Button>
           </Center>
         </FormControl>

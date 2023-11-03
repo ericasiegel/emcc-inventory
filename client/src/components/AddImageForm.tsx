@@ -1,6 +1,7 @@
 import { Center, Input, Button, Box, Alert, AlertIcon } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import APIClient, { AddImage } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { AddImage } from "../entities/Image";
 import { Image } from "../entities/Image";
 import useMutateCookies from "../hooks/useMutateCookies";
 import { CACHE_KEY_COOKIES } from "../constants";
@@ -21,9 +22,7 @@ const AddImageForm = ({ slug }: Props) => {
     // apiClient,
     (image: AddImage) =>
       apiClient.uploadImage(image, slug).then((res) => res.data),
-    () => {
-      
-    },
+    () => {},
     [CACHE_KEY_COOKIES]
   );
 
@@ -47,7 +46,6 @@ const AddImageForm = ({ slug }: Props) => {
       console.log("Uploading file:", selectedFile.name);
     }
   };
-  
 
   return (
     <>

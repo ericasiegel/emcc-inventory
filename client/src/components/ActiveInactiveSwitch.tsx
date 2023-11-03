@@ -1,6 +1,15 @@
-import { Text, Flex, FormControl, FormLabel, Switch, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  Text,
+  Flex,
+  FormControl,
+  FormLabel,
+  Switch,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
 import { useState } from "react";
-import APIClient, { AddUpdateCookie } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { AddUpdateCookie } from "../entities/Cookie";
 import { Cookie } from "../entities/Cookie";
 import useMutateCookies from "../hooks/useMutateCookies";
 import { CACHE_KEY_COOKIES } from "../constants";
@@ -14,12 +23,12 @@ interface Props {
 const ActiveInactiveSwitch = ({ id, name, is_active }: Props) => {
   const apiClient = new APIClient("cookies/");
 
-  const {
-    mutate: activateCookie,
-    error,
-  } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
-    (cookie: AddUpdateCookie) =>
-      apiClient.patch(cookie, id),
+  const { mutate: activateCookie, error } = useMutateCookies<
+    Cookie,
+    Error,
+    AddUpdateCookie
+  >(
+    (cookie: AddUpdateCookie) => apiClient.patch(cookie, id),
     () => {},
     [CACHE_KEY_COOKIES]
   );

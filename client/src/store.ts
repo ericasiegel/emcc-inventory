@@ -19,3 +19,4 @@ const useCookieQueryStore = create<CookieQueryStore>(set => ({
 }))
 
 export default useCookieQueryStore;
+

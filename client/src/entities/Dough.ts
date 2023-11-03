@@ -6,3 +6,9 @@ export interface Dough {
     location: string;
     date_added: string;
 }
+
+export interface AddUpdateDough {
+    cookie_name: number;
+    location_name: number;
+    quantity?: number;
+}

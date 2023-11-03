@@ -14,9 +14,10 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react";
-import APIClient, { AddUpdateStore } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { AddStore } from "../entities/StoreCookie";
 import { useRef, useState } from "react";
-import { Store } from "../entities/Store";
+import { Store } from "../entities/StoreCookie";
 import useMutateCookies from "../hooks/useMutateCookies";
 import { CACHE_KEY_COOKIES } from "../constants";
 
@@ -31,16 +32,15 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     mutate: addStoreCookies,
     error,
     isLoading,
-  } = useMutateCookies<Store, Error, AddUpdateStore>(
+  } = useMutateCookies<Store, Error, AddStore>(
     // apiClient,
-    (cookie: AddUpdateStore) =>
-      apiClient.post(cookie),
+    (cookie: AddStore) => apiClient.post(cookie),
     () => {
       resetForm();
     },
     [CACHE_KEY_COOKIES, "store"]
   );
-  
+
   const [storeQuantityValue, setStoreQuantityValue] = useState(1);
 
   const storeQuantity = useRef<HTMLInputElement>(null);
@@ -51,7 +51,7 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     const storequantityValue =
       storeQuantity.current?.querySelector("input")?.valueAsNumber;
 
-    const storeData: AddUpdateStore = {
+    const storeData: AddStore = {
       cookie_name: id,
       quantity: storequantityValue,
       size: cookieSize,

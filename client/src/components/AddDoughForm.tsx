@@ -16,7 +16,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
-import APIClient, { AddUpdateDough } from "../services/api-client";
+import APIClient from "../services/api-client";
+import { AddUpdateDough } from "../entities/Dough";
 import { useRef, useState } from "react";
 import { Dough } from "../entities/Dough";
 import useMutateCookies from "../hooks/useMutateCookies";
@@ -37,8 +38,7 @@ const AddDoughForm = ({ id }: Props) => {
     error,
     isLoading,
   } = useMutateCookies<Dough, Error, AddUpdateDough>(
-    (dough: AddUpdateDough) =>
-      apiClient.post(dough),
+    (dough: AddUpdateDough) => apiClient.post(dough),
     () => {
       resetForm();
     },
