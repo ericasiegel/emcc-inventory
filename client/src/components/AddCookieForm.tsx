@@ -10,29 +10,20 @@ import {
   // FormLabel,
   Input,
 } from "@chakra-ui/react";
-import APIClient from "../services/api-client";
 import { AddUpdateCookie } from "../entities/Cookie";
-import { Cookie } from "../entities/Cookie";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useAddCookie from "../hooks/useAddCookie";
 
 const AddCookieForm = () => {
-  const apiClient = new APIClient("cookies/");
-  
-  const {
-    mutate: addCookie,
-    error,
-    isLoading,
-  } = useMutateCookies<Cookie, Error, AddUpdateCookie>(
-    (cookie: AddUpdateCookie) => apiClient.post(cookie),
-    () => {
-      resetForm();
-    },
-    [CACHE_KEY_COOKIES]
-  );
 
   const [activeCookie, setActiveCookie] = useState<boolean>(true);
   const [name, setName] = useState<string>("");
+  const resetForm = () => {
+    setName("");
+    setActiveCookie(true);
+  };
+
+  const { addCookie, error, isLoading } = useAddCookie(resetForm)
+
 
   const cookieName = useRef<HTMLInputElement>(null);
   const isActive = useRef<HTMLInputElement>(null);
@@ -55,10 +46,6 @@ const AddCookieForm = () => {
     // resetForm();
   };
 
-  const resetForm = () => {
-    setName("");
-    setActiveCookie(true);
-  };
 
   return (
     <>
