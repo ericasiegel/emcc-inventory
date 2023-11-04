@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import APIClient from "../services/api-client";
-import { Cookie } from '../entities/Cookie';
+import cookieService from "../services/cookieService";
+import { CACHE_KEY_COOKIES } from "../constants";
 
-const apiClient = new APIClient<Cookie>('/cookies');
 
 const useCookie = (slug: string) => useQuery({
-    queryKey: ['cookies', slug],
-    queryFn: () => apiClient.get(slug)
+    queryKey: [CACHE_KEY_COOKIES, slug],
+    queryFn: () => cookieService.get(slug)
 })
 
 export default useCookie;

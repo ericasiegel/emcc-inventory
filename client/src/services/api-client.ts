@@ -8,7 +8,7 @@ export interface FetchResponse<T> {
   }
 
 // const apiToken = localStorage.getItem('apiToken')
-const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MTIyMTY0LCJpYXQiOjE2OTkwMzU3NjQsImp0aSI6IjdmZjIwZmNmOTBiNjQxNTE4NjU4NmRiOWEwZjUxYmQ5IiwidXNlcl9pZCI6MX0.xTnEMJBAYuLYcQB5_ArQ6tBjYUvw8PU0CP_GIbFy1xk'
+const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5MjIxMDQ3LCJpYXQiOjE2OTkxMzQ2NDcsImp0aSI6ImE2ZmNkMDNmZTljOTQ0MDU4ZGJkNzBkNTViYjNiNzRiIiwidXNlcl9pZCI6MX0.2Odc3s7Gzjj4YrM0bnsaMlE1dQ8T_RJbyeFNqU62eOo'
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery',

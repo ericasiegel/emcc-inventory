@@ -18,6 +18,7 @@ import { CACHE_KEY_COOKIES } from "../constants";
 
 const AddCookieForm = () => {
   const apiClient = new APIClient("cookies/");
+  
   const {
     mutate: addCookie,
     error,

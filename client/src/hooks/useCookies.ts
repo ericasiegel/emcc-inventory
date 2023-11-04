@@ -1,18 +1,20 @@
 import { FetchResponse } from './../services/api-client';
 import { useInfiniteQuery } from "@tanstack/react-query";
-import APIClient from "../services/api-client";
 import ms from 'ms';
 import useCookieQueryStore from '../store';
 import { Cookie } from '../entities/Cookie';
+import cookieService from '../services/cookieService';
+import { CACHE_KEY_COOKIES } from '../constants';
 
-const apiClient = new APIClient<Cookie>('/cookies')
+
+
 
   const useCookies = () => {
     const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
     return useInfiniteQuery<FetchResponse<Cookie>, Error>({
-      queryKey: ['cookies', cookieQuery],
+      queryKey: [CACHE_KEY_COOKIES, cookieQuery],
       queryFn: ({ pageParam = 1}) =>
-        apiClient
+        cookieService
           .getAll({
             params: { 
               search: cookieQuery.searchText,
