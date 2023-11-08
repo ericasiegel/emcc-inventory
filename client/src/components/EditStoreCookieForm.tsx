@@ -14,12 +14,9 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react";
-import APIClient from "../services/api-client";
 import { EditStore } from "../entities/StoreCookie";
 import { useRef } from "react";
-import { Store } from "../entities/StoreCookie";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useEditStoreCookies from "../hooks/useEditStoreCookies";
 
 interface Props {
   id: number;
@@ -27,17 +24,7 @@ interface Props {
 }
 
 const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
-  const apiClient = new APIClient("store/");
-
-  const {
-    mutate: editStoreCookies,
-    error,
-    isLoading,
-  } = useMutateCookies<Store, Error, EditStore>(
-    (store: EditStore) => apiClient.patch(store, id),
-    () => {},
-    [CACHE_KEY_COOKIES, "store"]
-  );
+  const { editStoreCookies, error, isLoading } = useEditStoreCookies(id)
 
   const storeQuantity = useRef<HTMLInputElement>(null);
 

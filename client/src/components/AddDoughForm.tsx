@@ -16,12 +16,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
-import APIClient from "../services/api-client";
 import { AddUpdateDough } from "../entities/Dough";
 import { useRef, useState } from "react";
-import { Dough } from "../entities/Dough";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useAddDough from "../hooks/useAddDough";
 
 interface Props {
   id: number;
@@ -32,18 +29,6 @@ const AddDoughForm = ({ id }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
-  const apiClient = new APIClient("doughs/");
-  const {
-    mutate: addDough,
-    error,
-    isLoading,
-  } = useMutateCookies<Dough, Error, AddUpdateDough>(
-    (dough: AddUpdateDough) => apiClient.post(dough),
-    () => {
-      resetForm();
-    },
-    [CACHE_KEY_COOKIES, "doughs"]
-  );
   const [doughQantityValue, setDoughQuantityValue] = useState(1);
 
   const resetForm = () => {
@@ -52,6 +37,8 @@ const AddDoughForm = ({ id }: Props) => {
     }
     setDoughQuantityValue(1);
   };
+
+  const { addDough, error, isLoading } = useAddDough(resetForm);
 
   const locationId = useRef<HTMLSelectElement>(null);
   const doughQuantity = useRef<HTMLInputElement>(null);

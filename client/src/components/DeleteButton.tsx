@@ -7,13 +7,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
-import APIClient from "../services/api-client";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { Cookie } from "../entities/Cookie";
-import { Dough } from "../entities/Dough";
-import { Baked } from "../entities/Baked";
-import { AxiosError } from "axios";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useDeleteCookies from "../hooks/useDeleteCookies";
 
 interface Props {
   endpoint: string;
@@ -21,17 +15,7 @@ interface Props {
 }
 
 const DeleteButton = ({ endpoint, id }: Props) => {
-  const apiClient = new APIClient(endpoint);
-
-  const {
-    mutate: deleteItem,
-    error,
-    isLoading,
-  } = useMutateCookies<{data: Cookie | Dough | Baked}, AxiosError, number>(
-    (id: number) => apiClient.delete(id).then((res) => res.data),
-    () => {},
-    [CACHE_KEY_COOKIES, endpoint]
-  );
+  const { deleteItem, error, isLoading } = useDeleteCookies(endpoint);
 
   if (error) {
     // Check if the error status code is 405
@@ -55,7 +39,9 @@ const DeleteButton = ({ endpoint, id }: Props) => {
           <AlertIcon />
           <Flex direction="column">
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>An error occurred while deleting.</AlertDescription>
+            <AlertDescription>
+              An error occurred while deleting.
+            </AlertDescription>
           </Flex>
         </Alert>
       );

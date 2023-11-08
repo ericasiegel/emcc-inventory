@@ -16,12 +16,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../hooks/useLocations";
-import APIClient from "../services/api-client";
 import { AddUpdateBaked } from "../entities/Baked";
 import { useRef, useState } from "react";
-import { Baked } from "../entities/Baked";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useAddBaked from "../hooks/useAddBaked";
 
 interface Props {
   id: number;
@@ -31,31 +28,23 @@ interface Props {
 const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
-
-  const apiClient = new APIClient("bakedcookies/");
-  const {
-    mutate: addBakedCookies,
-    error,
-    isLoading,
-  } = useMutateCookies<Baked, Error, AddUpdateBaked>(
-    (baked: AddUpdateBaked) => apiClient.post(baked),
-    () => {
-      resetForm();
-    },
-    [CACHE_KEY_COOKIES, "bakedcookies"]
-  );
-
   const [bakedValue, setBakedValue] = useState(1);
 
   const locationId = useRef<HTMLSelectElement>(null);
   const bakedQuantity = useRef<HTMLInputElement>(null);
 
+  const resetForm = () => {
+    if (locationId.current) locationId.current.value = "";
+    setBakedValue(1);
+  };
+
+  const { addBakedCookies, error, isLoading } = useAddBaked(resetForm)
+
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    
     const locationIdValue = locationId.current?.value;
-    const bakedquantityValue =
-      bakedQuantity.current?.querySelector("input")?.valueAsNumber;
+    const bakedquantityValue = bakedQuantity.current?.querySelector("input")?.valueAsNumber;
 
     const bakedData: AddUpdateBaked = {
       cookie_name: id,
@@ -67,10 +56,6 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     addBakedCookies(bakedData);
   };
 
-  const resetForm = () => {
-    if (locationId.current) locationId.current.value = "";
-    setBakedValue(1);
-  };
 
   return (
     <>

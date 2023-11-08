@@ -1,9 +1,6 @@
 import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { FcRemoveImage } from "react-icons/fc";
-import APIClient from "../services/api-client";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { Cookie } from "../entities/Cookie";
-import { CACHE_KEY_COOKIES } from "../constants";
+import useDeleteImage from "../hooks/useDeleteImage";
 
 interface Props {
   slug: string;
@@ -11,16 +8,7 @@ interface Props {
 }
 
 const DeleteImageButton = ({ slug, id }: Props) => {
-  const apiClient = new APIClient("cookies/");
-  const {
-    mutate: deleteItem,
-    error,
-    isLoading,
-  } = useMutateCookies<Cookie, Error, number>(
-    (id: number) => apiClient.deleteImage(slug, id).then((res) => res.data),
-    () => {},
-    [CACHE_KEY_COOKIES]
-  );
+  const { deleteImage, error, isLoading } = useDeleteImage(slug)
 
   return (
     <>
@@ -35,7 +23,7 @@ const DeleteImageButton = ({ slug, id }: Props) => {
         variant="unstyled"
         onClick={(event) => {
           event.preventDefault();
-          deleteItem(id);
+          deleteImage(id);
         }}
       >
         {isLoading ? "Deleting..." : <FcRemoveImage size="25px" />}
