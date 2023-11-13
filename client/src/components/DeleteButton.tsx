@@ -7,7 +7,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
-import useDeleteCookies from "../cookies/useDeleteCookies";
+import useDeleteCookies from "../hooks/useDeleteCookies";
 
 interface Props {
   endpoint: string;

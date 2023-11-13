@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
 import { CACHE_KEY_COOKIES } from "../constants";
 import { Baked } from "../baked/Baked";
-import { Cookie } from "./Cookie";
+import { Cookie } from "../cookies/Cookie";
 import { Dough } from "../dough/Dough";
 import APIClient from "../services/api-client";
-import useMutateCookies from "../hooks/useMutateCookies";
+import useMutateCookies from "./useMutateCookies";
 
 const useDeleteCookies = (endpoint: string) => {
     const apiClient = new APIClient(endpoint);

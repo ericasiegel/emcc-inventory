@@ -1,6 +1,6 @@
 
 import APIClient, { FetchResponse } from '../services/api-client'
-import { Location } from './Location'
+import { Location } from '../entities/Location'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
 const apiClient = new APIClient<Location>('/locations')

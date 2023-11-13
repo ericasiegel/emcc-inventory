@@ -9,13 +9,9 @@ export interface Store {
     };  
 }
 
-export interface AddStore {
+export interface AddEditStore {
     cookie_name: number;
     size: string;
-    quantity?: number;
-}
-
-export interface EditStore {
     quantity?: number;
 }
 

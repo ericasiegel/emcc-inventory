@@ -1,7 +1,6 @@
 import { Image } from '../cookieImage/Image';
 import { Counts } from '../counts/Counts';
 
-
 export interface Cookie {
   id: number;
   name: string;

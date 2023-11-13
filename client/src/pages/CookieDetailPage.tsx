@@ -46,9 +46,7 @@ const CookieDetailPage = () => {
             {cookie?.name}
           </Heading>
           <ActiveInactiveSwitch
-            id={cookie.id}
-            name={cookie.name}
-            is_active={cookie.is_active}
+            cookie={cookie}
           />
         </HStack>
 
