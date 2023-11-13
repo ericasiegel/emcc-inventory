@@ -1,0 +1,69 @@
+import {
+  Text,
+  Flex,
+  FormControl,
+  FormLabel,
+  Switch,
+  Alert,
+  AlertIcon,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import APIClient from "../services/api-client";
+import { Cookie } from "./Cookie";
+import useMutateCookies from "../hooks/useMutateCookies";
+import { CACHE_KEY_COOKIES } from "../constants";
+
+interface Props {
+  cookie: Cookie
+}
+
+const ActiveInactiveSwitch = ({cookie}: Props ) => {
+  const apiClient = new APIClient("cookies/");
+
+  const { mutate: activateCookie, error } = useMutateCookies<
+    Cookie,
+    Error,
+    Cookie
+  >(
+    (updatedCookie: Cookie) => apiClient.patch(updatedCookie, cookie.id),
+    () => {},
+    [CACHE_KEY_COOKIES]
+  );
+
+  const [isActive, setIsActive] = useState(cookie.is_active);
+
+  const handleSwitchChange = () => {
+    setIsActive(!isActive);
+
+    activateCookie({
+      ...cookie,
+      is_active: !isActive,
+    });
+  };
+
+  return (
+    <>
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          {error.message}
+        </Alert>
+      )}
+      <Flex justifyContent="center" alignItems="center">
+        <FormControl paddingTop={4} display="flex" alignItems="center">
+          <FormLabel htmlFor="is_active" mb="0">
+            {cookie.is_active ? <Text>Active</Text> : <Text>Inactive</Text>}
+          </FormLabel>
+          <Switch
+            id="email-alerts"
+            colorScheme="green"
+            isChecked={cookie.is_active}
+            onChange={handleSwitchChange}
+          />
+        </FormControl>
+      </Flex>
+    </>
+  );
+};
+
+export default ActiveInactiveSwitch;

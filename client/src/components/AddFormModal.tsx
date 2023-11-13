@@ -10,7 +10,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import AddImageButton from "./AddImageButton";
+import AddImageButton from "../cookieImage/AddImageButton";
 
 interface Props {
   children: ReactNode;

@@ -1,8 +1,8 @@
 import { Grid, Show, GridItem, HStack } from "@chakra-ui/react";
 import CookieGrid from "../components/CookieGrid";
-import CookieHeading from "../components/CookieHeading";
+import CookieHeading from "../cookies/CookieHeading";
 import SideBar from "../components/SideBar";
-import AddCookieForm from "../components/AddCookieForm";
+import AddCookieForm from "../cookies/AddCookieForm";
 import AddFormModal from "../components/AddFormModal";
 
 const HomePage = () => {

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import useCookie from "../hooks/useCookie";
+import useCookie from "../cookies/useCookie";
 import {
   Image,
   Heading,
@@ -12,15 +12,15 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
-import DetailCard from "../components/DetailCard";
-import useDoughs from "../hooks/useDoughs";
-import useBaked from "../hooks/useBaked";
+import DetailCard from "../cookies/DetailCard";
+import useDoughs from "../dough/useDoughs";
+import useBaked from "../baked/useBaked";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
-import ActiveInactiveSwitch from "../components/ActiveInactiveSwitch";
-import StoreCookieDetailCard from "../components/StoreCookieDetailCard";
+import ActiveInactiveSwitch from "../cookies/ActiveInactiveSwitch";
+import StoreCookieDetailCard from "../inStore/StoreCookieDetailCard";
 import AddFormModal from "../components/AddFormModal";
-import AddImageForm from "../components/AddImageForm";
-import DeleteImageButton from "../components/DeleteImageButton";
+import AddImageForm from "../cookieImage/AddImageForm";
+import DeleteImageButton from "../cookieImage/DeleteImageButton";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();

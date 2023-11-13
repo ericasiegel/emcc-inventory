@@ -1,6 +1,6 @@
 import { SimpleGrid, Text } from "@chakra-ui/layout";
-import useCookies from "../hooks/useCookies";
-import CookieCard from "./CookieCard";
+import useCookies from "../cookies/useCookies";
+import CookieCard from "../cookies/CookieCard";
 import CookieCardSkeleton from "./CookieCardSkeleton";
 import CookieCardContainer from "./CookieCardContainer";
 import { Spinner } from "@chakra-ui/react";

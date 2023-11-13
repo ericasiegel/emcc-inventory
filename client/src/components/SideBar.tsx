@@ -1,10 +1,7 @@
-
-import LowCountsSidebar from "./LowCountsSidebar";
-import ActiveCookiesNav from "./ActiveCookiesNav";
-
+import LowCountsSidebar from "../counts/LowCountsSidebar";
+import ActiveCookiesNav from "../cookies/ActiveCookiesNav";
 
 const SideBar = () => {
-
   return (
     <>
       <ActiveCookiesNav />

@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { AddImage } from "../entities/Image";
+import { AddImage } from "../cookieImage/Image";
 
 export interface FetchResponse<T> {
     count: number;
@@ -8,7 +8,7 @@ export interface FetchResponse<T> {
   }
 
 // const apiToken = localStorage.getItem('apiToken')
-const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5NTU2MjM1LCJpYXQiOjE2OTk0Njk4MzUsImp0aSI6ImMxYWIyZGE1OTI3ZTRmNTY5ODIxNTFlMzBhYzM0NWY1IiwidXNlcl9pZCI6MX0.JghG2k2CS8XWknJihTlbWdt4pCCalno1IPd2FblXBa4'
+const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk5OTg1ODQ2LCJpYXQiOjE2OTk4OTk0NDYsImp0aSI6Ijg5MWRhOTFmZjViNDRhYjE5OTI1NDVhMDI5ZTlmYTgyIiwidXNlcl9pZCI6MX0.B4wElehqePKvgY-LyqM6uMEfyriGBhhfwq0Eq3J4pmk'
 
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery',
