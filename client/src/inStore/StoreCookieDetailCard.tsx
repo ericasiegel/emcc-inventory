@@ -25,6 +25,8 @@ interface Props {
 const StoreCookieDetailCard = ({ id, size, count }: Props) => {
   const result = useStoreCookies(id, size);
   const cookieData = result.data?.pages.flatMap((page) => page.results)[0];
+  console.log(cookieData);
+  
 
   const headingSize = size === "mega" ? "Mega" : "Mini";
 

@@ -1,5 +1,5 @@
 import { CACHE_KEY_COOKIES } from "../constants";
-import { Store, AddEditStore } from "./StoreCookie";
+import { Store, EditStore } from "./StoreCookie";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 
@@ -10,8 +10,8 @@ const useEditStoreCookies = (id: number) => {
       mutate: editStoreCookies,
       error,
       isLoading,
-    } = useMutateCookies<Store, Error, AddEditStore>(
-      (store: AddEditStore) => apiClient.patch(store, id),
+    } = useMutateCookies<Store, Error, EditStore>(
+      (store: EditStore) => apiClient.patch(store, id),
       () => {},
       [CACHE_KEY_COOKIES, "store"]
     );

@@ -15,3 +15,7 @@ export interface AddEditStore {
     quantity?: number;
 }
 
+export interface EditStore {
+    quantity?: number;
+}
+

@@ -14,17 +14,16 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react";
-import { AddEditStore } from "./StoreCookie";
+import { EditStore } from "./StoreCookie";
 import { useRef } from "react";
 import useEditStoreCookies from "./useEditStoreCookies";
 
 interface Props {
   id: number;
   cookieSize: string;
-  store: AddEditStore;
 }
 
-const EditStoreCookiesForm = ({ id, cookieSize, store }: Props) => {
+const EditStoreCookiesForm = ({ id, cookieSize }: Props) => {
   const { editStoreCookies, error, isLoading } = useEditStoreCookies(id);
 
   const storeQuantity = useRef<HTMLInputElement>(null);
@@ -35,8 +34,7 @@ const EditStoreCookiesForm = ({ id, cookieSize, store }: Props) => {
     const storequantityValue =
       storeQuantity.current?.querySelector("input")?.valueAsNumber;
 
-    const storeData: AddEditStore = {
-      ...store,
+    const storeData: EditStore = {
       quantity: storequantityValue,
     };
 
