@@ -12,3 +12,7 @@ export interface AddUpdateDough {
     location_name: number;
     quantity?: number;
 }
+
+export interface EditDough {
+    quantity?: number
+}

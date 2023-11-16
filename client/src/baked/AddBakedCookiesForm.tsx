@@ -23,6 +23,9 @@ import { useRef, useState } from "react";
 import useAddBaked from "./useAddBaked";
 import useDoughs from "../dough/useDoughs";
 import { format } from "date-fns";
+import useEditDough from "../dough/useEditDough";
+import { EditDough } from "../dough/Dough";
+import useDeleteCookies from "../hooks/useDeleteCookies";
 
 interface Props {
   id: number;
@@ -30,69 +33,79 @@ interface Props {
 }
 
 const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
-  // get Locations for Select List
-  const { data: getLocations } = useLocations();
-  const locations = getLocations?.pages.flatMap((page) => page.results);
-
-  // get doughs for Select List
-  const { data: getDoughs } = useDoughs(id);
-  const doughs = getDoughs?.pages.flatMap((page) => page.results);
-
+  //  state declarations
   const [bakedValue, setBakedValue] = useState(1);
   const [doughUsedValue, setDoughUsedValue] = useState(0);
   const [doughUsage, setDoughUsage] = useState("No");
-
-  const handleDoughUsage = (value: string) => setDoughUsage(value);
-
   const [doughQuantity, setDoughQuantity] = useState(0);
 
+  //  Ref declarations
   const locationId = useRef<HTMLSelectElement>(null);
   const doughId = useRef<HTMLSelectElement>(null);
   const bakedQuantity = useRef<HTMLInputElement>(null);
   const doughUsedQuantity = useRef<HTMLInputElement>(null);
 
+  // get Locations for Select List
+  const { data: getLocations } = useLocations();
+  const locations = getLocations?.pages.flatMap((page) => page.results);
+  // get doughs for Select List
+  const { data: getDoughs } = useDoughs(id);
+  const doughs = getDoughs?.pages.flatMap((page) => page.results);
+
+  // reset form function
   const resetForm = () => {
     if (locationId.current) locationId.current.value = "";
     setBakedValue(1);
   };
-
+  // hooks for add, edit, delete operatoins
   const { addBakedCookies, error, isLoading } = useAddBaked(resetForm);
+  const { editDough } = useEditDough(Number(doughId.current?.value));
+  const { deleteItem } = useDeleteCookies("doughs");
 
+  // Determine if dough was used or not
+  const handleDoughUsage = (value: string) => setDoughUsage(value);
+
+  // set the quantity of dough from the selected dough
   const handleDoughSelection = () => {
     const selectedDoughId = doughId.current?.value;
-
-    const selectedDough = doughs?.find(
+    const doughQuantity = doughs?.find(
       (dough) => dough.id === Number(selectedDoughId)
     );
-    console.log(selectedDough?.quantity);
-
-    setDoughQuantity(selectedDough ? selectedDough.quantity : 0);
+    console.log(doughQuantity?.quantity);
+    setDoughQuantity(doughQuantity ? doughQuantity?.quantity : 0);
   };
 
+  // handle form submission
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Extracting values from refs
     const locationIdValue = locationId.current?.value;
     const doughIdValue = doughId.current?.value;
-    const bakedquantityValue =
+    const bakedQuantityValue =
       bakedQuantity.current?.querySelector("input")?.valueAsNumber;
     const doughQuantityValue =
       doughUsedQuantity.current?.querySelector("input")?.valueAsNumber;
 
-    console.log(
-      "dough ID: ",
-      doughIdValue,
-      "dough quantity: ",
-      doughQuantityValue
-    );
-
+    // Prepare bakedData and add baked cookies
     const bakedData: AddUpdateBaked = {
       cookie_name: id,
-      quantity: bakedquantityValue,
+      quantity: bakedQuantityValue,
       size: cookieSize,
-      location_name: parseInt(locationIdValue!),
+      location_name: parseInt(locationIdValue || "0"), // Assuming a default value if not available
     };
-
     addBakedCookies(bakedData);
+
+    // Handling dough delete and edit operations
+    if (doughId.current && doughUsedQuantity.current) {
+      if (doughQuantity === doughQuantityValue) {
+        deleteItem(Number(doughIdValue));
+      } else {
+        const newDoughQuantity = doughQuantity - (doughQuantityValue || 0);
+        const doughData: EditDough = { quantity: newDoughQuantity };
+        editDough(doughData);
+      }
+    }
   };
 
   return (
