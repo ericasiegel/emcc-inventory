@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { CACHE_KEY_COOKIES } from "../constants";
+import { COOKIES_ENDPOINT } from "../constants";
 import { Baked } from "../baked/Baked";
 import { Cookie } from "../cookies/Cookie";
 import { Dough } from "../dough/Dough";
@@ -16,7 +16,7 @@ const useDeleteCookies = (endpoint: string) => {
   } = useMutateCookies<{data: Cookie | Dough | Baked}, AxiosError, number>(
     (id: number) => apiClient.delete(id).then((res) => res.data),
     () => {},
-    [CACHE_KEY_COOKIES, endpoint]
+    [COOKIES_ENDPOINT, endpoint]
   );
   return { deleteItem, error, isLoading }
 }

@@ -21,6 +21,7 @@ import StoreCookieDetailCard from "../inStore/StoreCookieDetailCard";
 import AddFormModal from "../components/AddFormModal";
 import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
+import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -54,7 +55,7 @@ const CookieDetailPage = () => {
             count={cookie.counts}
             dataFetcher={useDoughs}
             headingText="Doughs"
-            endpoint="doughs"
+            endpoint={DOUGHS_ENDPOINT}
             />
         </CookieDetailContainer>
         <CookieDetailContainer>
@@ -64,7 +65,7 @@ const CookieDetailPage = () => {
             count={cookie.counts}
             dataFetcher={useBaked}
             headingText="Baked Cookies"
-            endpoint="bakedcookies"
+            endpoint={BAKED_ENDPOINT}
             />
           <DetailCard
             id={cookie.id}
@@ -72,7 +73,7 @@ const CookieDetailPage = () => {
             count={cookie.counts}
             dataFetcher={useBaked}
             headingText="Baked Cookies"
-            endpoint="bakedcookies"
+            endpoint={BAKED_ENDPOINT}
           />
         </CookieDetailContainer>
         <CookieDetailContainer>

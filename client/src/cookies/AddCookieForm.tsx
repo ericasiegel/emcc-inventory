@@ -12,10 +12,29 @@ import { Cookie } from "./Cookie";
 import useAddCookie from "./useAddCookie";
 
 interface Props {
-  cookie: Cookie;
+  cookie?: Cookie;
 }
 
-const AddCookieForm = ({cookie}: Props) => {
+const defaultCookieValue = {
+  "id": 0,
+  "name": "",
+  "slug": "",
+  "is_active": true,
+  "counts": {
+      "doughs": 0,
+      "baked_cookies": {
+          "mega": 0,
+          "mini": 0
+      },
+      "total_in_store": {
+          "mega": 0,
+          "mini": 0
+      }
+  },
+  "images": []
+}
+
+const AddCookieForm = ({cookie = defaultCookieValue}: Props) => {
   const [name, setName] = useState<string>("");
   const resetForm = () => {
     setName("");

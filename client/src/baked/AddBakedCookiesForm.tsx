@@ -26,6 +26,7 @@ import { format } from "date-fns";
 import useEditDough from "../dough/useEditDough";
 import { EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
+import { DOUGHS_ENDPOINT } from "../constants";
 
 interface Props {
   id: number;
@@ -35,9 +36,9 @@ interface Props {
 const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   //  state declarations
   const [bakedValue, setBakedValue] = useState(1);
-  const [doughUsedValue, setDoughUsedValue] = useState(0);
   const [doughUsage, setDoughUsage] = useState("No");
-  const [doughQuantity, setDoughQuantity] = useState(0);
+  const [doughUsedValue, setDoughUsedValue] = useState(0); // tracks dough value entered by user
+  const [doughQuantity, setDoughQuantity] = useState(0); // sets dough max value based off selection
 
   //  Ref declarations
   const locationId = useRef<HTMLSelectElement>(null);
@@ -60,7 +61,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   // hooks for add, edit, delete operatoins
   const { addBakedCookies, error, isLoading } = useAddBaked(resetForm);
   const { editDough } = useEditDough(Number(doughId.current?.value));
-  const { deleteItem } = useDeleteCookies("doughs");
+  const { deleteItem } = useDeleteCookies(DOUGHS_ENDPOINT);
 
   // Determine if dough was used or not
   const handleDoughUsage = (value: string) => setDoughUsage(value);

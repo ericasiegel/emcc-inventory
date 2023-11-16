@@ -11,14 +11,14 @@ import { useState } from "react";
 import APIClient from "../services/api-client";
 import { Cookie } from "./Cookie";
 import useMutateCookies from "../hooks/useMutateCookies";
-import { CACHE_KEY_COOKIES } from "../constants";
+import { COOKIES_ENDPOINT } from "../constants";
 
 interface Props {
   cookie: Cookie
 }
 
 const ActiveInactiveSwitch = ({cookie}: Props ) => {
-  const apiClient = new APIClient("cookies/");
+  const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
 
   const { mutate: activateCookie, error } = useMutateCookies<
     Cookie,
@@ -27,7 +27,7 @@ const ActiveInactiveSwitch = ({cookie}: Props ) => {
   >(
     (updatedCookie: Cookie) => apiClient.patch(updatedCookie, cookie.id),
     () => {},
-    [CACHE_KEY_COOKIES]
+    [COOKIES_ENDPOINT]
   );
 
   const [isActive, setIsActive] = useState(cookie.is_active);

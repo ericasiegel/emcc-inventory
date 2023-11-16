@@ -1,10 +1,10 @@
-import { CACHE_KEY_COOKIES } from '../constants';
+import { COOKIES_ENDPOINT } from '../constants';
 import { Cookie } from '../cookies/Cookie';
 import APIClient from '../services/api-client';
 import useMutateCookies from '../hooks/useMutateCookies';
 
 const useDeleteImage = (slug: string) => {
-    const apiClient = new APIClient("cookies/");
+    const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
     const {
       mutate: deleteImage,
       error,
@@ -12,7 +12,7 @@ const useDeleteImage = (slug: string) => {
     } = useMutateCookies<Cookie, Error, number>(
       (id: number) => apiClient.deleteImage(slug, id).then((res) => res.data),
       () => {},
-      [CACHE_KEY_COOKIES]
+      [COOKIES_ENDPOINT]
     );
     return { deleteImage, error, isLoading }
 }

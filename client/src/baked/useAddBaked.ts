@@ -1,11 +1,11 @@
-import { CACHE_KEY_COOKIES } from "../constants";
+import { BAKED_ENDPOINT, COOKIES_ENDPOINT } from "../constants";
 import { Baked, AddUpdateBaked } from "./Baked";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 
 
 const useAddBaked = (onSuccessCallback: () => void) => {
-    const apiClient = new APIClient("bakedcookies/");
+    const apiClient = new APIClient(BAKED_ENDPOINT + "/");
   const {
     mutate: addBakedCookies,
     error,
@@ -15,7 +15,7 @@ const useAddBaked = (onSuccessCallback: () => void) => {
     () => {
       onSuccessCallback();
     },
-    [CACHE_KEY_COOKIES, "bakedcookies"]
+    [COOKIES_ENDPOINT, BAKED_ENDPOINT]
   );
   return { addBakedCookies, error, isLoading }
 }

@@ -1,12 +1,12 @@
 
-import { CACHE_KEY_COOKIES } from '../constants';
+import { COOKIES_ENDPOINT } from '../constants';
 import { AddImage } from './Image';
 import APIClient from '../services/api-client';
 import useMutateCookies from '../hooks/useMutateCookies';
 import { Image } from "./Image";
 
 const useAddImage = (slug: string) => {
-    const apiClient = new APIClient("cookies/");
+    const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
 
   const {
     mutate: uploadImage,
@@ -16,7 +16,7 @@ const useAddImage = (slug: string) => {
     (image: AddImage) =>
       apiClient.uploadImage(image, slug).then((res) => res.data),
     () => {},
-    [CACHE_KEY_COOKIES]
+    [COOKIES_ENDPOINT]
   );
   return { uploadImage, error, isLoading }
 }

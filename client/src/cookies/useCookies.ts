@@ -4,14 +4,14 @@ import ms from 'ms';
 import useCookieQueryStore from '../store';
 import { Cookie } from './Cookie';
 import cookieService from '../services/cookieService';
-import { CACHE_KEY_COOKIES } from '../constants';
+import { COOKIES_ENDPOINT } from '../constants';
 
 
 
   const useCookies = () => {
     const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
     return useInfiniteQuery<FetchResponse<Cookie>, Error>({
-      queryKey: [CACHE_KEY_COOKIES, cookieQuery],
+      queryKey: [COOKIES_ENDPOINT, cookieQuery],
       queryFn: ({ pageParam = 1}) =>
         cookieService
           .getAll({

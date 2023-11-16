@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import cookieService from "../services/cookieService";
-import { CACHE_KEY_COOKIES } from "../constants";
+import { COOKIES_ENDPOINT } from "../constants";
 
 
 const useCookie = (slug: string) => useQuery({
-    queryKey: [CACHE_KEY_COOKIES, slug],
+    queryKey: [COOKIES_ENDPOINT, slug],
     queryFn: () => cookieService.get(slug)
 })
 

@@ -1,11 +1,11 @@
 import APIClient from '../services/api-client';
-import { CACHE_KEY_COOKIES } from '../constants';
+import { COOKIES_ENDPOINT } from '../constants';
 import { Cookie } from './Cookie';
 import useMutateCookies from '../hooks/useMutateCookies';
 
 
 const useAddCookie = (onSuccessCallback: () => void) => {
-  const apiClient = new APIClient("cookies/");
+  const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
   
   const {
     mutate: addCookie,
@@ -16,7 +16,7 @@ const useAddCookie = (onSuccessCallback: () => void) => {
     () => {
       onSuccessCallback();
     },
-    [CACHE_KEY_COOKIES]
+    [COOKIES_ENDPOINT]
   );
   return { addCookie, error, isLoading }
 }

@@ -1,10 +1,10 @@
-import { CACHE_KEY_COOKIES } from "../constants";
+import { COOKIES_ENDPOINT, STORE_ENDPOINT } from "../constants";
 import { Store, AddEditStore } from "./StoreCookie";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 
 const useAddStoreCookie = (onSuccessCallback: () => void) => {
-    const apiClient = new APIClient("store/");
+    const apiClient = new APIClient(STORE_ENDPOINT + "/");
     const {
       mutate: addStoreCookies,
       error,
@@ -14,7 +14,7 @@ const useAddStoreCookie = (onSuccessCallback: () => void) => {
       () => {
         onSuccessCallback();
       },
-      [CACHE_KEY_COOKIES, "store"]
+      [COOKIES_ENDPOINT, STORE_ENDPOINT]
     );
     return { addStoreCookies, error, isLoading }
 }

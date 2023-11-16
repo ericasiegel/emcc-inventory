@@ -1,11 +1,11 @@
-import { CACHE_KEY_COOKIES } from "../constants";
+import { COOKIES_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
 import { Dough, AddUpdateDough } from "./Dough";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 
 
 const useAddDough = (onSuccessCallback: () => void) => {
-    const apiClient = new APIClient("doughs/");
+    const apiClient = new APIClient(DOUGHS_ENDPOINT + "/");
     const {
       mutate: addDough,
       error,
@@ -15,7 +15,7 @@ const useAddDough = (onSuccessCallback: () => void) => {
       () => {
         onSuccessCallback();
       },
-      [CACHE_KEY_COOKIES, "doughs"]
+      [COOKIES_ENDPOINT, DOUGHS_ENDPOINT]
     );
     return { addDough, error, isLoading }
 }

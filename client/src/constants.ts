@@ -1,1 +1,4 @@
-export const CACHE_KEY_COOKIES = "cookies";
+export const COOKIES_ENDPOINT = "cookies";
+export const DOUGHS_ENDPOINT = "doughs";
+export const BAKED_ENDPOINT = "bakedcookies";
+export const STORE_ENDPOINT = "store";
