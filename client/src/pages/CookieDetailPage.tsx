@@ -12,7 +12,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
-import DetailCard from "../cookies/DetailCard";
+import DetailCard from "../components/DetailCard";
 import useDoughs from "../dough/useDoughs";
 import useBaked from "../baked/useBaked";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
@@ -45,9 +45,7 @@ const CookieDetailPage = () => {
           <Heading color="#941c3e" size="2xl" paddingY={3}>
             {cookie?.name}
           </Heading>
-          <ActiveInactiveSwitch
-            cookie={cookie}
-          />
+          <ActiveInactiveSwitch cookie={cookie} />
         </HStack>
 
         <CookieDetailContainer>
@@ -57,7 +55,7 @@ const CookieDetailPage = () => {
             dataFetcher={useDoughs}
             headingText="Doughs"
             endpoint="doughs"
-          />
+            />
         </CookieDetailContainer>
         <CookieDetailContainer>
           <DetailCard
@@ -67,7 +65,7 @@ const CookieDetailPage = () => {
             dataFetcher={useBaked}
             headingText="Baked Cookies"
             endpoint="bakedcookies"
-          />
+            />
           <DetailCard
             id={cookie.id}
             size="mini"

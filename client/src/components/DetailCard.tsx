@@ -14,9 +14,9 @@ import ColorBadge from "../counts/ColorBadge";
 import { Counts } from "../counts/Counts";
 import { Baked } from "../baked/Baked";
 import { Dough } from "../dough/Dough";
-import DeleteButton from "../components/DeleteButton";
+import DeleteButton from "./DeleteButton";
 import AddDoughForm from "../dough/AddDoughForm";
-import AddFormModal from "../components/AddFormModal";
+import AddFormModal from "./AddFormModal";
 import AddBakedCookiesForm from "../baked/AddBakedCookiesForm";
 
 interface Props<T> {
@@ -41,9 +41,6 @@ const DetailCard = <T extends Baked | Dough>({
 }: Props<T>) => {
   const result = dataFetcher(id, size);
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
-  // console.log(items);
-
-  // const getQuantity = <strong> Quantity: </strong>{item.quantity}
 
   let countSize =
     size === "mega" ? count.baked_cookies.mega : count.baked_cookies.mini;
