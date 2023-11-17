@@ -51,11 +51,11 @@ const ActiveInactiveSwitch = ({cookie}: Props ) => {
       )}
       <Flex justifyContent="center" alignItems="center">
         <FormControl paddingTop={4} display="flex" alignItems="center">
-          <FormLabel htmlFor="is_active" mb="0">
+          <FormLabel htmlFor={cookie.slug} mb="0">
             {cookie.is_active ? <Text>Active</Text> : <Text>Inactive</Text>}
           </FormLabel>
           <Switch
-            id="email-alerts"
+            id={cookie.slug}
             colorScheme="green"
             isChecked={cookie.is_active}
             onChange={handleSwitchChange}

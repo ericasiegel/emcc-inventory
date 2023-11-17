@@ -72,7 +72,6 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
     const doughQuantity = doughs?.find(
       (dough) => dough.id === Number(selectedDoughId)
     );
-    console.log(doughQuantity?.quantity);
     setDoughQuantity(doughQuantity ? doughQuantity?.quantity : 0);
   };
 
