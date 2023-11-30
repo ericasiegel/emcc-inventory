@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import useLocations from "../cookies/useLocations";
 import { AddUpdateBaked } from "./Baked";
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
 import useAddBaked from "./useAddBaked";
 import useDoughs from "../dough/useDoughs";
 import { format } from "date-fns";
@@ -27,6 +27,7 @@ import useEditDough from "../dough/useEditDough";
 import { EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import { DOUGHS_ENDPOINT } from "../constants";
+import bakedReducer, { AppState } from "./bakedReducer";
 
 interface Props {
   id: number;
@@ -35,10 +36,29 @@ interface Props {
 
 const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   //  state declarations
-  const [bakedValue, setBakedValue] = useState(1);
-  const [doughUsage, setDoughUsage] = useState("No");
-  const [doughUsedValue, setDoughUsedValue] = useState(0); // tracks dough value entered by user
-  const [doughQuantity, setDoughQuantity] = useState(0); // sets dough max value based off selection
+  const initialState: AppState = {
+    bakedValue: 1, // reset form value
+    doughUsage: "No", // decides weather dough was used
+    doughUsedValue: 0, // tracks dough value entered by user
+    doughQuantity: 0, // sets dough max value based off selection
+  };
+
+  const [state, dispatch] = useReducer(bakedReducer, initialState);
+  // Access state variables like this:
+  const { bakedValue, doughUsage, doughUsedValue, doughQuantity } = state;
+  // Dispatch actions to update state:
+  const setBakedValue = (value: number) => {
+    dispatch({ type: "SET_BAKED_VALUE", payload: value });
+  };
+  const setDoughUsage = (value: string) => {
+    dispatch({ type: "SET_DOUGH_USAGE", payload: value });
+  };
+  const setDoughUsedValue = (value: number) => {
+    dispatch({ type: "SET_DOUGH_USED_VALUE", payload: value });
+  };
+  const setDoughQuantity = (value: number) => {
+    dispatch({ type: "SET_DOUGH_QUANTITY", payload: value });
+  };
 
   //  Ref declarations
   const locationId = useRef<HTMLSelectElement>(null);
@@ -56,6 +76,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   // reset form function
   const resetForm = () => {
     if (locationId.current) locationId.current.value = "";
+    if (doughId.current) doughId.current.value = '';
     setBakedValue(1);
   };
   // hooks for add, edit, delete operatoins
