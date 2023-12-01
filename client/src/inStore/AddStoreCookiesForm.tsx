@@ -1,3 +1,5 @@
+// Importing necessary dependencies and components
+import React, { useRef } from "react";
 import {
   Alert,
   AlertIcon,
@@ -16,7 +18,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { AddEditStore } from "./StoreCookie";
-import { useReducer, useRef } from "react";
+import { useReducer } from "react";
 import useAddStoreCookie from "./useAddStoreCookie";
 import useBaked from "../baked/useBaked";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
@@ -29,24 +31,29 @@ import useDeleteCookies from "../hooks/useDeleteCookies";
 import { BAKED_ENDPOINT } from "../constants";
 import { EditBaked } from "../baked/Baked";
 
+// Define the Props interface
 interface Props {
   id: number;
   cookieSize: string;
 }
 
+// Create the AddStoreCookiesForm functional component
 const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
-  // const [storeQuantityValue, setStoreQuantityValue] = useState(1);
+  // Define the initial state for the form
   const initialState: StartingState = {
-    cookieValue: 1, // reset form value
-    selectedStoredUsage: "No", // decides weather cookie was used
-    storedUsageValue: 0, // tracks cookie value entered by user
-    storedQuantity: 0, // sets cookie max value based off selection
+    cookieValue: 1, // Reset form value
+    selectedStoredUsage: "No", // Decides whether the cookie was used
+    storedUsageValue: 0, // Tracks cookie value entered by the user
+    storedQuantity: 0, // Sets the cookie max value based on selection
   };
+  
+  // Use a reducer to manage the form state
   const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
-  // Access state variables
-  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } =
-    state;
-  // Dispatch actions to update state:
+  
+  // Destructure state variables for easy access
+  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } = state;
+  
+  // Define functions to dispatch actions to update state
   const setStoreQuantityValue = (value: number) => {
     dispatch({ type: "set_cookie_value", payload: value });
   };
@@ -60,17 +67,19 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     dispatch({ type: "set_stored_Quantity", payload: value });
   };
 
+  // Create refs for DOM elements
   const storeQuantity = useRef<HTMLInputElement>(null);
   const bakedCookieId = useRef<HTMLSelectElement>(null);
   const bakedCookieUsedQuantity = useRef<HTMLInputElement>(null);
 
+  // Fetch baked cookies data using a custom hook
   const { data: getBakedCookies } = useBaked(id, cookieSize);
   const bakedCookies = getBakedCookies?.pages.flatMap((page) => page.results);
 
-  // Determine if cookies were used or not
+  // Handle baked cookie usage selection
   const handleBakedCookieUsage = (value: string) => setCookieUsage(value);
 
-  // set the quantity of dough from the selected dough
+  // Handle baked cookie selection to set the quantity
   const handleBakedCookieSelection = () => {
     const selectedBakedCookieId = bakedCookieId.current?.value;
     const bakedCookieQuantity = bakedCookies?.find(
@@ -79,6 +88,7 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     setCookieQuantity(bakedCookieQuantity ? bakedCookieQuantity?.quantity : 0);
   };
 
+  // Reset the form
   const resetForm = () => {
     if (bakedCookieId.current) bakedCookieId.current.value = '';
     setCookieUsage('No')
@@ -86,39 +96,45 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     setStoreQuantityValue(1)
   };
 
+  // Custom hooks for adding, editing, and deleting cookies
   const { addStoreCookies, error, isLoading } = useAddStoreCookie(resetForm);
   const { editBakedCookie } = useEditBaked(Number(bakedCookieId.current?.value))
   const { deleteItem } = useDeleteCookies(BAKED_ENDPOINT)
 
+  // Handle form submission
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // Extract form input values
     const storequantityValue =
       storeQuantity.current?.querySelector("input")?.valueAsNumber;
     const bakedCookieIdValue = bakedCookieId.current?.value;
     const bakedCookieQuantityValue =
       bakedCookieUsedQuantity.current?.querySelector("input")?.valueAsNumber;
 
+    // Create store data object
     const storeData: AddEditStore = {
       cookie_name: id,
       quantity: storequantityValue,
       size: cookieSize,
     };
 
+    // Add store cookies
     addStoreCookies(storeData);
 
-      // Handling cookie delete and edit operations
-      if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
-        if (storedQuantity === bakedCookieQuantityValue) {
-          deleteItem(Number(bakedCookieIdValue));
-        } else {
-          const newBakedCookieQuantity = storedQuantity - (bakedCookieQuantityValue || 0);
-          const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
-          editBakedCookie(bakedCookieData);
-        }
+    // Handling cookie delete and edit operations
+    if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
+      if (storedQuantity === bakedCookieQuantityValue) {
+        deleteItem(Number(bakedCookieIdValue));
+      } else {
+        const newBakedCookieQuantity = storedQuantity - (bakedCookieQuantityValue || 0);
+        const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
+        editBakedCookie(bakedCookieData);
       }
-    };
+    }
+  };
 
+  // Render the form and UI elements
   return (
     <>
       {error && (
