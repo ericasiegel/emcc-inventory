@@ -27,7 +27,7 @@ import useEditDough from "../dough/useEditDough";
 import { EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import { DOUGHS_ENDPOINT } from "../constants";
-import bakedReducer, { AppState } from "./bakedReducer";
+import addUpdateFormReducer, { StartingState } from "../reducers/addUpdateFormReducer";
 
 interface Props {
   id: number;
@@ -36,28 +36,28 @@ interface Props {
 
 const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   //  state declarations
-  const initialState: AppState = {
-    bakedValue: 1, // reset form value
-    doughUsage: "No", // decides weather dough was used
-    doughUsedValue: 0, // tracks dough value entered by user
-    doughQuantity: 0, // sets dough max value based off selection
+  const initialState: StartingState = {
+    cookieValue: 1, // reset form value
+    selectedStoredUsage: 'No', // decides weather dough was used
+    storedUsageValue: 0, // tracks dough value entered by user
+    storedQuantity: 0, // sets dough max value based off selection
   };
 
-  const [state, dispatch] = useReducer(bakedReducer, initialState);
+  const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
   // Access state variables like this:
-  const { bakedValue, doughUsage, doughUsedValue, doughQuantity } = state;
+  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } = state;
   // Dispatch actions to update state:
   const setBakedValue = (value: number) => {
-    dispatch({ type: "SET_BAKED_VALUE", payload: value });
+    dispatch({ type: "set_cookie_value", payload: value });
   };
   const setDoughUsage = (value: string) => {
-    dispatch({ type: "SET_DOUGH_USAGE", payload: value });
+    dispatch({ type: "set_selected_stored_usage", payload: value });
   };
   const setDoughUsedValue = (value: number) => {
-    dispatch({ type: "SET_DOUGH_USED_VALUE", payload: value });
+    dispatch({ type: "set_stored_usage_value", payload: value });
   };
   const setDoughQuantity = (value: number) => {
-    dispatch({ type: "SET_DOUGH_QUANTITY", payload: value });
+    dispatch({ type: "set_stored_Quantity", payload: value });
   };
 
   //  Ref declarations
@@ -76,7 +76,9 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   // reset form function
   const resetForm = () => {
     if (locationId.current) locationId.current.value = "";
-    if (doughId.current) doughId.current.value = '';
+    if (doughId.current) doughId.current.value = "";
+    setDoughUsage('No')
+    setDoughUsedValue(0);
     setBakedValue(1);
   };
   // hooks for add, edit, delete operatoins
@@ -119,10 +121,10 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
 
     // Handling dough delete and edit operations
     if (doughId.current && doughUsedQuantity.current) {
-      if (doughQuantity === doughQuantityValue) {
+      if (storedQuantity === doughQuantityValue) {
         deleteItem(Number(doughIdValue));
       } else {
-        const newDoughQuantity = doughQuantity - (doughQuantityValue || 0);
+        const newDoughQuantity = storedQuantity - (doughQuantityValue || 0);
         const doughData: EditDough = { quantity: newDoughQuantity };
         editDough(doughData);
       }
@@ -147,7 +149,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
               <Text fontSize="20px" as="i">
                 Did you use any stored dough?
               </Text>
-              <RadioGroup defaultValue="No" onChange={handleDoughUsage}>
+              <RadioGroup value={selectedStoredUsage} defaultValue="No" onChange={handleDoughUsage}>
                 <HStack spacing="24px">
                   <Radio value="No">No</Radio>
                   <Radio value="Yes">Yes</Radio>
@@ -155,7 +157,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
               </RadioGroup>
             </Box>
           )}
-          {doughUsage === "Yes" && (
+          {selectedStoredUsage === "Yes" && (
             <Box paddingY={3}>
               <Text fontSize="20px" as="i">
                 How Many Doughs?
@@ -177,8 +179,8 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
 
               <Text>How much did you use?: </Text>
               <NumberInput
-                max={doughQuantity}
-                value={doughUsedValue}
+                max={storedQuantity}
+                value={storedUsageValue}
                 onChange={(value) => setDoughUsedValue(Number(value))}
                 width="100%"
                 ref={doughUsedQuantity}
@@ -210,7 +212,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
             <HStack>
               <Text>Quantity: </Text>
               <NumberInput
-                value={bakedValue}
+                value={cookieValue}
                 onChange={(value) => setBakedValue(Number(value))}
                 width="100%"
                 ref={bakedQuantity}
