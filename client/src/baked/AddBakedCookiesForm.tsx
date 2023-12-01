@@ -12,8 +12,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Radio,
-  RadioGroup,
   Select,
   Text,
 } from "@chakra-ui/react";
@@ -27,7 +25,10 @@ import useEditDough from "../dough/useEditDough";
 import { EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import { DOUGHS_ENDPOINT } from "../constants";
-import addUpdateFormReducer, { StartingState } from "../reducers/addUpdateFormReducer";
+import addUpdateFormReducer, {
+  StartingState,
+} from "../reducers/addUpdateFormReducer";
+import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 
 interface Props {
   id: number;
@@ -38,14 +39,15 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   //  state declarations
   const initialState: StartingState = {
     cookieValue: 1, // reset form value
-    selectedStoredUsage: 'No', // decides weather dough was used
+    selectedStoredUsage: "No", // decides weather dough was used
     storedUsageValue: 0, // tracks dough value entered by user
     storedQuantity: 0, // sets dough max value based off selection
   };
 
   const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
-  // Access state variables like this:
-  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } = state;
+  // Access state variables
+  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } =
+    state;
   // Dispatch actions to update state:
   const setBakedValue = (value: number) => {
     dispatch({ type: "set_cookie_value", payload: value });
@@ -77,7 +79,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const resetForm = () => {
     if (locationId.current) locationId.current.value = "";
     if (doughId.current) doughId.current.value = "";
-    setDoughUsage('No')
+    setDoughUsage("No");
     setDoughUsedValue(0);
     setBakedValue(1);
   };
@@ -144,19 +146,15 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
           <Heading paddingBottom={2} size="lg">
             Add Baked Cookies
           </Heading>
+          
           {doughs && doughs?.length > 0 && (
-            <Box paddingY={3}>
-              <Text fontSize="20px" as="i">
-                Did you use any stored dough?
-              </Text>
-              <RadioGroup value={selectedStoredUsage} defaultValue="No" onChange={handleDoughUsage}>
-                <HStack spacing="24px">
-                  <Radio value="No">No</Radio>
-                  <Radio value="Yes">Yes</Radio>
-                </HStack>
-              </RadioGroup>
-            </Box>
+            <AddUpdateFormRadioButtons
+              title="Did you use any stored dough?"
+              usage={selectedStoredUsage}
+              handleUsage={handleDoughUsage}
+            />
           )}
+
           {selectedStoredUsage === "Yes" && (
             <Box paddingY={3}>
               <Text fontSize="20px" as="i">
@@ -176,7 +174,6 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
                   </option>
                 ))}
               </Select>
-
               <Text>How much did you use?: </Text>
               <NumberInput
                 max={storedQuantity}
@@ -193,6 +190,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
               </NumberInput>
             </Box>
           )}
+
           <Box paddingY={3}>
             <Text fontSize="20px" as="b">
               How Many Baked Cookies?

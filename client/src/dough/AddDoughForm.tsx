@@ -17,8 +17,9 @@ import {
 } from "@chakra-ui/react";
 import useLocations from "../cookies/useLocations";
 import { AddUpdateDough } from "./Dough";
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
 import useAddDough from "./useAddDough";
+import addUpdateFormReducer, { StartingState } from "../reducers/addUpdateFormReducer";
 
 interface Props {
   id: number;
@@ -29,7 +30,19 @@ const AddDoughForm = ({ id }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
-  const [doughQantityValue, setDoughQuantityValue] = useState(1);
+  const initialState: StartingState ={
+    cookieValue: 1,
+    selectedStoredUsage: '',
+    storedUsageValue: 0,
+    storedQuantity: 0
+  }
+  const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
+  const { cookieValue } = state;
+
+  const setDoughQuantityValue = (value: number) => {
+    dispatch({ type: 'set_cookie_value', payload: value})
+  }
+
 
   const resetForm = () => {
     if (locationId.current) {
@@ -87,7 +100,7 @@ const AddDoughForm = ({ id }: Props) => {
             <HStack>
               <Text>Quantity: </Text>
               <NumberInput
-                value={doughQantityValue}
+                value={cookieValue}
                 onChange={(value) => setDoughQuantityValue(Number(value))}
                 width="100%"
                 ref={doughQuantity}

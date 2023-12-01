@@ -13,3 +13,7 @@ export interface AddUpdateBaked {
     size: string;
     quantity?: number;
 }
+
+export interface EditBaked {
+    quantity?: number
+}
