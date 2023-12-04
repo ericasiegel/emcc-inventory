@@ -10,11 +10,10 @@ import {
 import AddFormModal from "../components/AddFormModal";
 import EditFormModal from "../components/EditFormModal";
 import ColorBadge from "../counts/ColorBadge";
-import EditStoreCookiesForm from "./EditStoreCookieForm";
-import AddStoreCookiesForm from "./AddStoreCookiesForm";
 import useStoreCookies from "./useStoreCookies";
 import { format } from "date-fns";
 import DeleteButton from "../components/DeleteButton";
+import StoreCookiesForm from "./StoreCookiesForm";
 
 interface Props {
   id: number;
@@ -41,12 +40,12 @@ const StoreCookieDetailCard = ({ id, size, count }: Props) => {
         {countSize > 0 ? (
           <EditFormModal header="">
             {cookieData ? (
-              <EditStoreCookiesForm id={cookieData.id} cookieSize={size} />
+              <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} />
             ) : null}
           </EditFormModal>
         ) : (
           <AddFormModal header="">
-            <AddStoreCookiesForm id={id} cookieSize={size!} />
+            <StoreCookiesForm id={id} cookieSize={size!} mode="add" inStoreQuantityId={0} />
           </AddFormModal>
         )}
       </CardHeader>

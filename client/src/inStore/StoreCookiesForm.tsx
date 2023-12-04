@@ -1,5 +1,5 @@
 // Importing necessary dependencies and components
-import React, { useRef } from "react";
+import React, { useReducer, useRef } from "react";
 import {
   Alert,
   AlertIcon,
@@ -17,28 +17,28 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import { AddEditStore } from "./StoreCookie";
-import { useReducer } from "react";
-import useAddStoreCookie from "./useAddStoreCookie";
-import useBaked from "../baked/useBaked";
-import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
-import { format } from "date-fns";
+import useBaked from "../baked/useBaked";
 import useEditBaked from "../baked/useEditBaked";
-import useDeleteCookies from "../hooks/useDeleteCookies";
 import { BAKED_ENDPOINT } from "../constants";
+import useDeleteCookies from "../hooks/useDeleteCookies";
+import useAddStoreCookie from "./useAddStoreCookie";
+import useEditStoreCookies from "./useEditStoreCookies";
+import { AddEditStore, EditStore } from "./StoreCookie";
 import { EditBaked } from "../baked/Baked";
+import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
+import { format } from "date-fns";
 
-// Define the Props interface
 interface Props {
   id: number;
   cookieSize: string;
+  mode: "add" | "edit";
+  inStoreQuantityId: number;
 }
 
-// Create the AddStoreCookiesForm functional component
-const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
+const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) => {
   // Define the initial state for the form
   const initialState: StartingState = {
     cookieValue: 1, // Reset form value
@@ -46,13 +46,14 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
     storedUsageValue: 0, // Tracks cookie value entered by the user
     storedQuantity: 0, // Sets the cookie max value based on selection
   };
-  
+
   // Use a reducer to manage the form state
   const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
-  
+
   // Destructure state variables for easy access
-  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } = state;
-  
+  const { cookieValue, selectedStoredUsage, storedUsageValue, storedQuantity } =
+    state;
+
   // Define functions to dispatch actions to update state
   const setStoreQuantityValue = (value: number) => {
     dispatch({ type: "set_cookie_value", payload: value });
@@ -90,63 +91,79 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
 
   // Reset the form
   const resetForm = () => {
-    if (bakedCookieId.current) bakedCookieId.current.value = '';
-    setCookieUsage('No')
-    setCookieUsedValue(0)
-    setStoreQuantityValue(1)
+    if (bakedCookieId.current) bakedCookieId.current.value = "";
+    setCookieUsage("No");
+    setCookieUsedValue(0);
+    setStoreQuantityValue(1);
   };
 
   // Custom hooks for adding, editing, and deleting cookies
-  const { addStoreCookies, error, isLoading } = useAddStoreCookie(resetForm);
-  const { editBakedCookie } = useEditBaked(Number(bakedCookieId.current?.value))
-  const { deleteItem } = useDeleteCookies(BAKED_ENDPOINT)
+    const {
+    editStoreCookies,
+    error: editError,
+    isLoading: editIsLoading,
+  } = useEditStoreCookies(inStoreQuantityId, resetForm);
+  const {
+    addStoreCookies,
+    error: addError,
+    isLoading: addIsLoading,
+  } = useAddStoreCookie(resetForm);
+  const { editBakedCookie } = useEditBaked(
+    Number(bakedCookieId.current?.value)
+  );
+  const { deleteItem } = useDeleteCookies(BAKED_ENDPOINT);
 
   // Handle form submission
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Extract form input values
-    const storequantityValue =
+    const storeQuantityValue =
       storeQuantity.current?.querySelector("input")?.valueAsNumber;
     const bakedCookieIdValue = bakedCookieId.current?.value;
     const bakedCookieQuantityValue =
       bakedCookieUsedQuantity.current?.querySelector("input")?.valueAsNumber;
 
-    // Create store data object
-    const storeData: AddEditStore = {
-      cookie_name: id,
-      quantity: storequantityValue,
-      size: cookieSize,
-    };
-
-    // Add store cookies
-    addStoreCookies(storeData);
-
-    // Handling cookie delete and edit operations
-    if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
-      if (storedQuantity === bakedCookieQuantityValue) {
-        deleteItem(Number(bakedCookieIdValue));
-      } else {
-        const newBakedCookieQuantity = storedQuantity - (bakedCookieQuantityValue || 0);
-        const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
-        editBakedCookie(bakedCookieData);
-      }
+    if (mode === "edit") {
+      const storeData: EditStore = {
+        quantity: storeQuantityValue,
+      };
+      // Edit mode: Edit store cookies
+      editStoreCookies(storeData);
+    } else {
+      // Create store data object
+      const storeData: AddEditStore = {
+        cookie_name: id,
+        quantity: storeQuantityValue,
+        size: cookieSize,
+      };
+      addStoreCookies(storeData);
     }
+
+     // Handling cookie delete and edit operations
+     if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
+        if (storedQuantity === bakedCookieQuantityValue) {
+          deleteItem(Number(bakedCookieIdValue));
+        } else {
+          const newBakedCookieQuantity = storedQuantity - (bakedCookieQuantityValue || 0);
+          const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
+          editBakedCookie(bakedCookieData);
+        }
+      }
   };
 
-  // Render the form and UI elements
   return (
     <>
-      {error && (
+      {(editError || addError) && (
         <Alert status="error">
           <AlertIcon />
-          {error.message}
+          {editError ? editError.message : addError?.message}
         </Alert>
       )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
           <Heading paddingBottom={2} size="lg">
-            Add Cookies to Store
+            {mode === "edit" ? `Edit ${cookieSize} Cookies in Store` : "Add Cookies to Store"}
           </Heading>
 
           {bakedCookies && bakedCookies?.length > 0 && (
@@ -212,12 +229,16 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
           </Box>
           <Center>
             <Button
-              disabled={isLoading}
+              disabled={mode === "edit" ? editIsLoading : addIsLoading}
               type="submit"
               colorScheme="blue"
               marginTop={3}
             >
-              {isLoading
+              {mode === "edit"
+                ? editIsLoading
+                  ? "Editing Cookies in Store..."
+                  : "Edit Cookies in Store"
+                : addIsLoading
                 ? "Adding Cookies to Store..."
                 : "Add Cookies to Store"}
             </Button>
@@ -228,4 +249,4 @@ const AddStoreCookiesForm = ({ id, cookieSize }: Props) => {
   );
 };
 
-export default AddStoreCookiesForm;
+export default StoreCookiesForm;

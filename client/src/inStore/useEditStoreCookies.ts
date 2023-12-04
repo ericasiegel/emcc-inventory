@@ -3,7 +3,7 @@ import { Store, EditStore } from "./StoreCookie";
 import APIClient from "../services/api-client";
 import useMutateCookies from "../hooks/useMutateCookies";
 
-const useEditStoreCookies = (id: number) => {
+const useEditStoreCookies = (id: number, onSuccessCallback: () => void) => {
     const apiClient = new APIClient(STORE_ENDPOINT + "/");
 
     const {
@@ -12,7 +12,9 @@ const useEditStoreCookies = (id: number) => {
       isLoading,
     } = useMutateCookies<Store, Error, EditStore>(
       (store: EditStore) => apiClient.patch(store, id),
-      () => {},
+      () => {
+        onSuccessCallback();
+      },
       [COOKIES_ENDPOINT, STORE_ENDPOINT]
     );
     return { editStoreCookies, error, isLoading }
