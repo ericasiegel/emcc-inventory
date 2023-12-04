@@ -14,7 +14,6 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Select,
   Text,
 } from "@chakra-ui/react";
 import addUpdateFormReducer, {
@@ -29,7 +28,7 @@ import useEditStoreCookies from "./useEditStoreCookies";
 import { AddEditStore, EditStore } from "./StoreCookie";
 import { EditBaked } from "../baked/Baked";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
-import { format } from "date-fns";
+import AddEditFormSelect from "../components/AddEditFormSelect";
 
 interface Props {
   id: number;
@@ -175,39 +174,17 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) =>
           )}
 
           {selectedStoredUsage === "Yes" && (
-            <Box paddingY={3}>
-              <Text fontSize="20px" as="i">
-                How Many Cookies?
-              </Text>
-              <Select
-                placeholder="Select Cookies Used"
-                ref={bakedCookieId}
-                onChange={handleBakedCookieSelection}
-                paddingBottom={3}
-              >
-                {bakedCookies?.map((cookie) => (
-                  <option key={cookie.id} value={cookie.id}>
-                    Location: {cookie.location} - Quantity: {cookie.quantity} -
-                    Date Added:{" "}
-                    {format(new Date(cookie.date_added), "MM/dd/yyyy")}
-                  </option>
-                ))}
-              </Select>
-              <Text>How much did you use?: </Text>
-              <NumberInput
-                max={storedQuantity}
-                value={storedUsageValue}
-                onChange={(value) => setCookieUsedValue(Number(value))}
-                width="100%"
-                ref={bakedCookieUsedQuantity}
-              >
-                <NumberInputField type="number" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </Box>
+            <AddEditFormSelect 
+                title='How many cookies?' 
+                placeholder='Select Cookies Used' 
+                selectRefObject={bakedCookieId} 
+                handleSelection={handleBakedCookieSelection}
+                cookies={bakedCookies}
+                selectedQuantity={storedQuantity}
+                selectedValue={storedUsageValue}
+                changeValue={setCookieUsedValue}
+                inputRefObject={bakedCookieUsedQuantity}
+            />
           )}
 
           <Box>

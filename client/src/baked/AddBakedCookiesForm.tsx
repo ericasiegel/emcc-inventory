@@ -20,7 +20,6 @@ import { AddUpdateBaked } from "./Baked";
 import { useReducer, useRef } from "react";
 import useAddBaked from "./useAddBaked";
 import useDoughs from "../dough/useDoughs";
-import { format } from "date-fns";
 import useEditDough from "../dough/useEditDough";
 import { EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
@@ -29,6 +28,7 @@ import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
+import AddEditFormSelect from "../components/AddEditFormSelect";
 
 interface Props {
   id: number;
@@ -146,7 +146,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
           <Heading paddingBottom={2} size="lg">
             Add Baked Cookies
           </Heading>
-          
+
           {doughs && doughs?.length > 0 && (
             <AddUpdateFormRadioButtons
               title="Did you use any stored dough?"
@@ -156,39 +156,17 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
           )}
 
           {selectedStoredUsage === "Yes" && (
-            <Box paddingY={3}>
-              <Text fontSize="20px" as="i">
-                How Many Doughs?
-              </Text>
-              <Select
-                placeholder="Select Dough Used"
-                ref={doughId}
-                onChange={handleDoughSelection}
-                paddingBottom={3}
-              >
-                {doughs?.map((dough) => (
-                  <option key={dough.id} value={dough.id}>
-                    Location: {dough.location} - Quantity: {dough.quantity} -
-                    Date Added:{" "}
-                    {format(new Date(dough.date_added), "MM/dd/yyyy")}
-                  </option>
-                ))}
-              </Select>
-              <Text>How much did you use?: </Text>
-              <NumberInput
-                max={storedQuantity}
-                value={storedUsageValue}
-                onChange={(value) => setDoughUsedValue(Number(value))}
-                width="100%"
-                ref={doughUsedQuantity}
-              >
-                <NumberInputField type="number" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </Box>
+            <AddEditFormSelect
+              title="How many doughs?"
+              placeholder="Select Doughs Used"
+              selectRefObject={doughId}
+              handleSelection={handleDoughSelection}
+              cookies={doughs}
+              selectedQuantity={storedQuantity}
+              selectedValue={storedUsageValue}
+              changeValue={setDoughUsedValue}
+              inputRefObject={doughUsedQuantity}
+            />
           )}
 
           <Box paddingY={3}>
