@@ -7,6 +7,7 @@ from .models import *
 class CookieImageInline(admin.TabularInline):
     model = CookieImage
     readonly_fields = ['thumbnail']
+    extra = 1
     
     def thumbnail(self, instance):
         if instance.image.name != '':
@@ -121,24 +122,62 @@ class StoreAdmin(admin.ModelAdmin):
     list_filter = ['last_updated', 'size']
     exclude = ['updated_by']
     autocomplete_fields = ['cookie']
+    
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name']
+    
+@admin.register(RecipeInstruction)
+class RecipeInstructionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'instruction']
+    list_editable = ['instruction']
+    
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ['id', 'ingredient', 'recipe', 'quantity', 'unit']
+    list_editable = ['quantity', 'unit']
+    list_select_related = ['ingredient', 'recipe']
+    search_fields = ['ingredient', 'recipe']
+    list_filter = ['recipe']
+    autocomplete_fields = ['ingredient', 'recipe']
+    
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
 
 
-# @admin.register(Recipe)
-# class RecipeAdmin(admin.ModelAdmin):
-#     list_display = ['id', 'cookie', 'description', 'ingredients', 'instructions', 'created_at', 'last_updated', 'modified_by']
-#     list_editable = ['description', 'ingredients', 'instructions']
-#     list_select_related = ['cookie', 'modified_by']
-#     list_per_page = 5
-#     search_fields = ['cookie__name__icontains']
-#     list_filter = ['last_updated', 'cookie']
-#     exclude = ['modified_by']
-#     autocomplete_fields = ['cookie']
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'cookie', 'description', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
+    filter_horizontal = ['instructions']
+    list_editable = ['description']
+    list_select_related = ['cookie', 'modified_by']
+    list_per_page = 5
+    search_fields = ['cookie__name__icontains']
+    list_filter = ['last_updated', 'cookie']
+    exclude = ['modified_by']
+    autocomplete_fields = ['cookie']
+    inlines = [RecipeIngredientInline]
+    
+    def get_ingredients(self, obj):
+        ingredients_with_quantities = [
+            f"{ri.ingredient.name} - {ri.quantity} {ri.unit if ri.unit else ''}"
+            for ri in obj.recipeingredient_set.all()
+        ]
+        return ", ".join(ingredients_with_quantities)
+    get_ingredients.short_description = 'Ingredients'
+    
+    def get_instructions(self, obj):
+        return "\n".join([instruction.instruction for instruction in obj.instructions.all()])
+    get_instructions.short_description = 'Instructions'
 
 
-# @admin.register(Grocery)
-# class GroceryAdmin(BaseAdmin):
-#     list_display = ['id', 'ingredient', 'quantity', 'description', 'location', 'order_link']
-#     list_per_page = 10
-#     search_fields = ['title__icontains', 'location__title__icontains']
-#     list_filter = ['location']
-#     autocomplete_fields = ['location']
+@admin.register(Grocery)
+class GroceryAdmin(BaseAdmin):
+    list_display = ['id', 'ingredient', 'quantity', 'unit', 'description', 'location', 'order_link']
+    list_per_page = 10
+    list_editable = ['quantity', 'unit', 'description', 'location', 'order_link']
+    search_fields = ['ingredient', 'title__icontains', 'location__title__icontains']
+    list_filter = ['location']
+    autocomplete_fields = ['location']

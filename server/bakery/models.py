@@ -99,6 +99,9 @@ class Ingredient(models.Model):
 class RecipeInstruction(models.Model):
     instruction = models.TextField(max_length=255)
     
+    def __str__(self):
+        return self.instruction
+    
 class Recipe(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='recipe_set')
     description = models.TextField(null=True, blank=True)
@@ -119,17 +122,16 @@ class RecipeIngredient(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    unit = models.CharField(max_length=50, blank=True, null=True)
         
         
 class Grocery(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
+    unit = models.CharField(max_length=50, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.PROTECT)
-    order_link = models.URLField(max_length=250, null=True)
-    
-    def __str__(self):
-        return self.title
+    order_link = models.URLField(max_length=250, null=True, blank=True)
     
     class Meta:
         ordering = ['ingredient']
