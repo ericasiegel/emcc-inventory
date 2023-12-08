@@ -86,18 +86,6 @@ class CookieAdmin(admin.ModelAdmin):
         }
 
 
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cookie', 'description', 'ingredients', 'instructions', 'created_at', 'last_updated', 'modified_by']
-    list_editable = ['description', 'ingredients', 'instructions']
-    list_select_related = ['cookie', 'modified_by']
-    list_per_page = 5
-    search_fields = ['cookie__name__icontains']
-    list_filter = ['last_updated', 'cookie']
-    exclude = ['modified_by']
-    autocomplete_fields = ['cookie']
-
-
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
@@ -122,15 +110,7 @@ class BakedCookieAdmin(BaseAdmin):
     search_fields = ['cookie__name__icontains', 'location__title__icontains', 'size__icontains']
     list_filter = ['date_added', 'size', 'location']
     autocomplete_fields = ['cookie', 'location']
-
     
-@admin.register(Grocery)
-class GroceryAdmin(BaseAdmin):
-    list_display = ['id', 'title', 'quantity', 'description', 'location', 'order_link']
-    list_per_page = 10
-    search_fields = ['title__icontains', 'location__title__icontains']
-    list_filter = ['location']
-    autocomplete_fields = ['location']
 
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
@@ -141,3 +121,24 @@ class StoreAdmin(admin.ModelAdmin):
     list_filter = ['last_updated', 'size']
     exclude = ['updated_by']
     autocomplete_fields = ['cookie']
+
+
+# @admin.register(Recipe)
+# class RecipeAdmin(admin.ModelAdmin):
+#     list_display = ['id', 'cookie', 'description', 'ingredients', 'instructions', 'created_at', 'last_updated', 'modified_by']
+#     list_editable = ['description', 'ingredients', 'instructions']
+#     list_select_related = ['cookie', 'modified_by']
+#     list_per_page = 5
+#     search_fields = ['cookie__name__icontains']
+#     list_filter = ['last_updated', 'cookie']
+#     exclude = ['modified_by']
+#     autocomplete_fields = ['cookie']
+
+
+# @admin.register(Grocery)
+# class GroceryAdmin(BaseAdmin):
+#     list_display = ['id', 'ingredient', 'quantity', 'description', 'location', 'order_link']
+#     list_per_page = 10
+#     search_fields = ['title__icontains', 'location__title__icontains']
+#     list_filter = ['location']
+#     autocomplete_fields = ['location']
