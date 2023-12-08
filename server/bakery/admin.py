@@ -4,27 +4,31 @@ from django.urls import reverse
 from django.utils.html import format_html, urlencode
 from .models import *
 
+# Define an inline admin class for CookieImage
 class CookieImageInline(admin.TabularInline):
     model = CookieImage
     readonly_fields = ['thumbnail']
     extra = 1
-    
+
+    # Define a custom thumbnail method for rendering images
     def thumbnail(self, instance):
         if instance.image.name != '':
             return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
         return ''
 
+# BaseAdmin class with list_editable attribute
 class BaseAdmin(admin.ModelAdmin):
     list_editable = ['quantity']
-    
 
+# Register the Cookie model with custom admin settings
 @admin.register(Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'is_active', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
+    list_display = ['id', 'name', 'is_active', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
     exclude = ['slug']
     inlines = [CookieImageInline]
 
+    # Custom method to create formatted HTML links to related objects' changelist views
     def _formatted_link(self, cookie, app_name, model_name, attribute_name, size=None):
         """
         Returns a formatted HTML link to the changelist view of specified objects with specified criteria.
@@ -37,6 +41,7 @@ class CookieAdmin(admin.ModelAdmin):
         
         return format_html('<a href="{}">{}</a>', url, getattr(cookie, attribute_name))
 
+    # Custom methods for displaying links to related objects' changelist views
     def dough_quantity(self, cookie):
         return self._formatted_link(cookie, app_name="bakery", model_name="dough", attribute_name="dough_quantity")
 
@@ -52,6 +57,7 @@ class CookieAdmin(admin.ModelAdmin):
     def mini_in_store(self, cookie):
         return self._formatted_link(cookie, app_name="bakery", model_name="store", attribute_name="store_mini", size="mini")
 
+    # Custom queryset method to optimize retrieval and annotate quantities of related objects
     def get_queryset(self, request):
         """
         Overrides the default queryset to optimize retrieval and annotate quantities of related objects.
@@ -81,18 +87,19 @@ class CookieAdmin(admin.ModelAdmin):
             )
         )
 
+    # Define media settings to include custom CSS
     class Media:
         css = {
             'all': ['/static/bakery/styles.css']
         }
 
-
+# Register the Location model with custom admin settings
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
     search_fields = ['title__icontains']
-    
 
+# Register the Dough model with custom admin settings
 @admin.register(Dough)
 class DoughAdmin(BaseAdmin):
     list_display = ['id', 'cookie', 'quantity', 'location', 'date_added']
@@ -102,7 +109,7 @@ class DoughAdmin(BaseAdmin):
     list_filter = ['date_added', 'location']
     autocomplete_fields = ['cookie', 'location']
 
-
+# Register the BakedCookie model with custom admin settings
 @admin.register(BakedCookie)
 class BakedCookieAdmin(BaseAdmin):
     list_display = ['id', 'cookie', 'quantity', 'size', 'location', 'date_added']
@@ -111,8 +118,8 @@ class BakedCookieAdmin(BaseAdmin):
     search_fields = ['cookie__name__icontains', 'location__title__icontains', 'size__icontains']
     list_filter = ['date_added', 'size', 'location']
     autocomplete_fields = ['cookie', 'location']
-    
 
+# Register the Store model with custom admin settings
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
     list_display = ['id', 'cookie', 'size', 'quantity', 'last_updated', 'updated_by']
@@ -122,17 +129,20 @@ class StoreAdmin(admin.ModelAdmin):
     list_filter = ['last_updated', 'size']
     exclude = ['updated_by']
     autocomplete_fields = ['cookie']
-    
+
+# Register the Ingredient model with custom admin settings
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
-    
+
+# Register the RecipeInstruction model with custom admin settings
 @admin.register(RecipeInstruction)
 class RecipeInstructionAdmin(admin.ModelAdmin):
     list_display = ['id', 'instruction']
     list_editable = ['instruction']
-    
+
+# Register the RecipeIngredient model with custom admin settings
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ['id', 'ingredient', 'recipe', 'quantity', 'unit']
@@ -141,12 +151,13 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
     search_fields = ['ingredient', 'recipe']
     list_filter = ['recipe']
     autocomplete_fields = ['ingredient', 'recipe']
-    
+
+# Inline admin class for RecipeIngredient
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
 
-
+# Register the Recipe model with custom admin settings
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ['id', 'cookie', 'description', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
@@ -159,7 +170,8 @@ class RecipeAdmin(admin.ModelAdmin):
     exclude = ['modified_by']
     autocomplete_fields = ['cookie']
     inlines = [RecipeIngredientInline]
-    
+
+    # Custom method to get a comma-separated list of recipe ingredients
     def get_ingredients(self, obj):
         ingredients_with_quantities = [
             f"{ri.ingredient.name} - {ri.quantity} {ri.unit if ri.unit else ''}"
@@ -167,12 +179,13 @@ class RecipeAdmin(admin.ModelAdmin):
         ]
         return ", ".join(ingredients_with_quantities)
     get_ingredients.short_description = 'Ingredients'
-    
+
+    # Custom method to get a formatted list of recipe instructions
     def get_instructions(self, obj):
         return "\n".join([instruction.instruction for instruction in obj.instructions.all()])
     get_instructions.short_description = 'Instructions'
 
-
+# Register the Grocery model with custom admin settings
 @admin.register(Grocery)
 class GroceryAdmin(BaseAdmin):
     list_display = ['id', 'ingredient', 'quantity', 'unit', 'description', 'location', 'order_link']
