@@ -187,10 +187,38 @@ class StoreSerializer(serializers.ModelSerializer):
             'updated_by'
             ]
         
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = [
+            'id',
+            'name'
+        ]
+        
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    ingredient_name = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(), write_only=True, source='recipeingredient')
+    ingredient = serializers.StringRelatedField(read_only=True)
+    recipe_name = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), write_only=True, source='recipe')
+    recipe = serializers.StringRelatedField(read_only=True)
+    
+    class Meta:
+        model = RecipeIngredient
+        fields = [
+            'id',
+            'ingredient',
+            'ingredient_name',
+            'recipe',
+            'recipe_name',
+            'quantity', 
+            'unit'
+        ]
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
-    modified_by = UserNameSerializer(read_only=True)
+    modified_by = UserNameSerializer(read_only=True)  # Assuming UserNameSerializer exists and is configured correctly.
+    recipeingredient_set = RecipeIngredientSerializer(many=True)  # Remove read_only=True here
     
     class Meta:
         model = Recipe
@@ -199,12 +227,13 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cookie', 
             'cookie_name', 
             'description', 
-            'ingredients', 
+            'recipeingredient_set',  # You can include ingredients here
             'instructions', 
             'created_at',
             'last_updated',
             'modified_by'
-            ]
+        ]
+
            
 class GrocerySerializer(serializers.ModelSerializer):
     location = serializers.StringRelatedField(read_only=True)

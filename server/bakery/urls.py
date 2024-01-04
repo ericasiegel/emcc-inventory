@@ -13,6 +13,8 @@ router.register('store', StoreViewSet)
 router.register('locations', LocationViewSet)
 router.register('recipes', RecipeViewSet)
 router.register('groceries', GroceryViewSet)
+router.register('ingredients', IngredientViewSet, basename='ingredients')
+router.register('recipe-ingredients', RecipeIngredientViewSet, basename='recipe_ingredients')
 
 cookies_router = routers.NestedDefaultRouter(router, 'cookies', lookup ='cookie')
 cookies_router.register('images', CookieImageViewSet, basename='cookie-images')

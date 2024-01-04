@@ -143,6 +143,23 @@ class LocationViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['title']
     ordering_fields = ['id', 'title']
+    
+class IngredientViewSet(ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
+    search_fields = ['name']
+    ordering_fields = ['id', 'name']
+    
+class RecipeIngredientViewSet(ModelViewSet):
+    queryset = RecipeIngredient.objects.select_related('ingredient', 'recipe').all()
+    serializer_class = RecipeIngredientSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['recipe']
+    search_fields = ['recipe', 'ingredient']
+    ordering_fields = ['id', 'recipe']
+   
       
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.select_related('cookie', 'modified_by').all()
