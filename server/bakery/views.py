@@ -159,7 +159,11 @@ class RecipeIngredientViewSet(ModelViewSet):
     filterset_fields = ['recipe']
     search_fields = ['recipe', 'ingredient']
     ordering_fields = ['id', 'recipe']
-   
+
+class RecipeInstructionViewSet(ModelViewSet):
+    queryset = RecipeInstruction.objects.all()
+    serializer_class = RecipeInstructionSerializer
+    
       
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.select_related('cookie', 'modified_by').all()

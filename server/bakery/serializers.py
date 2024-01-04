@@ -214,11 +214,21 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         ]
 
 
+class RecipeInstructionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeInstruction
+        fields = [
+            'id',
+            'instruction'
+        ]
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
-    modified_by = UserNameSerializer(read_only=True)  # Assuming UserNameSerializer exists and is configured correctly.
-    recipeingredient_set = RecipeIngredientSerializer(many=True)  # Remove read_only=True here
+    modified_by = UserNameSerializer(read_only=True)  
+    recipeingredient_set = RecipeIngredientSerializer(many=True)
+    instructions = RecipeInstructionSerializer(many=True)
     
     class Meta:
         model = Recipe
@@ -233,6 +243,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             'last_updated',
             'modified_by'
         ]
+    
+    # def create(self, validated_data):
+    #     ingredients_data = validated_data.pop('ingredients')
 
            
 class GrocerySerializer(serializers.ModelSerializer):
