@@ -195,12 +195,17 @@ class IngredientSerializer(serializers.ModelSerializer):
             'name'
         ]
         
+class RecipeNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ['id', 'cookie']
+        
+
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    ingredient_name = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(), write_only=True, source='recipeingredient')
-    ingredient = serializers.StringRelatedField(read_only=True)
-    recipe_name = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), write_only=True, source='recipe')
-    recipe = serializers.StringRelatedField(read_only=True)
-    
+    ingredient_name = serializers.StringRelatedField(source='ingredient.name')
+    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all())
+
     class Meta:
         model = RecipeIngredient
         fields = [
@@ -208,10 +213,10 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
             'ingredient',
             'ingredient_name',
             'recipe',
-            'recipe_name',
-            'quantity', 
+            'quantity',
             'unit'
         ]
+
 
 
 class RecipeInstructionSerializer(serializers.ModelSerializer):
@@ -227,8 +232,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     modified_by = UserNameSerializer(read_only=True)  
-    recipeingredient_set = RecipeIngredientSerializer(many=True)
-    instructions = RecipeInstructionSerializer(many=True)
+    recipeingredient_set = RecipeIngredientSerializer(many=True, read_only=True)
+    instructions = RecipeInstructionSerializer(many=True, read_only=True)
     
     class Meta:
         model = Recipe
@@ -237,7 +242,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cookie', 
             'cookie_name', 
             'description', 
-            'recipeingredient_set',  # You can include ingredients here
+            'recipeingredient_set',
             'instructions', 
             'created_at',
             'last_updated',
@@ -245,7 +250,21 @@ class RecipeSerializer(serializers.ModelSerializer):
         ]
     
     # def create(self, validated_data):
-    #     ingredients_data = validated_data.pop('ingredients')
+    #     ingredients_data = validated_data.pop('ingredients', [])
+    #     print(ingredient_data)
+    #     instructions_data = validated_data.pop('instructions', [])
+    #     print(instructions_data)
+    #     recipe = Recipe.objects.create(**validated_data)
+    #     print(recipe)
+        
+    #     for ingredient_data in ingredients_data:
+    #         RecipeIngredient.objects.create(recipe=recipe, **ingredient_data)
+            
+    #     for instruction_data in instructions_data:
+    #         RecipeInstruction.objects.create(recipe=recipe, **instruction_data)
+        
+        
+    #     return recipe
 
            
 class GrocerySerializer(serializers.ModelSerializer):
