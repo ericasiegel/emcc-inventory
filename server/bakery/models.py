@@ -177,20 +177,6 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.name
 
-class RecipeInstruction(models.Model):
-    """
-    Model representing an instruction in a recipe.
-
-    Attributes:
-        instruction (TextField): The text of the instruction.
-
-    Methods:
-        __str__(): Returns a string representation of the instruction.
-    """
-    instruction = models.TextField(max_length=255)
-
-    def __str__(self):
-        return self.instruction
 
 class Recipe(models.Model):
     """
@@ -211,7 +197,7 @@ class Recipe(models.Model):
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='recipe_set')
     description = models.TextField(null=True, blank=True)
     ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient')
-    instructions = models.ManyToManyField(RecipeInstruction)
+    # instructions = models.ManyToManyField(RecipeInstruction)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -221,6 +207,24 @@ class Recipe(models.Model):
 
     class Meta:
         ordering = ['cookie']
+        
+
+class RecipeInstruction(models.Model):
+    """
+    Model representing an instruction in a recipe.
+
+    Attributes:
+        instruction (TextField): The text of the instruction.
+
+    Methods:
+        __str__(): Returns a string representation of the instruction.
+    """
+    instruction = models.TextField(max_length=255)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='instructions')
+
+    def __str__(self):
+        return self.instruction
+    
 
 class RecipeIngredient(models.Model):
     """

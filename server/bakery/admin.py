@@ -139,16 +139,16 @@ class IngredientAdmin(admin.ModelAdmin):
 # Register the RecipeInstruction model with custom admin settings
 @admin.register(RecipeInstruction)
 class RecipeInstructionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'instruction']
+    list_display = ['id', 'instruction', 'recipe']
     list_editable = ['instruction']
+    search_fields = ['recipe__cookie__name']
 
 # Register the RecipeIngredient model with custom admin settings
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ['id', 'ingredient', 'recipe', 'quantity', 'unit']
     list_editable = ['quantity', 'unit']
-    list_select_related = ['ingredient', 'recipe']
-    search_fields = ['ingredient', 'recipe']
+    search_fields = ['ingredient__name', 'recipe__cookie__name']
     list_filter = ['recipe']
     autocomplete_fields = ['ingredient', 'recipe']
 
@@ -161,7 +161,7 @@ class RecipeIngredientInline(admin.TabularInline):
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ['id', 'cookie', 'description', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
-    filter_horizontal = ['instructions']
+    # filter_horizontal = ['instructions']
     list_editable = ['description']
     list_select_related = ['cookie', 'modified_by']
     list_per_page = 5

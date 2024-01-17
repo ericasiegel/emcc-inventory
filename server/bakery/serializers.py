@@ -195,16 +195,11 @@ class IngredientSerializer(serializers.ModelSerializer):
             'name'
         ]
         
-class RecipeNameSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Recipe
-        fields = ['id', 'cookie']
-        
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     ingredient_name = serializers.StringRelatedField(source='ingredient.name')
     ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-    recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all())
+    recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), required=False)
 
     class Meta:
         model = RecipeIngredient
@@ -224,16 +219,20 @@ class RecipeInstructionSerializer(serializers.ModelSerializer):
         model = RecipeInstruction
         fields = [
             'id',
-            'instruction'
+            'instruction',
+            'recipe'
         ]
+        extra_kwargs = {
+            'recipe': {'required': False}
+        }
 
 
 class RecipeSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
     cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     modified_by = UserNameSerializer(read_only=True)  
-    recipeingredient_set = RecipeIngredientSerializer(many=True, read_only=True)
-    instructions = RecipeInstructionSerializer(many=True, read_only=True)
+    recipeingredient_set = RecipeIngredientSerializer(many=True, required=False)
+    instructions = RecipeInstructionSerializer(many=True)
     
     class Meta:
         model = Recipe
@@ -249,22 +248,19 @@ class RecipeSerializer(serializers.ModelSerializer):
             'modified_by'
         ]
     
-    # def create(self, validated_data):
-    #     ingredients_data = validated_data.pop('ingredients', [])
-    #     print(ingredient_data)
-    #     instructions_data = validated_data.pop('instructions', [])
-    #     print(instructions_data)
-    #     recipe = Recipe.objects.create(**validated_data)
-    #     print(recipe)
-        
-    #     for ingredient_data in ingredients_data:
-    #         RecipeIngredient.objects.create(recipe=recipe, **ingredient_data)
+    def create(self, validated_data):
+        ingredients_data = validated_data.pop('recipeingredient_set', [])
+        instructions_data = validated_data.pop('instructions', [])
+
+        recipe = Recipe.objects.create(**validated_data)
+
+        for ingredient_data in ingredients_data:
+            RecipeIngredient.objects.create(recipe=recipe, **ingredient_data)
             
-    #     for instruction_data in instructions_data:
-    #         RecipeInstruction.objects.create(recipe=recipe, **instruction_data)
+        for instruction_data in instructions_data:
+            RecipeInstruction.objects.create(recipe=recipe, **instruction_data)
         
-        
-    #     return recipe
+        return recipe
 
            
 class GrocerySerializer(serializers.ModelSerializer):
