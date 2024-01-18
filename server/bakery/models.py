@@ -39,6 +39,7 @@ class Cookie(models.Model):
     """
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
+    description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -195,7 +196,7 @@ class Recipe(models.Model):
         __str__(): Returns a string representation of the associated cookie.
     """
     cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='recipe_set')
-    description = models.TextField(null=True, blank=True)
+    notes = models.TextField(null=True, blank=True)
     ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient')
     # instructions = models.ManyToManyField(RecipeInstruction)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -23,7 +23,7 @@ class BaseAdmin(admin.ModelAdmin):
 # Register the Cookie model with custom admin settings
 @admin.register(Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'is_active', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
+    list_display = ['id', 'name', 'description', 'is_active', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
     exclude = ['slug']
     inlines = [CookieImageInline]
@@ -160,9 +160,9 @@ class RecipeIngredientInline(admin.TabularInline):
 # Register the Recipe model with custom admin settings
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cookie', 'description', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
+    list_display = ['id', 'cookie', 'notes', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
     # filter_horizontal = ['instructions']
-    list_editable = ['description']
+    list_editable = ['notes']
     list_select_related = ['cookie', 'modified_by']
     list_per_page = 5
     search_fields = ['cookie__name__icontains']

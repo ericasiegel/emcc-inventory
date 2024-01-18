@@ -64,7 +64,7 @@ class CookieSerializer(serializers.ModelSerializer):
     slug = serializers.StringRelatedField(read_only=True)
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'slug', 'is_active', 'counts', 'images']
+        fields = ['id', 'name', 'slug', 'description', 'is_active', 'counts', 'images']
     
     def calculate_totals(self, cookie: Cookie):
         """
@@ -240,7 +240,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'id', 
             'cookie', 
             'cookie_name', 
-            'description', 
+            'notes', 
             'recipeingredient_set',
             'instructions', 
             'created_at',

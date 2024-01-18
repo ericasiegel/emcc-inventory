@@ -5,7 +5,6 @@ import {
   Heading,
   Spinner,
   Card,
-  Text,
   SimpleGrid,
   GridItem,
   HStack,
@@ -22,6 +21,7 @@ import AddFormModal from "../components/AddFormModal";
 import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
+import RecipeCard from "../cookieRecipe/recipeCard";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -115,11 +115,10 @@ const CookieDetailPage = () => {
           background="#941c3e"
           p="2"
         />
-        <Card padding={3} border={2} width="100%" background="inherit">
-          <Text>Recipe Here</Text>
+        <Card padding={3} border={2} width="100%" background="inherit" variant='elevated' marginTop={5}>
+          <RecipeCard />
         </Card>
       </GridItem>
-      {/* CREATE recipe box */}
     </SimpleGrid>
   );
 };
