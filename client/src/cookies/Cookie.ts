@@ -5,6 +5,7 @@ export interface Cookie {
   id: number;
   name: string;
   slug: string;
+  description?: string;
   is_active: boolean;
   counts: Counts;
   images?: Image[];

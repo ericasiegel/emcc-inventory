@@ -22,6 +22,7 @@ import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
 import RecipeCard from "../cookieRecipe/recipeCard";
+import CookieDescriptionCard from "../cookies/CookieDescriptionCard";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -48,6 +49,7 @@ const CookieDetailPage = () => {
           </Heading>
           <ActiveInactiveSwitch cookie={cookie} />
         </HStack>
+        <CookieDescriptionCard description={cookie?.description} />
 
         <CookieDetailContainer>
           <DetailCard

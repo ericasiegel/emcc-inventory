@@ -13,6 +13,7 @@ import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import { Link } from "react-router-dom";
 import DeleteButton from "../components/DeleteButton";
 import ActiveInactiveSwitch from "./ActiveInactiveSwitch";
+import CookieDescriptionCard from "./CookieDescriptionCard";
 
 interface Props {
   cookie: Cookie;
@@ -33,6 +34,7 @@ const CookieCard = ({ cookie }: Props) => {
           <Heading as="em" color="#941c3e" fontSize="3xl">
             {cookie.name}
           </Heading>
+          <CookieDescriptionCard description={cookie?.description} />
         </Link>
         <Flex
           justifyContent="center" // Center horizontally
