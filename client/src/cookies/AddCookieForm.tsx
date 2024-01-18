@@ -36,22 +36,27 @@ const defaultCookieValue = {
 
 const AddCookieForm = ({cookie = defaultCookieValue}: Props) => {
   const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const resetForm = () => {
     setName("");
+    setDescription('');
   };
 
   const { addCookie, error, isLoading } = useAddCookie(resetForm);
 
   const cookieName = useRef<HTMLInputElement>(null);
+  const cookieDescription = useRef<HTMLInputElement>(null);
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const nameValue = cookieName.current?.value || "";
+    const cookieDescriptionValue = cookieDescription.current?.value || "";
 
     const cookieData: Cookie = {
       ...cookie,
       name: nameValue,
+      description: cookieDescriptionValue,
       is_active: true,
     };
 
@@ -75,6 +80,14 @@ const AddCookieForm = ({cookie = defaultCookieValue}: Props) => {
               placeholder="Cookie Name..."
               value={name} // Set the input value from formData
               onChange={(e) => setName(e.target.value)} // Update formData on input change
+              marginBottom={3}
+            />
+            <Input
+              ref={cookieDescription}
+              backgroundColor="white"
+              placeholder="Cookie Description..."
+              value={description} // Set the input value from formData
+              onChange={(e) => setDescription(e.target.value)} // Update formData on input change
             />
           </Box>
           <Center>
