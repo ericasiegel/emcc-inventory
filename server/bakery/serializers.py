@@ -266,13 +266,17 @@ class RecipeSerializer(serializers.ModelSerializer):
 class GrocerySerializer(serializers.ModelSerializer):
     location = serializers.StringRelatedField(read_only=True)
     location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+    ingredient_name = serializers.StringRelatedField(source='ingredient.name')
+    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
         model = Grocery
         fields = [
             'id',
-            'title',
+            'ingredient',
+            'ingredient_name',
             'quantity',
+            'unit',
             'description',
             'location',
             'location_name',
