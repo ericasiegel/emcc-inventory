@@ -14,21 +14,21 @@ import useMutateCookies from "../hooks/useMutateCookies";
 import { COOKIES_ENDPOINT } from "../constants";
 
 interface Props {
-  cookie: Cookie
+  cookie: Cookie;
 }
 
-const ActiveInactiveSwitch = ({cookie}: Props ) => {
+const ActiveInactiveSwitch = ({ cookie }: Props) => {
   const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
 
   const { mutate: activateCookie, error } = useMutateCookies<
     Cookie,
     Error,
     Cookie
-  >(
-    (updatedCookie: Cookie) => apiClient.patch(updatedCookie, cookie.id),
-    () => {},
-    [COOKIES_ENDPOINT]
-  );
+    >(
+      (updatedCookie: Cookie) => apiClient.patch(updatedCookie, cookie.id),
+      () => {},
+      [COOKIES_ENDPOINT]
+    );
 
   const [isActive, setIsActive] = useState(cookie.is_active);
 

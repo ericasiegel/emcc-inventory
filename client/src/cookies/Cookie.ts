@@ -11,3 +11,6 @@ export interface Cookie {
   images?: Image[];
 }
 
+export interface EditDescription {
+  description: string;
+}

@@ -9,6 +9,8 @@ import {
   GridItem,
   HStack,
   Flex,
+  Center,
+  Box,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
@@ -21,8 +23,10 @@ import AddFormModal from "../components/AddFormModal";
 import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
-import RecipeCard from "../cookieRecipe/recipeCard";
+import RecipeCard from "../cookieRecipe/RecipeCard";
 import CookieDescriptionCard from "../cookies/CookieDescriptionCard";
+import EditFormModal from "../components/EditFormModal";
+import EditCookieDescriptionForm from "../cookies/EditCookieDescriptionForm";
 
 const CookieDetailPage = () => {
   const { slug } = useParams();
@@ -49,7 +53,17 @@ const CookieDetailPage = () => {
           </Heading>
           <ActiveInactiveSwitch cookie={cookie} />
         </HStack>
-        <CookieDescriptionCard description={cookie?.description} />
+        <HStack justifyContent="space-between" alignItems="center">
+          <Box flex="1">
+            {" "}
+            <Center>
+              <CookieDescriptionCard description={cookie?.description} />
+            </Center>
+          </Box>
+          <EditFormModal header="Edit Cookie Description">
+            <EditCookieDescriptionForm id={cookie.id} oldDescription={cookie?.description} />
+          </EditFormModal>
+        </HStack>
 
         <CookieDetailContainer>
           <DetailCard
@@ -58,7 +72,7 @@ const CookieDetailPage = () => {
             dataFetcher={useDoughs}
             headingText="Doughs"
             endpoint={DOUGHS_ENDPOINT}
-            />
+          />
         </CookieDetailContainer>
         <CookieDetailContainer>
           <DetailCard
@@ -68,7 +82,7 @@ const CookieDetailPage = () => {
             dataFetcher={useBaked}
             headingText="Baked Cookies"
             endpoint={BAKED_ENDPOINT}
-            />
+          />
           <DetailCard
             id={cookie.id}
             size="mini"
@@ -117,7 +131,14 @@ const CookieDetailPage = () => {
           background="#941c3e"
           p="2"
         />
-        <Card padding={3} border={2} width="100%" background="inherit" variant='elevated' marginTop={5}>
+        <Card
+          padding={3}
+          border={2}
+          width="100%"
+          background="inherit"
+          variant="elevated"
+          marginTop={5}
+        >
           <RecipeCard />
         </Card>
       </GridItem>
