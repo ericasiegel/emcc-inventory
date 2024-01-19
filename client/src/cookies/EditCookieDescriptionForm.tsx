@@ -1,21 +1,22 @@
 import { Alert, AlertIcon, FormControl, Input, Center, Button, Box } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
-import useEditCookieDescription from './useEditCookieDescription'
-import { EditDescription } from './Cookie';
+import useEditCookie from './useEditCookie'
+import { Cookie } from './Cookie';
 
 interface Props {
     id: number;
     oldDescription?: string;
+    cookie: Cookie
 }
 
-const EditCookieDescriptionForm = ({ id, oldDescription }: Props) => {
+const EditCookieDescriptionForm = ({ id, oldDescription, cookie }: Props) => {
     const [newDescription, setNewDescription] = useState<string>('')
 
     const resetForm = () => {
         setNewDescription('');
     }
 
-    const { editCookieDescription, error, isLoading } = useEditCookieDescription(id, resetForm);
+    const { editCookie, error, isLoading } = useEditCookie(id, resetForm);
 
     const cookieDescription = useRef<HTMLInputElement>(null);
 
@@ -24,11 +25,12 @@ const EditCookieDescriptionForm = ({ id, oldDescription }: Props) => {
 
         const cookieDescriptionValue = cookieDescription.current?.value || '';
 
-        const cookieData: EditDescription = {
+        const cookieData = {
+          ...cookie,
             description: cookieDescriptionValue
         }
 
-        editCookieDescription(cookieData)
+        editCookie(cookieData)
     }
 
   return (

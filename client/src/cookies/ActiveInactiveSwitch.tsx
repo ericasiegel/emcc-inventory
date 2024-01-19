@@ -8,34 +8,23 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import APIClient from "../services/api-client";
 import { Cookie } from "./Cookie";
-import useMutateCookies from "../hooks/useMutateCookies";
-import { COOKIES_ENDPOINT } from "../constants";
+import useEditCookie from "./useEditCookie";
 
 interface Props {
   cookie: Cookie;
 }
 
 const ActiveInactiveSwitch = ({ cookie }: Props) => {
-  const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
-
-  const { mutate: activateCookie, error } = useMutateCookies<
-    Cookie,
-    Error,
-    Cookie
-    >(
-      (updatedCookie: Cookie) => apiClient.patch(updatedCookie, cookie.id),
-      () => {},
-      [COOKIES_ENDPOINT]
-    );
 
   const [isActive, setIsActive] = useState(cookie.is_active);
-
+  
+  const { editCookie, error } = useEditCookie(cookie.id);
+  
   const handleSwitchChange = () => {
     setIsActive(!isActive);
 
-    activateCookie({
+    editCookie({
       ...cookie,
       is_active: !isActive,
     });
