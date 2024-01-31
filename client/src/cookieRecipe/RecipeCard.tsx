@@ -8,8 +8,32 @@ import {
   StackDivider,
   Text,
 } from "@chakra-ui/react";
+import useRecipes from "./useRecipes";
 
-const recipeCard = () => {
+interface Props {
+  cookie_id: number;
+}
+
+const RecipeCard = ({ cookie_id }: Props) => {
+  const { data: recipeResults, isLoading, error } = useRecipes(cookie_id);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) throw error;
+
+  const recipeData = recipeResults?.results?.[0]
+  console.log(recipeData);
+
+  if (!recipeData) {
+    return <div>No recipe found.</div>;
+  }
+
+  
+  
+
+
   return (
     <Card>
       <CardHeader>
@@ -48,4 +72,4 @@ const recipeCard = () => {
   );
 };
 
-export default recipeCard;
+export default RecipeCard;

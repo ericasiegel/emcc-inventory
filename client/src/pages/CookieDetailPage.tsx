@@ -39,6 +39,9 @@ const CookieDetailPage = () => {
   if (!cookie) {
     return null; // or display an error message or handle this case as needed
   }
+  const cookie_image = cookie.images[0].id
+  console.log(cookie_image);
+  
   const imgUrl =
     cookie.images && cookie.images?.length > 0
       ? cookie.images[0].image
@@ -61,7 +64,7 @@ const CookieDetailPage = () => {
             </Center>
           </Box>
           <EditFormModal header="Edit Cookie Description">
-            <EditCookieDescriptionForm id={cookie.id} oldDescription={cookie?.description} />
+            <EditCookieDescriptionForm id={cookie.id} oldDescription={cookie?.description} cookie={cookie} />
           </EditFormModal>
         </HStack>
 
@@ -139,7 +142,7 @@ const CookieDetailPage = () => {
           variant="elevated"
           marginTop={5}
         >
-          <RecipeCard />
+          <RecipeCard cookie_id={cookie.id} />
         </Card>
       </GridItem>
     </SimpleGrid>
