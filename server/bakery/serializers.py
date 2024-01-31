@@ -47,24 +47,38 @@ class UserNameSerializer(serializers.ModelSerializer):
         
         
 # Serializer Classes to display on API
-class CookieImageSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        cookie_slug = self.context['cookie_slug']
-        cookie = get_object_or_404(Cookie, slug=cookie_slug)
-        return CookieImage.objects.create(cookie=cookie, **validated_data)
+# class CookieImageSerializer(serializers.ModelSerializer):
+#     def create(self, validated_data):
+#         cookie_slug = self.context['cookie_slug']
+#         cookie = get_object_or_404(Cookie, slug=cookie_slug)
+#         return CookieImage.objects.create(cookie=cookie, **validated_data)
     
-    class Meta:
-        model = CookieImage
-        fields = ['id', 'image']
+#     class Meta:
+#         model = CookieImage
+#         fields = ['image']
         
 
 class CookieSerializer(serializers.ModelSerializer):
     counts = serializers.SerializerMethodField(method_name='calculate_totals')
-    images = CookieImageSerializer(many=True, read_only=True)
     slug = serializers.StringRelatedField(read_only=True)
+    delete_image = serializers.BooleanField(write_only=True, default=False)
+    
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'slug', 'description', 'is_active', 'counts', 'images']
+        fields = ['id', 'name', 'slug', 'image', 'description', 'is_active', 'counts', 'delete_image']
+        
+        
+    def update(self, instance, validated_data):
+        delete_image = validated_data.pop('delete_image', False)
+        
+        if delete_image and instance.image:
+            instance.image.delete()  # Delete the image if delete_image is True
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
     
     def calculate_totals(self, cookie: Cookie):
         """

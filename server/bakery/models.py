@@ -41,6 +41,12 @@ class Cookie(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    image = models.ImageField(
+        upload_to='bakery/images',
+        validators=[validate_file_size],
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.name
@@ -53,22 +59,22 @@ class Cookie(models.Model):
             self.slug = slugify(self.name)
         super(Cookie, self).save(*args, **kwargs)
 
-class CookieImage(models.Model):
-    """
-    Model representing images associated with a cookie.
+# class CookieImage(models.Model):
+#     """
+#     Model representing images associated with a cookie.
 
-    Attributes:
-        cookie (ForeignKey): The cookie associated with the image.
-        image (ImageField): The image file of the cookie.
+#     Attributes:
+#         cookie (ForeignKey): The cookie associated with the image.
+#         image (ImageField): The image file of the cookie.
 
-    Note:
-        Images are validated using the validate_file_size function.
-    """
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(
-        upload_to='bakery/images',
-        validators=[validate_file_size]
-    )
+#     Note:
+#         Images are validated using the validate_file_size function.
+#     """
+#     cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE, related_name='image')
+#     image = models.ImageField(
+#         upload_to='bakery/images',
+#         validators=[validate_file_size]
+#     )
 
 class Location(models.Model):
     """

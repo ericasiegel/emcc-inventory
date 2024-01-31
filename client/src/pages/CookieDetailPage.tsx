@@ -39,12 +39,12 @@ const CookieDetailPage = () => {
   if (!cookie) {
     return null; // or display an error message or handle this case as needed
   }
-  const cookie_image = cookie.images[0].id
-  console.log(cookie_image);
+  // const cookie_image = cookie.images.id
+  // console.log(cookie_image);
   
   const imgUrl =
-    cookie.images && cookie.images?.length > 0
-      ? cookie.images[0].image
+    cookie.image
+      ? cookie.image
       : noImage;
 
   return (
@@ -109,7 +109,7 @@ const CookieDetailPage = () => {
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
-        {cookie.images?.length === 0 ? (
+        {cookie.image?.length === 0 ? (
           <Flex justifyContent="flex-end">
             <AddFormModal header="Add Image">
               <AddImageForm slug={cookie.slug} />
@@ -117,7 +117,7 @@ const CookieDetailPage = () => {
           </Flex>
         ) : (
           <Flex justifyContent="flex-end">
-            <DeleteImageButton slug={cookie.slug} id={cookie.images[0].id} />
+            <DeleteImageButton slug={cookie.slug} id={cookie.image.id} />
           </Flex>
         )}
         <Image

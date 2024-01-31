@@ -14,7 +14,7 @@ from rest_framework.generics import get_object_or_404
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
-    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set', 'images').all()
+    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set').all()
     serializer_class = CookieSerializer
     filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name']
@@ -51,24 +51,24 @@ class CookieViewSet(ModelViewSet):
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-class CookieImageViewSet(ModelViewSet):
-    serializer_class = CookieImageSerializer
+# class CookieImageViewSet(ModelViewSet):
+#     serializer_class = CookieImageSerializer
 
-    def get_serializer_context(self):
-        # Check if the lookup value is a digit (ID) or a string (slug)
-        lookup_value = self.kwargs.get('cookie_slug')
-        if lookup_value.isdigit():
-            return {'cookie_id': int(lookup_value)}  # Pass the ID
-        else:
-            return {'cookie_slug': lookup_value}  # Pass the slug
+#     def get_serializer_context(self):
+#         # Check if the lookup value is a digit (ID) or a string (slug)
+#         lookup_value = self.kwargs.get('cookie_slug')
+#         if lookup_value.isdigit():
+#             return {'cookie_id': int(lookup_value)}  # Pass the ID
+#         else:
+#             return {'cookie_slug': lookup_value}  # Pass the slug
     
-    def get_queryset(self):
-        # Check if the lookup value is a digit (ID) or a string (slug)
-        lookup_value = self.kwargs.get('cookie_slug')
-        if lookup_value.isdigit():
-            return CookieImage.objects.filter(cookie_id=int(lookup_value))  # Filter by ID
-        else:
-            return CookieImage.objects.filter(cookie__slug=lookup_value)  # Filter by slug
+#     def get_queryset(self):
+#         # Check if the lookup value is a digit (ID) or a string (slug)
+#         lookup_value = self.kwargs.get('cookie_slug')
+#         if lookup_value.isdigit():
+#             return CookieImage.objects.filter(cookie_id=int(lookup_value))  # Filter by ID
+#         else:
+#             return CookieImage.objects.filter(cookie__slug=lookup_value)  # Filter by slug
 
     # def get_serializer_context(self):
     #     print('first', self.kwargs)

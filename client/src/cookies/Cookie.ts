@@ -8,7 +8,7 @@ export interface Cookie {
   description?: string;
   is_active: boolean;
   counts: Counts;
-  images?: Image[];
+  image?: Image[];
 }
 
 export interface EditDescription {
