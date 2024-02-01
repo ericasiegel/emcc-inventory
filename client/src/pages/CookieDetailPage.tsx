@@ -126,7 +126,7 @@ const CookieDetailPage = () => {
           padding={4}
           src={imgUrl}
           alt={cookie.description}
-          maxW="70%"
+          maxW="50%"
           height="auto"
           borderRadius="full"
           overflow="hidden"

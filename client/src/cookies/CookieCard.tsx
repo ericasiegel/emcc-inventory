@@ -21,14 +21,14 @@ interface Props {
 
 const CookieCard = ({ cookie }: Props) => {
   const imgUrl =
-    cookie.images && cookie.images?.length > 0
-      ? cookie.images[0].image
+    cookie.image
+      ? cookie.image
       : noImage;
   const inactiveCookie = !cookie.is_active ? "40%" : "100%";
 
   return (
     <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
-      <Image src={imgUrl} alt={cookie.name} width="100%" height="auto" />
+      <Image src={imgUrl} alt={cookie.description} width="100%" height="auto"/>
       <CardHeader borderBottom="1px" justifyContent="center">
         <Link to={"/cookies/" + cookie.slug}>
           <Heading as="em" color="#941c3e" fontSize="3xl">
