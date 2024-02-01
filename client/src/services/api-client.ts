@@ -43,6 +43,8 @@ class APIClient<T> {
     }
     
     patch = (data: T, id: number | string) => {
+        console.log(data);
+        
         return axiosInstance
         .patch(this.endpoint + id + '/', data)
         .then(res => res.data)

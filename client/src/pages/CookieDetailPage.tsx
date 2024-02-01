@@ -109,7 +109,7 @@ const CookieDetailPage = () => {
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
-        {cookie.image?.length === 0 ? (
+        {cookie.image === null ? (
           <Flex justifyContent="flex-end">
             <AddFormModal header="Add Image">
               <AddImageForm slug={cookie.slug} />
@@ -117,7 +117,7 @@ const CookieDetailPage = () => {
           </Flex>
         ) : (
           <Flex justifyContent="flex-end">
-            <DeleteImageButton slug={cookie.slug} id={cookie.image.id} />
+            <DeleteImageButton cookie={cookie} />
           </Flex>
         )}
         <Image
@@ -125,7 +125,7 @@ const CookieDetailPage = () => {
           display="block"
           padding={4}
           src={imgUrl}
-          alt={cookie.name}
+          alt={cookie.description}
           maxW="70%"
           height="auto"
           borderRadius="full"

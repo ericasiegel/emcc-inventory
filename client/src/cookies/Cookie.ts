@@ -1,4 +1,4 @@
-import { Image } from '../cookieImage/Image';
+
 import { Counts } from '../counts/Counts';
 
 export interface Cookie {
@@ -8,9 +8,14 @@ export interface Cookie {
   description?: string;
   is_active: boolean;
   counts: Counts;
-  image?: Image[];
+  image?: string;
+  delete_image: boolean;
 }
 
 export interface EditDescription {
   description: string;
+}
+
+export interface DeleteImage {
+  delete_image: boolean;
 }
