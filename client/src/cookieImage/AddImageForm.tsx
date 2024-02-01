@@ -1,16 +1,16 @@
 import { Center, Input, Button, Box, Alert, AlertIcon } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { AddImage } from "./Image";
 import useAddImage from "./useAddImage";
+import { AddImage } from "../cookies/Cookie";
 
 interface Props {
-  slug: string;
+  id: number;
 }
 
-const AddImageForm = ({ slug }: Props) => {
+const AddImageForm = ({ id }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { uploadImage, error, isLoading } = useAddImage(slug);
+  const { uploadImage, error, isLoading } = useAddImage(id);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {

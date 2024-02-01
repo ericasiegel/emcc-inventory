@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { AddImage } from "../cookieImage/Image";
+import { AddImage } from "../cookies/Cookie";
+
 
 export interface FetchResponse<T> {
     count: number;
@@ -43,8 +44,6 @@ class APIClient<T> {
     }
     
     patch = (data: T, id: number | string) => {
-        console.log(data);
-        
         return axiosInstance
         .patch(this.endpoint + id + '/', data)
         .then(res => res.data)
@@ -59,14 +58,20 @@ class APIClient<T> {
         })
     }
 
-    uploadImage = (image: AddImage, slug: string) => {
+    uploadImage = (image: AddImage, id: number) => {
+        const formData = new FormData();
+        formData.append('image', image.image);
+    
         return axiosInstance
-            .post(this.endpoint + slug + '/images/', image, {
+            .patch(this.endpoint + id + '/', formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
-                }
+                    'Content-Type': 'multipart/form-data',
+                },
             })
-            .then(res => res.data)
+            .then((res) => res.data)
+            .catch((error) => {
+                throw error;
+            });
     }
 
     deleteImage = (slug: string, id: number | string) => {

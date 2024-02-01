@@ -112,7 +112,7 @@ const CookieDetailPage = () => {
         {cookie.image === null ? (
           <Flex justifyContent="flex-end">
             <AddFormModal header="Add Image">
-              <AddImageForm slug={cookie.slug} />
+              <AddImageForm id={cookie.id} />
             </AddFormModal>
           </Flex>
         ) : (

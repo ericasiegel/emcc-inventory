@@ -16,6 +16,10 @@ export interface EditDescription {
   description: string;
 }
 
+export interface AddImage {
+  image: File;
+}
+
 export interface DeleteImage {
   delete_image: boolean;
 }

@@ -5,6 +5,4 @@ export interface Image {
   image: string;
 }
 
-export interface AddImage {
-    image: File;
-}
+
