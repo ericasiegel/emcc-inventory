@@ -142,7 +142,7 @@ const CookieDetailPage = () => {
           variant="elevated"
           marginTop={5}
         >
-          <RecipeCard cookie_id={cookie.id} />
+          {/* <RecipeCard cookie_id={cookie.id} /> */}
         </Card>
       </GridItem>
     </SimpleGrid>

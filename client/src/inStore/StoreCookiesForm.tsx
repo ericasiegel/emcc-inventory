@@ -132,7 +132,7 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) =>
     } else {
       // Create store data object
       const storeData: AddEditStore = {
-        cookie_name: id,
+        cookie_id: id,
         quantity: storeQuantityValue,
         size: cookieSize,
       };

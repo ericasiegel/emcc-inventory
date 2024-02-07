@@ -1,6 +1,7 @@
 export interface Store {
     id: number;
     cookie: string;
+    cookie_id: number;
     size: string;
     quantity: number;
     last_updated: string;
@@ -10,7 +11,7 @@ export interface Store {
 }
 
 export interface AddEditStore {
-    cookie_name: number;
+    cookie_id: number;
     size: string;
     quantity?: number;
 }

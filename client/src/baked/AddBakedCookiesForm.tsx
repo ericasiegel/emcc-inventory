@@ -114,10 +114,10 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
 
     // Prepare bakedData and add baked cookies
     const bakedData: AddUpdateBaked = {
-      cookie_name: id,
+      cookie_id: id,
       quantity: bakedQuantityValue,
       size: cookieSize,
-      location_name: parseInt(locationIdValue || "0"), // Assuming a default value if not available
+      location_id: parseInt(locationIdValue || "0"), // Assuming a default value if not available
     };
     addBakedCookies(bakedData);
 

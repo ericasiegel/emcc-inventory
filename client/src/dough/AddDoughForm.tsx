@@ -64,9 +64,9 @@ const AddDoughForm = ({ id }: Props) => {
       doughQuantity.current?.querySelector("input")?.valueAsNumber;
 
     const doughData: AddUpdateDough = {
-      cookie_name: id,
+      cookie_id: id,
       quantity: doughquantityValue,
-      location_name: parseInt(locationIdValue!),
+      location_id: parseInt(locationIdValue!),
     };
 
     addDough(doughData);

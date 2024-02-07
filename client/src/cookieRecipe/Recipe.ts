@@ -2,6 +2,8 @@
 
 export interface RecipeIngredient {
     id: number;
+    cookie: string;
+    cookie_name: string;
     ingredient: number;
     ingredient_name: string;
     recipe: number;
