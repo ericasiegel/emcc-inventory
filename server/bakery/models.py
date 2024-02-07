@@ -25,6 +25,7 @@ def validate_file_size(file):
 
 # Create your models here.
 
+
 class Cookie(models.Model):
     """
     Model representing a type of cookie.
@@ -47,6 +48,7 @@ class Cookie(models.Model):
         null=True,
         blank=True
     )
+    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -58,23 +60,7 @@ class Cookie(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super(Cookie, self).save(*args, **kwargs)
-
-# class CookieImage(models.Model):
-#     """
-#     Model representing images associated with a cookie.
-
-#     Attributes:
-#         cookie (ForeignKey): The cookie associated with the image.
-#         image (ImageField): The image file of the cookie.
-
-#     Note:
-#         Images are validated using the validate_file_size function.
-#     """
-#     cookie = models.OneToOneField(Cookie, on_delete=models.CASCADE, related_name='image')
-#     image = models.ImageField(
-#         upload_to='bakery/images',
-#         validators=[validate_file_size]
-#     )
+        
 
 class Location(models.Model):
     """
@@ -168,6 +154,25 @@ class Store(models.Model):
         ordering = ['cookie', 'size']
         verbose_name = 'Cookies In Store'
         unique_together = [['size', 'cookie']]
+        
+
+class RecipeInstruction(models.Model):
+    """
+    Model representing an instruction in a recipe.
+
+    Attributes:
+        instruction (TextField): The text of the instruction.
+
+    Methods:
+        __str__(): Returns a string representation of the instruction.
+    """
+    instruction = models.TextField(max_length=255)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='instructions')
+
+    def __str__(self):
+        return self.instruction
+
+
 
 class Ingredient(models.Model):
     """
@@ -183,54 +188,6 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Recipe(models.Model):
-    """
-    Model representing a recipe for a specific cookie type.
-
-    Attributes:
-        cookie (ForeignKey): The type of cookie the recipe is for.
-        description (TextField): A description of the recipe.
-        ingredients (ManyToManyField): Ingredients used in the recipe (through RecipeIngredient).
-        instructions (ManyToManyField): Instructions for making the recipe.
-        created_at (DateTimeField): The date and time when the recipe was created.
-        last_updated (DateTimeField): The date and time when the recipe was last updated.
-        modified_by (ForeignKey): The user who last modified the recipe.
-
-    Methods:
-        __str__(): Returns a string representation of the associated cookie.
-    """
-    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='recipe_set')
-    notes = models.TextField(null=True, blank=True)
-    ingredients = models.ManyToManyField(Ingredient, through='RecipeIngredient')
-    # instructions = models.ManyToManyField(RecipeInstruction)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return self.cookie.name
-
-    class Meta:
-        ordering = ['cookie']
-        
-
-class RecipeInstruction(models.Model):
-    """
-    Model representing an instruction in a recipe.
-
-    Attributes:
-        instruction (TextField): The text of the instruction.
-
-    Methods:
-        __str__(): Returns a string representation of the instruction.
-    """
-    instruction = models.TextField(max_length=255)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='instructions')
-
-    def __str__(self):
-        return self.instruction
     
 
 class RecipeIngredient(models.Model):
@@ -247,7 +204,7 @@ class RecipeIngredient(models.Model):
         This model is used to associate ingredients with recipes.
     """
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    cookie = models.ForeignKey(Cookie, on_delete=models.CASCADE, related_name='ingredients')
     quantity = models.PositiveIntegerField()
     unit = models.CharField(max_length=50, blank=True, null=True)
 

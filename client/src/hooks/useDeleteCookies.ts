@@ -1,3 +1,4 @@
+
 import { AxiosError } from "axios";
 import { COOKIES_ENDPOINT } from "../constants";
 import { Baked } from "../baked/Baked";
@@ -7,7 +8,7 @@ import APIClient from "../services/api-client";
 import useMutateCookies from "./useMutateCookies";
 
 const useDeleteCookies = (endpoint: string) => {
-    const apiClient = new APIClient(endpoint);
+  const apiClient = new APIClient(endpoint);
 
   const {
     mutate: deleteItem,
@@ -21,4 +22,4 @@ const useDeleteCookies = (endpoint: string) => {
   return { deleteItem, error, isLoading }
 }
 
-export default useDeleteCookies
+export default useDeleteCookies;

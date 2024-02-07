@@ -11,15 +11,10 @@ router.register('doughs', DoughViewSet)
 router.register('bakedcookies', BakedCookieViewSet)
 router.register('store', StoreViewSet)
 router.register('locations', LocationViewSet)
-router.register('recipes', RecipeViewSet)
 router.register('groceries', GroceryViewSet)
-router.register('ingredients', IngredientViewSet, basename='ingredients')
-router.register('recipe-ingredients', RecipeIngredientViewSet, basename='recipe_ingredients')
-router.register('recipe-instructions', RecipeInstructionViewSet, basename='recipe_instructions')
-
-# cookies_router = routers.NestedDefaultRouter(router, 'cookies', lookup ='cookie')
-# cookies_router.register('images', CookieImageViewSet, basename='cookie-images')
+router.register('ingredient', IngredientViewSet)
+router.register('ingredients', RecipeIngredientViewSet, basename='ingredients')
+router.register('instructions', RecipeInstructionViewSet)
 
 
 urlpatterns = router.urls
-# urlpatterns = router.urls + cookies_router.urls

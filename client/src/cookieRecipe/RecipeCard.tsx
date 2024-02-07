@@ -3,19 +3,26 @@ import {
   Card,
   CardBody,
   CardHeader,
+  HStack,
   Heading,
+ ListItem,
   Stack,
   StackDivider,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import useRecipes from "./useRecipes";
+import DeleteButton from "../components/DeleteButton";
 
 interface Props {
-  cookie_id: number;
+  notes: string;
+  ingredients: Ingredients
 }
 
 const RecipeCard = ({ cookie_id }: Props) => {
   const { data: recipeResults, isLoading, error } = useRecipes(cookie_id);
+  console.log(recipeResults);
+  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -24,7 +31,6 @@ const RecipeCard = ({ cookie_id }: Props) => {
   if (error) throw error;
 
   const recipeData = recipeResults?.results?.[0]
-  console.log(recipeData);
 
   if (!recipeData) {
     return <div>No recipe found.</div>;
@@ -37,18 +43,25 @@ const RecipeCard = ({ cookie_id }: Props) => {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">Cookie Recipe</Heading>
+        <Heading size="lg">{recipeData.cookie} Cookie Recipe</Heading>
       </CardHeader>
 
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
           <Box>
-            <Heading size="sm" textTransform="uppercase">
+            <Heading size="md" textTransform="uppercase">
               Ingredients
             </Heading>
-            <Text pt="2" fontSize="sm">
-              Bullet Point Ingredient Here
-            </Text>
+            <UnorderedList>
+              {recipeData.recipeingredient_set.map((ingredient) => (
+                <ListItem key={ingredient.id}>
+                  <HStack justifyContent='space-between' width='100%'>
+                    <Text>{ingredient.ingredient_name} - {ingredient.quantity} {ingredient.unit}</Text>
+                    <DeleteButton id={ingredient.id} endpoint={`recipes/${recipeData.id}/recipe-ingredients`} />
+                  </HStack>
+                </ListItem>
+              ))}
+            </UnorderedList>
           </Box>
           <Box>
             <Heading size="sm" textTransform="uppercase">

@@ -144,51 +144,22 @@ class IngredientAdmin(admin.ModelAdmin):
 # Register the RecipeInstruction model with custom admin settings
 @admin.register(RecipeInstruction)
 class RecipeInstructionAdmin(admin.ModelAdmin):
-    list_display = ['id', 'instruction', 'recipe']
+    list_display = ['id', 'instruction']
     list_editable = ['instruction']
-    search_fields = ['recipe__cookie__name']
 
 # Register the RecipeIngredient model with custom admin settings
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ['id', 'ingredient', 'recipe', 'quantity', 'unit']
+    list_display = ['id', 'ingredient', 'quantity', 'unit']
     list_editable = ['quantity', 'unit']
-    search_fields = ['ingredient__name', 'recipe__cookie__name']
-    list_filter = ['recipe']
-    autocomplete_fields = ['ingredient', 'recipe']
+    search_fields = ['ingredient__name', 'cookie__name']
+    list_filter = ['cookie']
+    autocomplete_fields = ['ingredient', 'cookie']
 
 # Inline admin class for RecipeIngredient
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
-
-# Register the Recipe model with custom admin settings
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cookie', 'notes', 'get_ingredients', 'get_instructions', 'created_at', 'last_updated', 'modified_by']
-    # filter_horizontal = ['instructions']
-    list_editable = ['notes']
-    list_select_related = ['cookie', 'modified_by']
-    list_per_page = 5
-    search_fields = ['cookie__name__icontains']
-    list_filter = ['last_updated', 'cookie']
-    exclude = ['modified_by']
-    autocomplete_fields = ['cookie']
-    inlines = [RecipeIngredientInline]
-
-    # Custom method to get a comma-separated list of recipe ingredients
-    def get_ingredients(self, obj):
-        ingredients_with_quantities = [
-            f"{ri.ingredient.name} - {ri.quantity} {ri.unit if ri.unit else ''}"
-            for ri in obj.recipeingredient_set.all()
-        ]
-        return ", ".join(ingredients_with_quantities)
-    get_ingredients.short_description = 'Ingredients'
-
-    # Custom method to get a formatted list of recipe instructions
-    def get_instructions(self, obj):
-        return "\n".join([instruction.instruction for instruction in obj.instructions.all()])
-    get_instructions.short_description = 'Instructions'
 
 # Register the Grocery model with custom admin settings
 @admin.register(Grocery)

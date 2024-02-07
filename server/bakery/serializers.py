@@ -45,28 +45,94 @@ class UserNameSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username']
         
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = [
+            'id',
+            'name'
+        ]
         
-# Serializer Classes to display on API
-# class CookieImageSerializer(serializers.ModelSerializer):
-#     def create(self, validated_data):
-#         cookie_slug = self.context['cookie_slug']
-#         cookie = get_object_or_404(Cookie, slug=cookie_slug)
-#         return CookieImage.objects.create(cookie=cookie, **validated_data)
-    
+# class IngredientNameSerializer(serializers.ModelSerializer):
 #     class Meta:
-#         model = CookieImage
-#         fields = ['image']
+#         model = Ingredient
+#         fields = [
+#             'name'
+#         ]
         
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    ingredient_name = serializers.StringRelatedField(source='ingredient.name')
+    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    cookie = serializers.StringRelatedField(read_only=True)
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+
+    class Meta:
+        model = RecipeIngredient
+        fields = [
+            'id',
+            'cookie',
+            'cookie_name',
+            'ingredient',
+            'ingredient_name',
+            'quantity',
+            'unit'
+        ]
+
+class IngredientDetailSerializer(serializers.ModelSerializer):
+    ingredient = serializers.StringRelatedField(source='ingredient.name')
+
+    class Meta:
+        model = RecipeIngredient
+        fields = [
+            'ingredient',
+            'quantity',
+            'unit'
+        ]
+
+class RecipeInstructionSerializer(serializers.ModelSerializer):
+    cookie = serializers.StringRelatedField(read_only=True)
+    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    
+    class Meta:
+        model = RecipeInstruction
+        fields = [
+            'id',
+            'cookie',
+            'cookie_name',
+            'instruction'
+        ]
+        
+        
+class InstructionDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeInstruction
+        fields = [
+            'instruction'
+        ]
 
 class CookieSerializer(serializers.ModelSerializer):
     counts = serializers.SerializerMethodField(method_name='calculate_totals')
     slug = serializers.StringRelatedField(read_only=True)
     delete_image = serializers.BooleanField(write_only=True, default=False)
+    ingredients = IngredientDetailSerializer(many=True, read_only=True)
+    instructions = InstructionDetailSerializer(many=True, read_only=True)
+
     
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'slug', 'image', 'description', 'is_active', 'counts', 'delete_image']
+        fields = ['id', 'name', 'slug', 'image', 'description', 'notes', 'is_active', 'ingredients', 'instructions', 'counts', 'delete_image']
         
+    def create(self, validated_data):
+        delete_image = validated_data.pop('delete_image', False)
+        
+        # Create a Cookie instance without the delete_image field
+        cookie = Cookie.objects.create(**validated_data)
+        
+        # Delete the image if delete_image is True
+        if delete_image and cookie.image:
+            cookie.image.delete()
+        
+        return cookie
         
     def update(self, instance, validated_data):
         delete_image = validated_data.pop('delete_image', False)
@@ -201,80 +267,10 @@ class StoreSerializer(serializers.ModelSerializer):
             'updated_by'
             ]
         
-class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = [
-            'id',
-            'name'
-        ]
+
         
 
-class RecipeIngredientSerializer(serializers.ModelSerializer):
-    ingredient_name = serializers.StringRelatedField(source='ingredient.name')
-    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-    recipe = serializers.PrimaryKeyRelatedField(queryset=Recipe.objects.all(), required=False)
 
-    class Meta:
-        model = RecipeIngredient
-        fields = [
-            'id',
-            'ingredient',
-            'ingredient_name',
-            'recipe',
-            'quantity',
-            'unit'
-        ]
-
-
-
-class RecipeInstructionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RecipeInstruction
-        fields = [
-            'id',
-            'instruction',
-            'recipe'
-        ]
-        extra_kwargs = {
-            'recipe': {'required': False}
-        }
-
-
-class RecipeSerializer(serializers.ModelSerializer):
-    cookie = serializers.StringRelatedField(read_only=True)
-    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
-    modified_by = UserNameSerializer(read_only=True)  
-    recipeingredient_set = RecipeIngredientSerializer(many=True, required=False)
-    instructions = RecipeInstructionSerializer(many=True)
-    
-    class Meta:
-        model = Recipe
-        fields = [
-            'id', 
-            'cookie', 
-            'cookie_name', 
-            'notes', 
-            'recipeingredient_set',
-            'instructions', 
-            'created_at',
-            'last_updated',
-            'modified_by'
-        ]
-    
-    def create(self, validated_data):
-        ingredients_data = validated_data.pop('recipeingredient_set', [])
-        instructions_data = validated_data.pop('instructions', [])
-
-        recipe = Recipe.objects.create(**validated_data)
-
-        for ingredient_data in ingredients_data:
-            RecipeIngredient.objects.create(recipe=recipe, **ingredient_data)
-            
-        for instruction_data in instructions_data:
-            RecipeInstruction.objects.create(recipe=recipe, **instruction_data)
-        
-        return recipe
 
            
 class GrocerySerializer(serializers.ModelSerializer):

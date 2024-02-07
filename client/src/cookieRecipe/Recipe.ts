@@ -1,12 +1,6 @@
-export interface Recipe {
-    id: number;
-    cookie: string;
-    notes: string;
-    recipeingredient_set: RecipeIngredient[];
-    instructions: Instructions[]
-}
 
-interface RecipeIngredient {
+
+export interface RecipeIngredient {
     id: number;
     ingredient: number;
     ingredient_name: string;
@@ -15,7 +9,7 @@ interface RecipeIngredient {
     unit: string;
 }
 
-interface Instructions {
+export interface Instructions {
     id: number;
     instruction: string;
     recipe: number;
