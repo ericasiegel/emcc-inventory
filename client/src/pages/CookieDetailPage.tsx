@@ -14,15 +14,13 @@ import {
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
-import useDoughs from "../dough/useDoughs";
-import useBaked from "../baked/useBaked";
 import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import ActiveInactiveSwitch from "../cookies/ActiveInactiveSwitch";
 import StoreCookieDetailCard from "../inStore/StoreCookieDetailCard";
 import AddFormModal from "../components/AddFormModal";
 import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
-import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
+import { BAKED_ENDPOINT, DOUGHS_ENDPOINT, STORE_ENDPOINT } from "../constants";
 import RecipeCard from "../cookieRecipe/RecipeCard";
 import CookieDescriptionCard from "../cookies/CookieDescriptionCard";
 import EditFormModal from "../components/EditFormModal";
@@ -39,8 +37,6 @@ const CookieDetailPage = () => {
   if (!cookie) {
     return null; // or display an error message or handle this case as needed
   }
-  // const cookie_image = cookie.images.id
-  // console.log(cookie_image);
   
   const imgUrl =
     cookie.image
@@ -72,7 +68,6 @@ const CookieDetailPage = () => {
           <DetailCard
             id={cookie.id}
             count={cookie.counts}
-            dataFetcher={useDoughs}
             headingText="Doughs"
             endpoint={DOUGHS_ENDPOINT}
           />
@@ -82,7 +77,6 @@ const CookieDetailPage = () => {
             id={cookie.id}
             size="mega"
             count={cookie.counts}
-            dataFetcher={useBaked}
             headingText="Baked Cookies"
             endpoint={BAKED_ENDPOINT}
           />
@@ -90,7 +84,6 @@ const CookieDetailPage = () => {
             id={cookie.id}
             size="mini"
             count={cookie.counts}
-            dataFetcher={useBaked}
             headingText="Baked Cookies"
             endpoint={BAKED_ENDPOINT}
           />
@@ -100,11 +93,13 @@ const CookieDetailPage = () => {
             id={cookie.id}
             size="mega"
             count={cookie.counts}
+            endpoint = {STORE_ENDPOINT}
           />
           <StoreCookieDetailCard
             id={cookie.id}
             size="mini"
             count={cookie.counts}
+            endpoint = {STORE_ENDPOINT}
           />
         </CookieDetailContainer>
       </GridItem>
@@ -142,7 +137,7 @@ const CookieDetailPage = () => {
           variant="elevated"
           marginTop={5}
         >
-          {/* <RecipeCard cookie_id={cookie.id} /> */}
+          <RecipeCard id={cookie.id} name={cookie.name} notes={cookie.notes} />
         </Card>
       </GridItem>
     </SimpleGrid>

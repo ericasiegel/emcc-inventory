@@ -18,15 +18,12 @@ import DeleteButton from "./DeleteButton";
 import AddDoughForm from "../dough/AddDoughForm";
 import AddFormModal from "./AddFormModal";
 import AddBakedCookiesForm from "../baked/AddBakedCookiesForm";
+import useGetData from "../hooks/useGetData";
 
-interface Props<T> {
+interface Props {
   id: number;
   size?: string;
   count: Counts;
-  dataFetcher: (
-    id: number,
-    size?: string
-  ) => { data?: { pages: { results: T[] }[] } };
   headingText: string;
   endpoint: string;
 }
@@ -35,11 +32,10 @@ const DetailCard = <T extends Baked | Dough>({
   id,
   size,
   count,
-  dataFetcher,
   headingText,
   endpoint,
-}: Props<T>) => {
-  const result = dataFetcher(id, size);
+}: Props) => {
+  const result = useGetData<T>({endpoint, id, size});
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
 
   let countSize =

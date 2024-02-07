@@ -1,18 +1,22 @@
 
+export interface Ingredient {
+    id: number;
+    name: string;
+}
 
-export interface RecipeIngredient {
+export interface Ingredients {
     id: number;
     cookie: string;
-    cookie_name: string;
-    ingredient: number;
-    ingredient_name: string;
-    recipe: number;
+    cookie_id: number;
+    ingredient: string;
+    ingredient_id: number;
     quantity: number;
     unit: string;
 }
 
 export interface Instructions {
     id: number;
+    cookie: string;
+    cookie_id: number;
     instruction: string;
-    recipe: number;
 }

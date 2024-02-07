@@ -10,19 +10,21 @@ import {
 import AddFormModal from "../components/AddFormModal";
 import EditFormModal from "../components/EditFormModal";
 import ColorBadge from "../counts/ColorBadge";
-import useStoreCookies from "./useStoreCookies";
 import { format } from "date-fns";
 import DeleteButton from "../components/DeleteButton";
 import StoreCookiesForm from "./StoreCookiesForm";
+import useGetData from "../hooks/useGetData";
+import { Store } from "./StoreCookie";
 
 interface Props {
   id: number;
   size: string;
   count: Counts;
+  endpoint: string;
 }
 
-const StoreCookieDetailCard = ({ id, size, count }: Props) => {
-  const result = useStoreCookies(id, size);
+const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
+  const result = useGetData<Store>({ endpoint, id, size});
   const cookieData = result.data?.pages.flatMap((page) => page.results)[0];
   const headingSize = size === "mega" ? "Mega" : "Mini";
 

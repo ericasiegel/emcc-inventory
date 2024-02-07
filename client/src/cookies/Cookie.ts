@@ -10,6 +10,7 @@ export interface Cookie {
   counts: Counts;
   image?: string;
   delete_image: boolean;
+  notes: string;
 }
 
 export interface EditDescription {

@@ -19,9 +19,8 @@ import useLocations from "../cookies/useLocations";
 import { AddUpdateBaked } from "./Baked";
 import { useReducer, useRef } from "react";
 import useAddBaked from "./useAddBaked";
-import useDoughs from "../dough/useDoughs";
 import useEditDough from "../dough/useEditDough";
-import { EditDough } from "../dough/Dough";
+import { Dough, EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import { DOUGHS_ENDPOINT } from "../constants";
 import addUpdateFormReducer, {
@@ -29,6 +28,7 @@ import addUpdateFormReducer, {
 } from "../reducers/addUpdateFormReducer";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 import AddEditFormSelect from "../components/AddEditFormSelect";
+import useGetData from "../hooks/useGetData";
 
 interface Props {
   id: number;
@@ -72,7 +72,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
   // get doughs for Select List
-  const { data: getDoughs } = useDoughs(id);
+  const { data: getDoughs } = useGetData<Dough>({endpoint:DOUGHS_ENDPOINT, id});
   const doughs = getDoughs?.pages.flatMap((page) => page.results);
 
   // reset form function

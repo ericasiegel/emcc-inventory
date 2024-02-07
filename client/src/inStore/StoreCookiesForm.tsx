@@ -19,16 +19,16 @@ import {
 import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
-import useBaked from "../baked/useBaked";
 import useEditBaked from "../baked/useEditBaked";
 import { BAKED_ENDPOINT } from "../constants";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import useAddStoreCookie from "./useAddStoreCookie";
 import useEditStoreCookies from "./useEditStoreCookies";
 import { AddEditStore, EditStore } from "./StoreCookie";
-import { EditBaked } from "../baked/Baked";
+import { Baked, EditBaked } from "../baked/Baked";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 import AddEditFormSelect from "../components/AddEditFormSelect";
+import useGetData from "../hooks/useGetData";
 
 interface Props {
   id: number;
@@ -73,7 +73,7 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) =>
   const bakedCookieUsedQuantity = useRef<HTMLInputElement>(null);
 
   // Fetch baked cookies data using a custom hook
-  const { data: getBakedCookies } = useBaked(id, cookieSize);
+  const { data: getBakedCookies } = useGetData<Baked>({endpoint: BAKED_ENDPOINT, id, size: cookieSize});
   const bakedCookies = getBakedCookies?.pages.flatMap((page) => page.results);
 
   // Handle baked cookie usage selection
