@@ -7,14 +7,13 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import AddFormModal from "../components/AddFormModal";
-import EditFormModal from "../components/EditFormModal";
 import ColorBadge from "../counts/ColorBadge";
 import { format } from "date-fns";
 import DeleteButton from "../components/DeleteButton";
 import StoreCookiesForm from "./StoreCookiesForm";
 import useGetData from "../hooks/useGetData";
 import { Store } from "./StoreCookie";
+import FormModal from "../components/FormModal";
 
 interface Props {
   id: number;
@@ -40,15 +39,15 @@ const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
           <ColorBadge size="30px" count={countSize} />
         </Flex>
         {countSize > 0 ? (
-          <EditFormModal header="">
+          <FormModal header={`Edit quantity of ${size} cookies in store`}  isAddForm={false}>
             {cookieData ? (
               <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} />
             ) : null}
-          </EditFormModal>
+          </FormModal>
         ) : (
-          <AddFormModal header="">
+          <FormModal header={`Add quantity of ${size} cookies in store`}  isAddForm={true}>
             <StoreCookiesForm id={id} cookieSize={size!} mode="add" inStoreQuantityId={0} />
-          </AddFormModal>
+          </FormModal>
         )}
       </CardHeader>
       <CardBody paddingTop={2}>

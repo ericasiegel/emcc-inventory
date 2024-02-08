@@ -3,7 +3,7 @@ import CookieGrid from "../components/CookieGrid";
 import CookieHeading from "../cookies/CookieHeading";
 import SideBar from "../components/SideBar";
 import AddCookieForm from "../cookies/AddCookieForm";
-import AddFormModal from "../components/AddFormModal";
+import FormModal from "../components/FormModal";
 
 
 const HomePage = () => {
@@ -23,9 +23,9 @@ const HomePage = () => {
       <GridItem area="main">
         <HStack paddingX={4} justifyContent="space-between">
           <CookieHeading />
-          <AddFormModal header="Add A Cookie">
+          <FormModal header="Add A Cookie" isAddForm={true}>
             <AddCookieForm />
-          </AddFormModal>
+          </FormModal>
         </HStack>
         <CookieGrid />
       </GridItem>

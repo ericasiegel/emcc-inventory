@@ -6,7 +6,6 @@ import {
   Center,
   FormControl,
   HStack,
-  Heading,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -19,7 +18,9 @@ import useLocations from "../cookies/useLocations";
 import { AddUpdateDough } from "./Dough";
 import { useReducer, useRef } from "react";
 import useAddDough from "./useAddDough";
-import addUpdateFormReducer, { StartingState } from "../reducers/addUpdateFormReducer";
+import addUpdateFormReducer, {
+  StartingState,
+} from "../reducers/addUpdateFormReducer";
 
 interface Props {
   id: number;
@@ -30,19 +31,18 @@ const AddDoughForm = ({ id }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
 
-  const initialState: StartingState ={
+  const initialState: StartingState = {
     cookieValue: 1,
-    selectedStoredUsage: '',
+    selectedStoredUsage: "",
     storedUsageValue: 0,
-    storedQuantity: 0
-  }
+    storedQuantity: 0,
+  };
   const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
   const { cookieValue } = state;
 
   const setDoughQuantityValue = (value: number) => {
-    dispatch({ type: 'set_cookie_value', payload: value})
-  }
-
+    dispatch({ type: "set_cookie_value", payload: value });
+  };
 
   const resetForm = () => {
     if (locationId.current) {
@@ -82,9 +82,6 @@ const AddDoughForm = ({ id }: Props) => {
       )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
-          <Heading paddingBottom={2} size="lg">
-            Add Dough
-          </Heading>
           <Box>
             <Select
               placeholder="Select Location"

@@ -16,9 +16,9 @@ import { Baked } from "../baked/Baked";
 import { Dough } from "../dough/Dough";
 import DeleteButton from "./DeleteButton";
 import AddDoughForm from "../dough/AddDoughForm";
-import AddFormModal from "./AddFormModal";
 import AddBakedCookiesForm from "../baked/AddBakedCookiesForm";
 import useGetData from "../hooks/useGetData";
+import FormModal from "./FormModal";
 
 interface Props {
   id: number;
@@ -62,13 +62,16 @@ const DetailCard = <T extends Baked | Dough>({
   );
 
   let chooseForm;
+  let header;
 
   switch (endpoint) {
     case "doughs":
       chooseForm = <AddDoughForm id={id} counts={countSize} />;
+      header = 'Add Doughs'
       break;
     case "bakedcookies":
       chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;
+      header = `Add ${size} baked cookies`
       break;
     default:
       chooseForm = null;
@@ -84,7 +87,7 @@ const DetailCard = <T extends Baked | Dough>({
     >
       <CardHeader>
         {headerContent}
-        <AddFormModal header="">{chooseForm}</AddFormModal>
+        <FormModal header={header} isAddForm={true}>{chooseForm}</FormModal>
       </CardHeader>
       <CardBody paddingTop={2}>
         <UnorderedList>

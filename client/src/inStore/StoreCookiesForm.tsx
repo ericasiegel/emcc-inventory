@@ -8,7 +8,6 @@ import {
   Center,
   FormControl,
   HStack,
-  Heading,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -161,10 +160,6 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) =>
       )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
-          <Heading paddingBottom={2} size="lg">
-            {mode === "edit" ? `Edit ${cookieSize} Cookies in Store` : "Add Cookies to Store"}
-          </Heading>
-
           {bakedCookies && bakedCookies?.length > 0 && (
             <AddUpdateFormRadioButtons
               title="Did you bring cookies from the Bakery?"

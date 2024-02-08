@@ -6,7 +6,6 @@ import {
   Center,
   FormControl,
   HStack,
-  Heading,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -143,10 +142,6 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
       )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
-          <Heading paddingBottom={2} size="lg">
-            Add Baked Cookies
-          </Heading>
-
           {doughs && doughs?.length > 0 && (
             <AddUpdateFormRadioButtons
               title="Did you use any stored dough?"
