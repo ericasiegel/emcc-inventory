@@ -13,22 +13,22 @@ const NavBar = () => {
         alignItems="center"
         flexDirection={{ base: "column", md: "row" }}
       >
-        <HStack>
+        <HStack paddingEnd={20}>
           <Image margin={3} src={logo} boxSize="150px" />
           <Link to={""}>
-            <Heading fontSize='5xl' color="#f9dfe8">Cookie Inventory</Heading>
+            <Heading fontSize='6xl' color="#f9dfe8">Cookie Inventory</Heading>
           </Link>
         </HStack>
         <Box flex="1" textAlign="left">
           <HStack justifyContent="flex-start" paddingStart={10}>
           <Link to={""}>
-            <Text color="#f9dfe8" fontSize="2xl">
+            <Text color="white" fontSize="2xl">
               Cookies
             </Text>
           </Link>
-          <Text fontSize='2xl' paddingX='30'>|</Text>
+          <Text fontSize='4xl' paddingX='5'>|</Text>
           <Link to={"pantry"}>
-            <Text color="#f9dfe8" fontSize="2xl">Pantry</Text>
+            <Text color="white" fontSize="2xl">Pantry</Text>
           </Link>
           </HStack>
         </Box>
