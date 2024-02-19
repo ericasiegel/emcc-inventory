@@ -14,6 +14,13 @@ export interface Ingredients {
     unit: string;
 }
 
+export interface AddUpdateCookieIngredients {
+    cookie_id: number;
+    ingredient_id: number;
+    quantity: number;
+    unit: string;
+}
+
 export interface Instructions {
     id: number;
     cookie: string;
