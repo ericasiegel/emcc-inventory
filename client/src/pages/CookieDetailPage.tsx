@@ -9,8 +9,8 @@ import {
   GridItem,
   HStack,
   Flex,
-  Center,
   Box,
+  useDisclosure,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
@@ -21,11 +21,12 @@ import AddImageForm from "../cookieImage/AddImageForm";
 import DeleteImageButton from "../cookieImage/DeleteImageButton";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT, STORE_ENDPOINT } from "../constants";
 import RecipeCard from "../cookieRecipe/RecipeCard";
-import CookieDescriptionCard from "../cookies/CookieDescriptionCard";
-import EditCookieDescriptionForm from "../cookies/EditCookieDescriptionForm";
 import FormModal from "../components/FormModal";
+import CookieDescription from "../cookies/CookieDescription";
 
 const CookieDetailPage = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const { slug } = useParams();
   const { data: cookie, isLoading, error } = useCookie(slug!);
 
@@ -39,6 +40,7 @@ const CookieDetailPage = () => {
 
   const imgUrl = cookie.image ? cookie.image : noImage;
 
+
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
       <GridItem>
@@ -48,22 +50,9 @@ const CookieDetailPage = () => {
           </Heading>
           <ActiveInactiveSwitch cookie={cookie} />
         </HStack>
-        <HStack justifyContent="space-between" alignItems="center">
-          <Box flex="1">
-            {" "}
-            <Center>
-              <CookieDescriptionCard description={cookie?.description} />
-            </Center>
-          </Box>
-          <FormModal header="Edit Cookie Description" isAddForm={false}>
-            <EditCookieDescriptionForm
-              id={cookie.id}
-              oldDescription={cookie?.description}
-              cookie={cookie}
-              // onClose={onClose}
-            />
-          </FormModal>
-        </HStack>
+        <Box>
+          <CookieDescription cookie={cookie} />
+        </Box>
 
         <CookieDetailContainer>
           <DetailCard
@@ -107,7 +96,13 @@ const CookieDetailPage = () => {
       <GridItem>
         {cookie.image === null ? (
           <Flex justifyContent="flex-end">
-            <FormModal header="Add Image" isAddForm={true}>
+            <FormModal
+              header="Add Image"
+              isAddForm={true}
+              onClose={onClose}
+              isOpen={isOpen}
+              onOpen={onOpen}
+            >
               <AddImageForm id={cookie.id} />
             </FormModal>
           </Flex>

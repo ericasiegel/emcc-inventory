@@ -34,9 +34,10 @@ interface Props {
   cookieSize: string;
   mode: "add" | "edit";
   inStoreQuantityId: number;
+  onClose: () => void;
 }
 
-const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) => {
+const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: Props) => {
   // Define the initial state for the form
   const initialState: StartingState = {
     cookieValue: 1, // Reset form value
@@ -87,25 +88,17 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId }: Props) =>
     setCookieQuantity(bakedCookieQuantity ? bakedCookieQuantity?.quantity : 0);
   };
 
-  // Reset the form
-  const resetForm = () => {
-    if (bakedCookieId.current) bakedCookieId.current.value = "";
-    setCookieUsage("No");
-    setCookieUsedValue(0);
-    setStoreQuantityValue(1);
-  };
-
   // Custom hooks for adding, editing, and deleting cookies
     const {
     editStoreCookies,
     error: editError,
     isLoading: editIsLoading,
-  } = useEditStoreCookies(inStoreQuantityId, resetForm);
+  } = useEditStoreCookies(inStoreQuantityId, onClose);
   const {
     addStoreCookies,
     error: addError,
     isLoading: addIsLoading,
-  } = useAddStoreCookie(resetForm);
+  } = useAddStoreCookie(onClose);
   const { editBakedCookie } = useEditBaked(
     Number(bakedCookieId.current?.value)
   );

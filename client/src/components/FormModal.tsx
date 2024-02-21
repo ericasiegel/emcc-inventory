@@ -4,12 +4,10 @@ import {
   Heading,
   Modal,
   ModalBody,
-  // ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure,
 } from "@chakra-ui/react";
 import AddButton from "./AddButton";
 import EditButton from "./EditButton";
@@ -19,11 +17,13 @@ interface Props {
   children: ReactNode;
   header?: string;
   isAddForm?: boolean;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
-const FormModal = ({ children, header, isAddForm }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+const FormModal = ({ children, header, isAddForm,  onOpen, onClose, isOpen }: Props) => {
+  
   const renderTriggerButton = () => {
     if (isAddForm) {
       return <AddButton onClick={onOpen} />;

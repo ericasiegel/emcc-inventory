@@ -17,41 +17,33 @@ import {
 } from "@chakra-ui/react";
 import useAddCookieIngredient from "./useAddCookieIngredient";
 import useIngredientItem from "./useIngredientItem";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const defaultIngredientValue = {
-  "id": 0,
-  "cookie": "",
-  "cookie_id": 0,
-  "ingredient": "",
-  "ingredient_id": 0,
-  "quantity": 0,
-  "unit": ""
-}
+  id: 0,
+  cookie: "",
+  cookie_id: 0,
+  ingredient: "",
+  ingredient_id: 0,
+  quantity: 0,
+  unit: "",
+};
 
 interface Props {
   cookieId: number;
+  onClose: () => void;
 }
 
-const AddCookieIngredientForm = ({cookieId}: Props) => {
+const AddCookieIngredientForm = ({ cookieId, onClose }: Props) => {
   // get list of ingredients,
   const { data: getIngredientItems } = useIngredientItem();
   const ingredientItems = getIngredientItems?.pages.flatMap(
     (page) => page.results
   );
 
-  const [ ingredientQuantityValue, setIngredientQuantityValue] = useState(1)
-
-  // add form reset function
-  const resetForm = () => {
-    console.log("reset form");
-    if (ingredientId.current) ingredientId.current.value = "";
-    setIngredientQuantityValue(1)
-    if (ingredientUnit.current) ingredientUnit.current.value = "";
-  };
 
   const { addCookieIngredient, error, isLoading } =
-    useAddCookieIngredient(resetForm);
+    useAddCookieIngredient(onClose);
 
   const ingredientId = useRef<HTMLSelectElement>(null);
   const ingredientQuantity = useRef<HTMLInputElement>(null);
@@ -100,10 +92,10 @@ const AddCookieIngredientForm = ({cookieId}: Props) => {
             </Select>
             <HStack>
               <Text>Quantity:</Text>
-              <NumberInput width="100%" 
-              ref={ingredientQuantity}
-              value={ingredientQuantityValue}
-               onChange={(value) => setIngredientQuantityValue(Number(value))}
+              <NumberInput
+                width="100%"
+                ref={ingredientQuantity}
+                defaultValue="1"
               >
                 <NumberInputField type="number" />
                 <NumberInputStepper>

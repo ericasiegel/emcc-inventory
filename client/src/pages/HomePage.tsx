@@ -1,4 +1,4 @@
-import { Grid, Show, GridItem, HStack } from "@chakra-ui/react";
+import { Grid, Show, GridItem, HStack, useDisclosure } from "@chakra-ui/react";
 import CookieGrid from "../components/CookieGrid";
 import CookieHeading from "../cookies/CookieHeading";
 import SideBar from "../components/SideBar";
@@ -7,6 +7,8 @@ import FormModal from "../components/FormModal";
 
 
 const HomePage = () => {
+ const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
     <Grid
       templateAreas={{
@@ -23,8 +25,8 @@ const HomePage = () => {
       <GridItem area="main">
         <HStack paddingX={4} justifyContent="space-between">
           <CookieHeading />
-          <FormModal header="Add A Cookie" isAddForm={true}>
-            <AddCookieForm />
+          <FormModal header="Add A Cookie" isAddForm={true} onClose={onClose} isOpen={isOpen} onOpen={onOpen}>
+            <AddCookieForm onClose={onClose} />
           </FormModal>
         </HStack>
         <CookieGrid />

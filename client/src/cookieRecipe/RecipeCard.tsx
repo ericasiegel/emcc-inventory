@@ -10,6 +10,7 @@ import {
   StackDivider,
   Text,
   UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
 import DeleteButton from "../components/DeleteButton";
 import { Ingredients, Instructions } from "./Recipe";
@@ -26,6 +27,17 @@ interface Props {
 }
 
 const RecipeCard = ({ id, name, notes }: Props) => {
+  const {
+    isOpen: addIsOpen,
+    onOpen: addOnOpen,
+    onClose: addOnClose,
+  } = useDisclosure();
+  const {
+    isOpen: editIsOpen,
+    onOpen: editOnOpen,
+    onClose: editOnClose,
+  } = useDisclosure();
+
   const ingredientsResults = useGetData<Ingredients>({
     endpoint: INGREDIENTS_ENDOINT,
     id,
@@ -53,8 +65,14 @@ const RecipeCard = ({ id, name, notes }: Props) => {
               <Heading size="md" textTransform="uppercase">
                 Ingredients
               </Heading>
-              <FormModal header="Add Ingredient" isAddForm={true}>
-                <AddCookieIngredientForm cookieId={id} />
+              <FormModal
+                header="Add Ingredient"
+                isAddForm={true}
+                onClose={addOnClose}
+                isOpen={addIsOpen}
+                onOpen={addOnOpen}
+              >
+                <AddCookieIngredientForm cookieId={id} onClose={addOnClose} />
               </FormModal>
             </HStack>
             <UnorderedList>
@@ -66,23 +84,26 @@ const RecipeCard = ({ id, name, notes }: Props) => {
                       {ingredient.unit}
                     </Text>
                     <Box>
-
-                    <FormModal
-                      header={`Edit ${ingredient.ingredient}`}
-                      isAddForm={false}
+                      <FormModal
+                        header={`Edit ${ingredient.ingredient}`}
+                        isAddForm={false}
+                        onClose={editOnClose}
+                        isOpen={editIsOpen}
+                        onOpen={editOnOpen}
                       >
-                      <EditCookieIngredientForm
-                        id={ingredient.id}
-                        oldQuantity={ingredient.quantity}
-                        oldUnit={ingredient.unit}
-                        ingredient={ingredient}
+                        <EditCookieIngredientForm
+                          id={ingredient.id}
+                          oldQuantity={ingredient.quantity}
+                          oldUnit={ingredient.unit}
+                          ingredient={ingredient}
+                          onClose={editOnClose}
                         />
-                    </FormModal>
-                    <DeleteButton
-                      id={ingredient.id}
-                      endpoint={INGREDIENTS_ENDOINT}
+                      </FormModal>
+                      <DeleteButton
+                        id={ingredient.id}
+                        endpoint={INGREDIENTS_ENDOINT}
                       />
-                      </Box>
+                    </Box>
                   </HStack>
                 </ListItem>
               ))}

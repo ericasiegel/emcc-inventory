@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   Alert,
   AlertIcon,
@@ -35,15 +35,13 @@ const defaultCookieValue = {
   "delete_image": false
 }
 
-const AddCookieForm = () => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const resetForm = () => {
-    setName("");
-    setDescription('');
-  };
+interface Props {
+  onClose: () => void; 
+}
 
-  const { addCookie, error, isLoading } = useAddCookie(resetForm);
+const AddCookieForm = ({onClose}: Props) => {
+
+  const { addCookie, error, isLoading } = useAddCookie(onClose);
 
   const cookieName = useRef<HTMLInputElement>(null);
   const cookieDescription = useRef<HTMLInputElement>(null);
@@ -79,16 +77,12 @@ const AddCookieForm = () => {
               ref={cookieName}
               backgroundColor="white"
               placeholder="Cookie Name..."
-              value={name} // Set the input value from formData
-              onChange={(e) => setName(e.target.value)} // Update formData on input change
               marginBottom={3}
             />
             <Input
               ref={cookieDescription}
               backgroundColor="white"
               placeholder="Cookie Description..."
-              value={description} // Set the input value from formData
-              onChange={(e) => setDescription(e.target.value)} // Update formData on input change
             />
           </Box>
           <Center>

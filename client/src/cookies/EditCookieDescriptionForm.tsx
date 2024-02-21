@@ -1,75 +1,80 @@
-import { Alert, AlertIcon, FormControl, Input, Center, Button, Box } from '@chakra-ui/react'
-import React, { useRef, useState } from 'react'
-import useEditCookie from './useEditCookie'
-import { Cookie } from './Cookie';
+import {
+  Alert,
+  AlertIcon,
+  FormControl,
+  Input,
+  Center,
+  Box,
+  HStack,
+} from "@chakra-ui/react";
+import React, { useRef } from "react";
+import useEditCookie from "./useEditCookie";
+import { Cookie } from "./Cookie";
+import CheckMarkButton from "../components/CheckMarkButton";
 
 interface Props {
-    id: number;
-    oldDescription?: string;
-    cookie: Cookie
-    // onClose: () => void;
+  id: number;
+  oldDescription?: string;
+  cookie: Cookie;
+  onSubmit: () => void;
 }
 
-const EditCookieDescriptionForm = ({ id, oldDescription, cookie }: Props) => {
-    const [newDescription, setNewDescription] = useState<string>('')
+const EditCookieDescriptionForm = ({
+  id,
+  oldDescription,
+  cookie,
+  onSubmit,
+}: Props) => {
+  const { editCookie, error, isLoading } = useEditCookie(id, onSubmit);
 
-    const resetForm = () => {
-        setNewDescription('');
-    }
+  const cookieDescription = useRef<HTMLInputElement>(null);
 
-    const { editCookie, error, isLoading } = useEditCookie(id, resetForm);
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    const cookieDescription = useRef<HTMLInputElement>(null);
+    const cookieDescriptionValue = cookieDescription.current?.value || "";
 
-    const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const cookieData: Cookie = {
+      ...cookie,
+      description: cookieDescriptionValue,
+    };
 
-        const cookieDescriptionValue = cookieDescription.current?.value || '';
+    editCookie(cookieData);
+  };
 
-        const cookieData = {
-          ...cookie,
-            description: cookieDescriptionValue
-        }
-
-        editCookie(cookieData)
-
-        // onClose();
-    }
+  const description = oldDescription || "Add a cookie description";
 
   return (
     <>
-      {error && (
-        <Alert status="error">
-          <AlertIcon />
-          {error.message}
-        </Alert>
-      )}
-      <form onSubmit={handleFormSubmit}>
-        <FormControl>
-          <Box>
-            <Input
-              ref={cookieDescription}
-              backgroundColor="white"
-              placeholder={oldDescription}
-              value={newDescription} // Set the input value from formData
-              onChange={(e) => setNewDescription(e.target.value)} // Update formData on input change
-              marginBottom={3}
-            />
-          </Box>
-          <Center>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {isLoading ? "Editing Description..." : "Edit Description"}
-            </Button>
-          </Center>
-        </FormControl>
-      </form>
+      <Box width="100%">
+        {error && (
+          <Alert status="error">
+            <AlertIcon />
+            {error.message}
+          </Alert>
+        )}
+        <form onSubmit={handleFormSubmit}>
+          <FormControl>
+            <HStack>
+              <Input
+                width="100%"
+                variant='outline'
+                borderColor='black'
+                focusBorderColor="green"
+                size='lg'
+                ref={cookieDescription}
+                backgroundColor="transparent"
+                textAlign='center'
+                fontSize='xl'
+                defaultValue={description} // Set the input value from formData
+              />
+              <Center>{isLoading ? "..." : <CheckMarkButton />}</Center>
+            </HStack>
+          </FormControl>
+        </form>
+      </Box>
     </>
-  )
-}
+  );
+};
 
-export default EditCookieDescriptionForm
+export default EditCookieDescriptionForm;

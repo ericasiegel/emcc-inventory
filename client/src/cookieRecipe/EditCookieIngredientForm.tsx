@@ -23,6 +23,7 @@ interface Props {
   oldQuantity: number;
   oldUnit: string;
   ingredient: Ingredients;
+  onClose: () => void;
 }
 
 const EditCookieIngredientForm = ({
@@ -30,6 +31,7 @@ const EditCookieIngredientForm = ({
   oldQuantity,
   oldUnit,
   ingredient,
+  onClose
 }: Props) => {
   const [ingredientQuantityValue, setIngredientQuantityValue] =
     useState(oldQuantity);
@@ -43,7 +45,7 @@ const EditCookieIngredientForm = ({
 
   const { editCookieIngredient, error, isLoading } = useEditCookieIngredients(
     id,
-    resetForm
+    onClose
   );
 
   const ingredientQuantity = useRef<HTMLInputElement>(null);
