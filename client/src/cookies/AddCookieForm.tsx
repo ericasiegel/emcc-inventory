@@ -8,18 +8,19 @@ import {
   FormControl,
   Input,
 } from "@chakra-ui/react";
-import { Cookie } from "./Cookie";
 import useAddCookie from "./useAddCookie";
 
-interface Props {
-  cookie?: Cookie;
-}
 
 const defaultCookieValue = {
   "id": 0,
   "name": "",
   "slug": "",
-  "is_active": true,
+  "image": null,
+  "description": "",
+  "notes": null,
+  "is_active": false,
+  "ingredients": [],
+  "instructions": [],
   "counts": {
       "doughs": 0,
       "baked_cookies": {
@@ -31,10 +32,10 @@ const defaultCookieValue = {
           "mini": 0
       }
   },
-  "images": []
+  "delete_image": false
 }
 
-const AddCookieForm = ({cookie = defaultCookieValue}: Props) => {
+const AddCookieForm = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const resetForm = () => {
@@ -53,8 +54,8 @@ const AddCookieForm = ({cookie = defaultCookieValue}: Props) => {
     const nameValue = cookieName.current?.value || "";
     const cookieDescriptionValue = cookieDescription.current?.value || "";
 
-    const cookieData: Cookie = {
-      ...cookie,
+    const cookieData = {
+      ...defaultCookieValue,
       name: nameValue,
       description: cookieDescriptionValue,
       is_active: true,

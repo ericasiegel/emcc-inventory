@@ -129,14 +129,18 @@ class RecipeIngredientViewSet(viewsets.ModelViewSet):
     queryset = RecipeIngredient.objects.select_related('ingredient').all()
     serializer_class = RecipeIngredientSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['cookie']
-    search_fields = ['cookie', 'ingredient']
-    ordering_fields = ['id', 'cookie']
+    filterset_fields = ['cookie_id']
+    search_fields = ['cookie__name', 'ingredient']
+    ordering_fields = ['id', 'cookie__name']
     
 
 class RecipeInstructionViewSet(ModelViewSet):
     queryset = RecipeInstruction.objects.all()
     serializer_class = RecipeInstructionSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id']
+    search_fields = ['cookie__name']
+    ordering_fields = ['id', 'cookie__name']
     
     
 class GroceryViewSet(ModelViewSet):

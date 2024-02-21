@@ -7,10 +7,10 @@ export interface Cookie {
   slug: string;
   description?: string;
   is_active: boolean;
-  counts: Counts;
-  image?: string;
+  counts?: Counts;
+  image?: string | null;
   delete_image: boolean;
-  notes: string;
+  notes: string | null;
 }
 
 export interface EditDescription {

@@ -3,20 +3,20 @@ import { COOKIES_ENDPOINT, INGREDIENTS_ENDOINT } from '../constants'
 import useMutateCookies from '../hooks/useMutateCookies';
 import { Ingredients } from './Recipe';
 
-const useAddCookieIngredient = (onSuccessCallback: () => void) => {
+const useEditCookieIngredients = (id: number, onSuccessCallback: () => void) => {
     const apiClient = new APIClient(INGREDIENTS_ENDOINT + '/');
     const {
-        mutate: addCookieIngredient,
+        mutate: editCookieIngredient,
         error,
         isLoading,
     } = useMutateCookies<Ingredients, Error, Ingredients>(
-        (cookieIngredient: Ingredients) => apiClient.post(cookieIngredient),
+        (cookieIngredient: Ingredients) => apiClient.patch(cookieIngredient, id),
         () => {
             onSuccessCallback();
         },
         [COOKIES_ENDPOINT, INGREDIENTS_ENDOINT]
     )
-  return { addCookieIngredient, error, isLoading }
+  return { editCookieIngredient, error, isLoading }
 }
 
-export default useAddCookieIngredient
+export default useEditCookieIngredients

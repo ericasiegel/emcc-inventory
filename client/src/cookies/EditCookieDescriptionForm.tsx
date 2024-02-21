@@ -7,6 +7,7 @@ interface Props {
     id: number;
     oldDescription?: string;
     cookie: Cookie
+    // onClose: () => void;
 }
 
 const EditCookieDescriptionForm = ({ id, oldDescription, cookie }: Props) => {
@@ -31,6 +32,8 @@ const EditCookieDescriptionForm = ({ id, oldDescription, cookie }: Props) => {
         }
 
         editCookie(cookieData)
+
+        // onClose();
     }
 
   return (

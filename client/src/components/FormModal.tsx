@@ -37,12 +37,9 @@ const FormModal = ({ children, header, isAddForm }: Props) => {
       <>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign='center'>
-            <Heading size="lg">
-              {header}
-            </Heading>
+          <ModalHeader textAlign="center">
+            <Heading size="lg">{header}</Heading>
           </ModalHeader>
-          {/* <ModalCloseButton /> */}
           <ModalBody>{children}</ModalBody>
           <ModalFooter justifyContent="center">
             <Button variant="ghost" size="md" mr={3} onClick={onClose}>
@@ -56,7 +53,7 @@ const FormModal = ({ children, header, isAddForm }: Props) => {
 
   return (
     <>
-      {isAddForm && header === "Add Image" ? (
+      {isAddForm && header === 'Add Image' ? (
         <AddImageButton onClick={onOpen} />
       ) : (
         renderTriggerButton()

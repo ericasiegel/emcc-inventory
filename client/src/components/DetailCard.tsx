@@ -23,7 +23,7 @@ import FormModal from "./FormModal";
 interface Props {
   id: number;
   size?: string;
-  count: Counts;
+  count: Counts| undefined;
   headingText: string;
   endpoint: string;
 }
@@ -39,10 +39,10 @@ const DetailCard = <T extends Baked | Dough>({
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
 
   let countSize =
-    size === "mega" ? count.baked_cookies.mega : count.baked_cookies.mini;
+    size === "mega" ? count?.baked_cookies.mega : count?.baked_cookies.mini;
   // Use count.doughs when size is not specified
   if (!size) {
-    countSize = count.doughs;
+    countSize = count?.doughs;
   }
   const headingSize = size === "mega" ? "Mega" : "Mini";
 
@@ -51,13 +51,13 @@ const DetailCard = <T extends Baked | Dough>({
       <Heading fontSize="3xl">{headingText}</Heading>
       <Flex justifyContent="space-between">
         <Heading fontSize="2xl">{headingSize}</Heading>
-        <ColorBadge size="30px" count={countSize} />
+        <ColorBadge size="30px" count={countSize!} />
       </Flex>
     </>
   ) : (
     <Flex justifyContent="space-between">
       <Heading fontSize="3xl">{headingText}</Heading>
-      <ColorBadge size="30px" count={countSize} />
+      <ColorBadge size="30px" count={countSize!} />
     </Flex>
   );
 
@@ -66,7 +66,7 @@ const DetailCard = <T extends Baked | Dough>({
 
   switch (endpoint) {
     case "doughs":
-      chooseForm = <AddDoughForm id={id} counts={countSize} />;
+      chooseForm = <AddDoughForm id={id} counts={countSize!} />;
       header = 'Add Doughs'
       break;
     case "bakedcookies":

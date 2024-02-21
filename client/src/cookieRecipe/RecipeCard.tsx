@@ -17,11 +17,12 @@ import useGetData from "../hooks/useGetData";
 import { INGREDIENTS_ENDOINT, INSTRUCTIONS_ENDOINT } from "../constants";
 import FormModal from "../components/FormModal";
 import AddCookieIngredientForm from "./AddCookieIngredientForm";
+import EditCookieIngredientForm from "./EditCookieIngredientForm";
 
 interface Props {
   id: number;
   name: string;
-  notes: string;
+  notes: string | null;
 }
 
 const RecipeCard = ({ id, name, notes }: Props) => {
@@ -49,12 +50,12 @@ const RecipeCard = ({ id, name, notes }: Props) => {
         <Stack divider={<StackDivider />} spacing="4">
           <Box>
             <HStack>
-            <Heading size="md" textTransform="uppercase">
-              Ingredients
-            </Heading>
-            <FormModal header="Add Ingredient" isAddForm={true}>
-              <AddCookieIngredientForm cookieId={id} />
-            </FormModal>
+              <Heading size="md" textTransform="uppercase">
+                Ingredients
+              </Heading>
+              <FormModal header="Add Ingredient" isAddForm={true}>
+                <AddCookieIngredientForm cookieId={id} />
+              </FormModal>
             </HStack>
             <UnorderedList>
               {ingredients.map((ingredient) => (
@@ -64,10 +65,24 @@ const RecipeCard = ({ id, name, notes }: Props) => {
                       {ingredient.ingredient} - {ingredient.quantity}{" "}
                       {ingredient.unit}
                     </Text>
+                    <Box>
+
+                    <FormModal
+                      header={`Edit ${ingredient.ingredient}`}
+                      isAddForm={false}
+                      >
+                      <EditCookieIngredientForm
+                        id={ingredient.id}
+                        oldQuantity={ingredient.quantity}
+                        oldUnit={ingredient.unit}
+                        ingredient={ingredient}
+                        />
+                    </FormModal>
                     <DeleteButton
                       id={ingredient.id}
                       endpoint={INGREDIENTS_ENDOINT}
-                    />
+                      />
+                      </Box>
                   </HStack>
                 </ListItem>
               ))}

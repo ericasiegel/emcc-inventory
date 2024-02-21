@@ -17,34 +17,30 @@ import {
 } from "@chakra-ui/react";
 import useAddCookieIngredient from "./useAddCookieIngredient";
 import useIngredientItem from "./useIngredientItem";
-import { useReducer, useRef } from "react";
-import { AddUpdateCookieIngredients } from "./Recipe";
-import addUpdateFormReducer, { StartingState } from "../reducers/addUpdateFormReducer";
+import { useRef, useState } from "react";
+
+const defaultIngredientValue = {
+  "id": 0,
+  "cookie": "",
+  "cookie_id": 0,
+  "ingredient": "",
+  "ingredient_id": 0,
+  "quantity": 0,
+  "unit": ""
+}
 
 interface Props {
   cookieId: number;
 }
 
-const AddCookieIngredientForm = ({ cookieId }: Props) => {
+const AddCookieIngredientForm = ({cookieId}: Props) => {
   // get list of ingredients,
   const { data: getIngredientItems } = useIngredientItem();
   const ingredientItems = getIngredientItems?.pages.flatMap(
     (page) => page.results
   );
 
-
-  const initialState: StartingState = {
-    cookieValue: 1,
-    selectedStoredUsage: "",
-    storedUsageValue: 0,
-    storedQuantity: 0,
-  };
-  const [state, dispatch] = useReducer(addUpdateFormReducer, initialState);
-  const { cookieValue } = state;
-
-  const setIngredientQuantityValue = (value: number) => {
-    dispatch({ type: "set_cookie_value", payload: value });
-  };
+  const [ ingredientQuantityValue, setIngredientQuantityValue] = useState(1)
 
   // add form reset function
   const resetForm = () => {
@@ -69,7 +65,8 @@ const AddCookieIngredientForm = ({ cookieId }: Props) => {
       ingredientQuantity.current?.querySelector("input")?.valueAsNumber;
     const ingredientUnitValue = ingredientUnit.current?.value;
 
-    const cookieIngredientData: AddUpdateCookieIngredients = {
+    const cookieIngredientData = {
+      ...defaultIngredientValue,
       cookie_id: cookieId,
       ingredient_id: parseInt(ingredientIdValue!),
       quantity: ingredientQuantityValue!,
@@ -105,7 +102,7 @@ const AddCookieIngredientForm = ({ cookieId }: Props) => {
               <Text>Quantity:</Text>
               <NumberInput width="100%" 
               ref={ingredientQuantity}
-              value={cookieValue}
+              value={ingredientQuantityValue}
                onChange={(value) => setIngredientQuantityValue(Number(value))}
               >
                 <NumberInputField type="number" />

@@ -60,6 +60,7 @@ const CookieDetailPage = () => {
               id={cookie.id}
               oldDescription={cookie?.description}
               cookie={cookie}
+              // onClose={onClose}
             />
           </FormModal>
         </HStack>
@@ -137,7 +138,7 @@ const CookieDetailPage = () => {
           variant="elevated"
           marginTop={5}
         >
-          <RecipeCard id={cookie.id} name={cookie.name} notes={cookie.notes} />
+          <RecipeCard id={cookie.id} name={cookie.name} notes={cookie?.notes} />
         </Card>
       </GridItem>
     </SimpleGrid>

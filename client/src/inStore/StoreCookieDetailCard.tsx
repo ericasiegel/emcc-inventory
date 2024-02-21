@@ -18,7 +18,7 @@ import FormModal from "../components/FormModal";
 interface Props {
   id: number;
   size: string;
-  count: Counts;
+  count?: Counts;
   endpoint: string;
 }
 
@@ -28,7 +28,7 @@ const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
   const headingSize = size === "mega" ? "Mega" : "Mini";
 
   const countSize =
-    size === "mega" ? count.total_in_store.mega : count.total_in_store.mini;
+    size === "mega" ? count?.total_in_store.mega : count?.total_in_store.mini;
 
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4} minW="50%">
@@ -36,9 +36,9 @@ const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
         <Heading fontSize="3xl">Cookies In Store</Heading>
         <Flex justifyContent="space-between">
           <Heading fontSize="2xl">{headingSize}</Heading>
-          <ColorBadge size="30px" count={countSize} />
+          <ColorBadge size="30px" count={countSize!} />
         </Flex>
-        {countSize > 0 ? (
+        {countSize! > 0 ? (
           <FormModal header={`Edit quantity of ${size} cookies in store`}  isAddForm={false}>
             {cookieData ? (
               <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} />
