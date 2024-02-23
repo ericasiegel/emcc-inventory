@@ -1,14 +1,13 @@
 import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { FcRemoveImage } from "react-icons/fc";
-import { Cookie } from "../cookies/Cookie";
 import useDeleteImage from "./useDeleteImage";
 
 interface Props {
-  cookie: Cookie
+  id: number;
 }
 
-const DeleteImageButton = ({ cookie }: Props) => {
-  const { deleteImage, error, isLoading } = useDeleteImage(cookie.id);
+const DeleteImageButton = ({ id }: Props) => {
+  const { deleteImage, error, isLoading } = useDeleteImage(id);
 
   const handleDeleteImage = () => {
     deleteImage({
@@ -26,10 +25,10 @@ const DeleteImageButton = ({ cookie }: Props) => {
       )}
       <Button
         colorScheme="red"
-        variant="unstyled"
+        variant="outline"
         onClick={handleDeleteImage}
       >
-        {isLoading ? "Deleting..." : <FcRemoveImage size="25px" />}
+        {isLoading ? "Deleting..." : <FcRemoveImage size="30px" />}
       </Button>
     </>
   );

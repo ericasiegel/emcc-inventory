@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react";
-import { CiEdit } from "react-icons/ci";
+import { MdOutlineModeEdit } from "react-icons/md";
 
 interface Props {
   onClick: () => void;
@@ -7,8 +7,8 @@ interface Props {
 
 const EditButton = ({ onClick }: Props) => {
   return (
-    <Button onClick={onClick} variant="unstyled" colorScheme="blue" marginY={2}>
-      <CiEdit color='blue' size="35px" />
+    <Button onClick={onClick} variant="unstyled" colorScheme="blue">
+      <MdOutlineModeEdit color='blue' size="30px" />
     </Button>
   );
 };

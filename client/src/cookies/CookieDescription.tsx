@@ -25,6 +25,7 @@ const CookieDescription = ({ cookie }: Props) => {
           oldDescription={cookie?.description}
           cookie={cookie}
           onSubmit={() => setOpenForm(false)}
+          onCancel={() => setOpenForm(false)}
         />
       ) : (
         <Text fontSize="xl" as="cite">

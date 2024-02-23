@@ -1,31 +1,24 @@
 import { useParams } from "react-router-dom";
 import useCookie from "../cookies/useCookie";
 import {
-  Image,
   Heading,
   Spinner,
   Card,
   SimpleGrid,
   GridItem,
   HStack,
-  Flex,
   Box,
-  useDisclosure,
 } from "@chakra-ui/react";
 import CookieDetailContainer from "../components/CookieDetailContainer";
 import DetailCard from "../components/DetailCard";
-import noImage from "../assets/no-image-placeholder-6f3882e0.webp";
 import ActiveInactiveSwitch from "../cookies/ActiveInactiveSwitch";
 import StoreCookieDetailCard from "../inStore/StoreCookieDetailCard";
-import AddImageForm from "../cookieImage/AddImageForm";
-import DeleteImageButton from "../cookieImage/DeleteImageButton";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT, STORE_ENDPOINT } from "../constants";
 import RecipeCard from "../cookieRecipe/RecipeCard";
-import FormModal from "../components/FormModal";
 import CookieDescription from "../cookies/CookieDescription";
+import CookieImage from "../cookieImage/CookieImage";
 
 const CookieDetailPage = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const { slug } = useParams();
   const { data: cookie, isLoading, error } = useCookie(slug!);
@@ -38,7 +31,7 @@ const CookieDetailPage = () => {
     return null; // or display an error message or handle this case as needed
   }
 
-  const imgUrl = cookie.image ? cookie.image : noImage;
+  
 
 
   return (
@@ -94,37 +87,7 @@ const CookieDetailPage = () => {
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
-        {cookie.image === null ? (
-          <Flex justifyContent="flex-end">
-            <FormModal
-              header="Add Image"
-              isAddForm={true}
-              onClose={onClose}
-              isOpen={isOpen}
-              onOpen={onOpen}
-            >
-              <AddImageForm id={cookie.id} />
-            </FormModal>
-          </Flex>
-        ) : (
-          <Flex justifyContent="flex-end">
-            <DeleteImageButton cookie={cookie} />
-          </Flex>
-        )}
-        <Image
-          margin="0 auto" // Center horizontally using margin auto
-          display="block"
-          padding={4}
-          src={imgUrl}
-          alt={cookie.description}
-          maxW="50%"
-          height="auto"
-          borderRadius="full"
-          overflow="hidden"
-          boxShadow="dark-lg"
-          background="#941c3e"
-          p="2"
-        />
+        <CookieImage image={cookie.image} description={cookie.description} id={cookie.id} />
         <Card
           padding={3}
           border={2}

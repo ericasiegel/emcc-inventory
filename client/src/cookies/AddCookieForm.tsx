@@ -2,13 +2,13 @@ import React, { useRef } from "react";
 import {
   Alert,
   AlertIcon,
-  Box,
-  Button,
-  Center,
   FormControl,
+  HStack,
   Input,
 } from "@chakra-ui/react";
 import useAddCookie from "./useAddCookie";
+import CheckMarkButton from "../components/CheckMarkButton";
+import CancelButton from "../components/CancelButton";
 
 
 const defaultCookieValue = {
@@ -36,12 +36,13 @@ const defaultCookieValue = {
 }
 
 interface Props {
-  onClose: () => void; 
+  onSubmit: () => void; 
+  onCancel: () => void;
 }
 
-const AddCookieForm = ({onClose}: Props) => {
+const AddCookieForm = ({onSubmit, onCancel}: Props) => {
 
-  const { addCookie, error, isLoading } = useAddCookie(onClose);
+  const { addCookie, error, isLoading } = useAddCookie(onSubmit);
 
   const cookieName = useRef<HTMLInputElement>(null);
   const cookieDescription = useRef<HTMLInputElement>(null);
@@ -72,29 +73,23 @@ const AddCookieForm = ({onClose}: Props) => {
       )}
       <form onSubmit={handleFormSubmit}>
         <FormControl>
-          <Box>
+          <HStack>
             <Input
               ref={cookieName}
               backgroundColor="white"
               placeholder="Cookie Name..."
-              marginBottom={3}
+              size='lg'
             />
             <Input
               ref={cookieDescription}
               backgroundColor="white"
               placeholder="Cookie Description..."
+              size='lg'
             />
-          </Box>
-          <Center>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {isLoading ? "Adding Cookie..." : "Add Cookie"}
-            </Button>
-          </Center>
+          {isLoading ? "..." : <CheckMarkButton />}
+          <CancelButton onClick={onCancel} />
+          </HStack>
+          
         </FormControl>
       </form>
     </>

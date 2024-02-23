@@ -7,7 +7,7 @@ interface Props {
 
 const AddButton = ({ onClick }: Props) => {
   return (
-    <Button onClick={onClick} variant="unstyled" colorScheme="pink" marginY={2}>
+    <Button onClick={onClick} variant="unstyled">
       <IoAddCircleOutline color='purple' size="35px" />
     </Button>
   );

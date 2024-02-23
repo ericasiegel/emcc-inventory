@@ -57,7 +57,7 @@ const DeleteButton = ({ endpoint, id }: Props) => {
         deleteItem(id);
       }}
     >
-      {isLoading ? "Deleting..." : <BsTrash size="25px" color="red" />}
+      {isLoading ? "Deleting..." : <BsTrash size="30px" color="red" />}
     </Button>
   );
 };

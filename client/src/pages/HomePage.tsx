@@ -1,13 +1,19 @@
-import { Grid, Show, GridItem, HStack, useDisclosure } from "@chakra-ui/react";
+import {
+  Grid,
+  Show,
+  GridItem,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
 import CookieGrid from "../components/CookieGrid";
 import CookieHeading from "../cookies/CookieHeading";
 import SideBar from "../components/SideBar";
 import AddCookieForm from "../cookies/AddCookieForm";
-import FormModal from "../components/FormModal";
-
+import { useState } from "react";
+import AddButton from "../components/AddButton";
 
 const HomePage = () => {
- const { isOpen, onClose, onOpen } = useDisclosure();
+  const [openForm, setOpenForm] = useState(false);
 
   return (
     <Grid
@@ -25,9 +31,16 @@ const HomePage = () => {
       <GridItem area="main">
         <HStack paddingX={4} justifyContent="space-between">
           <CookieHeading />
-          <FormModal header="Add A Cookie" isAddForm={true} onClose={onClose} isOpen={isOpen} onOpen={onOpen}>
-            <AddCookieForm onClose={onClose} />
-          </FormModal>
+          {openForm ? (
+            <AddCookieForm onSubmit={() => setOpenForm(false)} onCancel={() => setOpenForm(false)} />
+          ) : (
+            <HStack>
+              <Text fontSize="2xl">
+                Add A Cookie
+              </Text>{" "}
+              <AddButton onClick={() => setOpenForm(true)} />
+            </HStack>
+          )}
         </HStack>
         <CookieGrid />
       </GridItem>

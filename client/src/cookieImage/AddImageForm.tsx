@@ -1,13 +1,23 @@
-import { Center, Input, Button, Box, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  Input,
+  Button,
+  Box,
+  Alert,
+  AlertIcon,
+  HStack,
+} from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import useAddImage from "./useAddImage";
 import { AddImage } from "../cookies/Cookie";
+import CheckMarkButton from "../components/CheckMarkButton";
+import CancelButton from "../components/CancelButton";
 
 interface Props {
   id: number;
+  onCancel: () => void;
 }
 
-const AddImageForm = ({ id }: Props) => {
+const AddImageForm = ({ id, onCancel }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { uploadImage, error, isLoading } = useAddImage(id);
@@ -41,29 +51,30 @@ const AddImageForm = ({ id }: Props) => {
           {error.message}
         </Alert>
       )}
-      <Center>
-        <Box>
+        <Box paddingBottom={5} width='100%'>
           <form onSubmit={handleUpload}>
             {" "}
-            {/* Wrap the input and button in a <form> */}
-            <Input
-              type="file"
-              accept="image/*"
-              variant="unstyled"
-              onChange={handleFileChange}
-              marginBottom="1rem"
-            />
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="teal"
-              isDisabled={!selectedFile}
-            >
-              {isLoading ? "Adding Image..." : "Add Image"}
-            </Button>
+            <HStack>
+              <Input
+                type="file"
+                accept="image/*"
+                variant="outline"
+                onChange={handleFileChange}
+                paddingY={2}
+                size='lg'
+              />
+              <Button
+                disabled={isLoading}
+                type="submit"
+                variant="unstyled"
+                isDisabled={!selectedFile}
+              >
+                <CheckMarkButton />
+              </Button>
+              <CancelButton onClick={onCancel} />
+            </HStack>
           </form>
         </Box>
-      </Center>
     </>
   );
 };

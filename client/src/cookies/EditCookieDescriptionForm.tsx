@@ -3,7 +3,6 @@ import {
   AlertIcon,
   FormControl,
   Input,
-  Center,
   Box,
   HStack,
 } from "@chakra-ui/react";
@@ -11,12 +10,14 @@ import React, { useRef } from "react";
 import useEditCookie from "./useEditCookie";
 import { Cookie } from "./Cookie";
 import CheckMarkButton from "../components/CheckMarkButton";
+import CancelButton from "../components/CancelButton";
 
 interface Props {
   id: number;
   oldDescription?: string;
   cookie: Cookie;
   onSubmit: () => void;
+  onCancel: () => void;
 }
 
 const EditCookieDescriptionForm = ({
@@ -24,6 +25,7 @@ const EditCookieDescriptionForm = ({
   oldDescription,
   cookie,
   onSubmit,
+  onCancel
 }: Props) => {
   const { editCookie, error, isLoading } = useEditCookie(id, onSubmit);
 
@@ -68,7 +70,8 @@ const EditCookieDescriptionForm = ({
                 fontSize='xl'
                 defaultValue={description} // Set the input value from formData
               />
-              <Center>{isLoading ? "..." : <CheckMarkButton />}</Center>
+              {isLoading ? "..." : <CheckMarkButton />}
+              <CancelButton onClick={onCancel} />
             </HStack>
           </FormControl>
         </form>
