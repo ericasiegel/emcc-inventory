@@ -9,18 +9,33 @@ import {
 import DeleteButton from "../components/DeleteButton";
 import { INSTRUCTIONS_ENDOINT } from "../constants";
 import { Instructions } from "./Recipe";
+import { useState } from "react";
+import AddInstructionsForm from "./AddInstructionsForm";
+import AddButton from "../components/AddButton";
 
 interface Props {
-    instructions: Instructions[];
-    cookieId: number;
-  }
+  instructions: Instructions[];
+  cookieId: number;
+}
 
 const InstructionsSection = ({ instructions, cookieId }: Props) => {
+  const [openForm, setOpenForm] = useState(false);
+
   return (
     <Box>
-      <Heading size="md" textTransform="uppercase">
-        Instructions
-      </Heading>
+      <HStack>
+        <Heading size="md" textTransform="uppercase">
+          Instructions
+        </Heading>
+        {openForm ? (
+          <AddInstructionsForm
+            cookieId={cookieId}
+            closeForm={() => setOpenForm(false)}
+          />
+        ) : (
+          <AddButton onClick={() => setOpenForm(true)} />
+        )}
+      </HStack>
       <UnorderedList>
         {instructions.map((instructon) => (
           <ListItem key={instructon.id}>

@@ -26,7 +26,7 @@ const defaultIngredientValue = {
   ingredient: "",
   ingredient_id: 0,
   quantity: 0,
-  unit: "",
+  unit: ""
 };
 
 interface Props {
