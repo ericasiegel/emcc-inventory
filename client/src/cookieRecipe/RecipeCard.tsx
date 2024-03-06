@@ -3,19 +3,16 @@ import {
   Card,
   CardBody,
   CardHeader,
-  HStack,
   Heading,
-  ListItem,
   Stack,
   StackDivider,
   Text,
-  UnorderedList,
 } from "@chakra-ui/react";
-import DeleteButton from "../components/DeleteButton";
 import { Ingredients, Instructions } from "./Recipe";
 import useGetData from "../hooks/useGetData";
 import { INGREDIENTS_ENDOINT, INSTRUCTIONS_ENDOINT } from "../constants";
 import IngredientsSection from "./IngredientsSection";
+import InstructionsSection from "./InstructionsSection";
 
 interface Props {
   id: number;
@@ -31,12 +28,12 @@ const RecipeCard = ({ id, name, notes }: Props) => {
   const ingredients =
     ingredientsResults?.data?.pages.flatMap((page) => page.results) || [];
 
-  const InstructionsResults = useGetData<Instructions>({
+  const instructionsResults = useGetData<Instructions>({
     endpoint: INSTRUCTIONS_ENDOINT,
     id,
   });
-  const Instructions =
-    InstructionsResults?.data?.pages.flatMap((page) => page.results) || [];
+  const instructions =
+    instructionsResults?.data?.pages.flatMap((page) => page.results) || [];
 
   return (
     <Card>
@@ -47,24 +44,8 @@ const RecipeCard = ({ id, name, notes }: Props) => {
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
           <IngredientsSection ingredients={ingredients} cookieId={id} />
-          <Box>
-            <Heading size="md" textTransform="uppercase">
-              Instructions
-            </Heading>
-            <UnorderedList>
-              {Instructions.map((instructon) => (
-                <ListItem key={instructon.id}>
-                  <HStack justifyContent="space-between" width="100%">
-                    <Text>{instructon.instruction}</Text>
-                    <DeleteButton
-                      id={instructon.id}
-                      endpoint={INSTRUCTIONS_ENDOINT}
-                    />
-                  </HStack>
-                </ListItem>
-              ))}
-            </UnorderedList>
-          </Box>
+          
+          <InstructionsSection instructions={instructions} cookieId={id} />
           <Box>
             <Heading size="sm" textTransform="uppercase">
               Notes
