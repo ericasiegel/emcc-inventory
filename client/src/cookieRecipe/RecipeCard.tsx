@@ -11,16 +11,11 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { GoDash } from "react-icons/go";
 import DeleteButton from "../components/DeleteButton";
 import { Ingredients, Instructions } from "./Recipe";
 import useGetData from "../hooks/useGetData";
 import { INGREDIENTS_ENDOINT, INSTRUCTIONS_ENDOINT } from "../constants";
-import AddCookieIngredientForm from "./AddCookieIngredientForm";
-import EditCookieIngredientForm from "./EditCookieIngredientForm";
-import { useState } from "react";
-import AddButton from "../components/AddButton";
-import EditButton from "../components/EditButton";
+import IngredientsSection from "./IngredientsSection";
 
 interface Props {
   id: number;
@@ -29,12 +24,6 @@ interface Props {
 }
 
 const RecipeCard = ({ id, name, notes }: Props) => {
-  const [openForm, setOpenForm] = useState(false);
-  const [openEditForm, setOpenEditForm] = useState(false);
-  const [selectedIngredeint, setSelectedIngredient] = useState<number | null>(
-    null
-  );
-
   const ingredientsResults = useGetData<Ingredients>({
     endpoint: INGREDIENTS_ENDOINT,
     id,
@@ -49,11 +38,6 @@ const RecipeCard = ({ id, name, notes }: Props) => {
   const Instructions =
     InstructionsResults?.data?.pages.flatMap((page) => page.results) || [];
 
-  const openEditIngredientsForm = (ingredientId: number) => {
-    setSelectedIngredient(ingredientId);
-    setOpenEditForm(true);
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -62,66 +46,7 @@ const RecipeCard = ({ id, name, notes }: Props) => {
 
       <CardBody>
         <Stack divider={<StackDivider />} spacing="4">
-          <Box>
-            <HStack>
-              <Heading size="md" textTransform="uppercase">
-                Ingredients
-              </Heading>
-              {openForm ? (
-                <AddCookieIngredientForm
-                  cookieId={id}
-                  closeForm={() => setOpenForm(false)}
-                />
-              ) : (
-                <AddButton onClick={() => setOpenForm(true)} />
-              )}
-            </HStack>
-            <UnorderedList>
-              {ingredients.map((ingredient) => (
-                <ListItem key={ingredient.id}>
-                  {openEditForm && selectedIngredeint === ingredient.id ? (
-                    <>
-                      <HStack justifyContent="space-between" width="100%">
-                        <Text style={{ whiteSpace: "nowrap" }}>
-                          {ingredient.ingredient}{" "}
-                        </Text>
-                        <GoDash />
-                        <EditCookieIngredientForm
-                          ingredient={ingredient}
-                          closeForm={() => setOpenEditForm(false)}
-                        />
-                      </HStack>
-                    </>
-                  ) : (
-                    <>
-                      <HStack justifyContent="space-between" width="100%">
-                        <Box>
-                          <HStack>
-                            <Text>{ingredient.ingredient} </Text>
-                            <GoDash />
-                            <Text>
-                              {ingredient.quantity} {ingredient.unit}
-                            </Text>
-                          </HStack>
-                        </Box>
-                        <Box>
-                          <EditButton
-                            onClick={() =>
-                              openEditIngredientsForm(ingredient.id)
-                            }
-                          />
-                          <DeleteButton
-                            id={ingredient.id}
-                            endpoint={INGREDIENTS_ENDOINT}
-                          />
-                        </Box>
-                      </HStack>
-                    </>
-                  )}
-                </ListItem>
-              ))}
-            </UnorderedList>
-          </Box>
+          <IngredientsSection ingredients={ingredients} cookieId={id} />
           <Box>
             <Heading size="md" textTransform="uppercase">
               Instructions
