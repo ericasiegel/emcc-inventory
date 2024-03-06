@@ -10,15 +10,17 @@ import {
   StackDivider,
   Text,
   UnorderedList,
-  useDisclosure,
 } from "@chakra-ui/react";
+import { GoDash } from "react-icons/go";
 import DeleteButton from "../components/DeleteButton";
 import { Ingredients, Instructions } from "./Recipe";
 import useGetData from "../hooks/useGetData";
 import { INGREDIENTS_ENDOINT, INSTRUCTIONS_ENDOINT } from "../constants";
-import FormModal from "../components/FormModal";
 import AddCookieIngredientForm from "./AddCookieIngredientForm";
 import EditCookieIngredientForm from "./EditCookieIngredientForm";
+import { useState } from "react";
+import AddButton from "../components/AddButton";
+import EditButton from "../components/EditButton";
 
 interface Props {
   id: number;
@@ -27,16 +29,11 @@ interface Props {
 }
 
 const RecipeCard = ({ id, name, notes }: Props) => {
-  const {
-    isOpen: addIsOpen,
-    onOpen: addOnOpen,
-    onClose: addOnClose,
-  } = useDisclosure();
-  const {
-    isOpen: editIsOpen,
-    onOpen: editOnOpen,
-    onClose: editOnClose,
-  } = useDisclosure();
+  const [openForm, setOpenForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [selectedIngredeint, setSelectedIngredient] = useState<number | null>(
+    null
+  );
 
   const ingredientsResults = useGetData<Ingredients>({
     endpoint: INGREDIENTS_ENDOINT,
@@ -52,6 +49,11 @@ const RecipeCard = ({ id, name, notes }: Props) => {
   const Instructions =
     InstructionsResults?.data?.pages.flatMap((page) => page.results) || [];
 
+  const openEditIngredientsForm = (ingredientId: number) => {
+    setSelectedIngredient(ingredientId);
+    setOpenEditForm(true);
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -65,46 +67,57 @@ const RecipeCard = ({ id, name, notes }: Props) => {
               <Heading size="md" textTransform="uppercase">
                 Ingredients
               </Heading>
-              <FormModal
-                header="Add Ingredient"
-                isAddForm={true}
-                onClose={addOnClose}
-                isOpen={addIsOpen}
-                onOpen={addOnOpen}
-              >
-                <AddCookieIngredientForm cookieId={id} onClose={addOnClose} />
-              </FormModal>
+              {openForm ? (
+                <AddCookieIngredientForm
+                  cookieId={id}
+                  closeForm={() => setOpenForm(false)}
+                />
+              ) : (
+                <AddButton onClick={() => setOpenForm(true)} />
+              )}
             </HStack>
             <UnorderedList>
               {ingredients.map((ingredient) => (
                 <ListItem key={ingredient.id}>
-                  <HStack justifyContent="space-between" width="100%">
-                    <Text>
-                      {ingredient.ingredient} - {ingredient.quantity}{" "}
-                      {ingredient.unit}
-                    </Text>
-                    <Box>
-                      <FormModal
-                        header={`Edit ${ingredient.ingredient}`}
-                        isAddForm={false}
-                        onClose={editOnClose}
-                        isOpen={editIsOpen}
-                        onOpen={editOnOpen}
-                      >
+                  {openEditForm && selectedIngredeint === ingredient.id ? (
+                    <>
+                      <HStack justifyContent="space-between" width="100%">
+                        <Text style={{ whiteSpace: "nowrap" }}>
+                          {ingredient.ingredient}{" "}
+                        </Text>
+                        <GoDash />
                         <EditCookieIngredientForm
-                          id={ingredient.id}
-                          oldQuantity={ingredient.quantity}
-                          oldUnit={ingredient.unit}
                           ingredient={ingredient}
-                          onClose={editOnClose}
+                          closeForm={() => setOpenEditForm(false)}
                         />
-                      </FormModal>
-                      <DeleteButton
-                        id={ingredient.id}
-                        endpoint={INGREDIENTS_ENDOINT}
-                      />
-                    </Box>
-                  </HStack>
+                      </HStack>
+                    </>
+                  ) : (
+                    <>
+                      <HStack justifyContent="space-between" width="100%">
+                        <Box>
+                          <HStack>
+                            <Text>{ingredient.ingredient} </Text>
+                            <GoDash />
+                            <Text>
+                              {ingredient.quantity} {ingredient.unit}
+                            </Text>
+                          </HStack>
+                        </Box>
+                        <Box>
+                          <EditButton
+                            onClick={() =>
+                              openEditIngredientsForm(ingredient.id)
+                            }
+                          />
+                          <DeleteButton
+                            id={ingredient.id}
+                            endpoint={INGREDIENTS_ENDOINT}
+                          />
+                        </Box>
+                      </HStack>
+                    </>
+                  )}
                 </ListItem>
               ))}
             </UnorderedList>

@@ -19,7 +19,6 @@ import CookieDescription from "../cookies/CookieDescription";
 import CookieImage from "../cookieImage/CookieImage";
 
 const CookieDetailPage = () => {
-
   const { slug } = useParams();
   const { data: cookie, isLoading, error } = useCookie(slug!);
 
@@ -30,9 +29,6 @@ const CookieDetailPage = () => {
   if (!cookie) {
     return null; // or display an error message or handle this case as needed
   }
-
-  
-
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
@@ -87,7 +83,11 @@ const CookieDetailPage = () => {
         </CookieDetailContainer>
       </GridItem>
       <GridItem>
-        <CookieImage image={cookie.image} description={cookie.description} id={cookie.id} />
+        <CookieImage
+          image={cookie.image}
+          description={cookie.description}
+          id={cookie.id}
+        />
         <Card
           padding={3}
           border={2}

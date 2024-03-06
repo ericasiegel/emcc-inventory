@@ -1,9 +1,4 @@
-import {
-  Box,
-  Center,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, HStack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import AddButton from "../components/AddButton";
 import EditCookieDescriptionForm from "./EditCookieDescriptionForm";
@@ -24,8 +19,7 @@ const CookieDescription = ({ cookie }: Props) => {
           id={cookie.id}
           oldDescription={cookie?.description}
           cookie={cookie}
-          onSubmit={() => setOpenForm(false)}
-          onCancel={() => setOpenForm(false)}
+          closeForm={() => setOpenForm(false)}
         />
       ) : (
         <Text fontSize="xl" as="cite">

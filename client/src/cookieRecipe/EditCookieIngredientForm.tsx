@@ -2,8 +2,6 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
-  Center,
   FormControl,
   HStack,
   Input,
@@ -12,40 +10,23 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
-  Text,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Ingredients } from "./Recipe";
 import useEditCookieIngredients from "./useEditCookieIngredients";
+import CancelButton from "../components/CancelButton";
+import CheckMarkButton from "../components/CheckMarkButton";
+import { Form } from "react-router-dom";
 
 interface Props {
-  id: number;
-  oldQuantity: number;
-  oldUnit: string;
   ingredient: Ingredients;
-  onClose: () => void;
+  closeForm: () => void;
 }
 
-const EditCookieIngredientForm = ({
-  id,
-  oldQuantity,
-  oldUnit,
-  ingredient,
-  onClose
-}: Props) => {
-  const [ingredientQuantityValue, setIngredientQuantityValue] =
-    useState(oldQuantity);
-  const [ingredientUnitValue, setIngredientUnitValue] = useState(oldUnit);
-
-  // add form reset function
-  const resetForm = () => {
-    setIngredientQuantityValue(ingredientQuantityValue);
-    setIngredientUnitValue(ingredientUnitValue);
-  };
-
+const EditCookieIngredientForm = ({ ingredient, closeForm }: Props) => {
   const { editCookieIngredient, error, isLoading } = useEditCookieIngredients(
-    id,
-    onClose
+    ingredient.id,
+    closeForm
   );
 
   const ingredientQuantity = useRef<HTMLInputElement>(null);
@@ -75,16 +56,13 @@ const EditCookieIngredientForm = ({
           {error.message}
         </Alert>
       )}
-      <form onSubmit={handleFormSubmit}>
-        <FormControl>
-          <Box>
+      <Box width="100%">
+        <Form onSubmit={handleFormSubmit}>
+          <FormControl>
             <HStack>
-              <Text>Quantity:</Text>
               <NumberInput
-                width="100%"
                 ref={ingredientQuantity}
-                defaultValue={ingredientQuantityValue}
-                onChange={(value) => setIngredientQuantityValue(Number(value))}
+                defaultValue={ingredient.quantity}
               >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
@@ -92,26 +70,20 @@ const EditCookieIngredientForm = ({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
+              <Input
+                ref={ingredientUnit}
+                backgroundColor="white"
+                defaultValue={ingredient.unit}
+                placeholder="Unit Type"
+              />
+              <HStack>
+                {isLoading ? "..." : <CheckMarkButton />}
+                <CancelButton onClick={closeForm} />
+              </HStack>
             </HStack>
-            <Input
-              ref={ingredientUnit}
-              backgroundColor="white"
-              defaultValue={ingredientUnitValue}
-              placeholder={ingredientUnitValue}
-            />
-          </Box>
-          <Center>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {isLoading ? "Editing Ingredient..." : "Edit Ingredient"}
-            </Button>
-          </Center>
-        </FormControl>
-      </form>
+          </FormControl>
+        </Form>
+      </Box>
     </>
   );
 };

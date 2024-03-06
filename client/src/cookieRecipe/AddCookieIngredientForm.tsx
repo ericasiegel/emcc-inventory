@@ -2,8 +2,6 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
-  Center,
   FormControl,
   HStack,
   Input,
@@ -18,6 +16,8 @@ import {
 import useAddCookieIngredient from "./useAddCookieIngredient";
 import useIngredientItem from "./useIngredientItem";
 import { useRef } from "react";
+import CancelButton from "../components/CancelButton";
+import CheckMarkButton from "../components/CheckMarkButton";
 
 const defaultIngredientValue = {
   id: 0,
@@ -31,19 +31,18 @@ const defaultIngredientValue = {
 
 interface Props {
   cookieId: number;
-  onClose: () => void;
+  closeForm: () => void;
 }
 
-const AddCookieIngredientForm = ({ cookieId, onClose }: Props) => {
+const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
   // get list of ingredients,
   const { data: getIngredientItems } = useIngredientItem();
   const ingredientItems = getIngredientItems?.pages.flatMap(
     (page) => page.results
   );
 
-
   const { addCookieIngredient, error, isLoading } =
-    useAddCookieIngredient(onClose);
+    useAddCookieIngredient(closeForm);
 
   const ingredientId = useRef<HTMLSelectElement>(null);
   const ingredientQuantity = useRef<HTMLInputElement>(null);
@@ -79,47 +78,51 @@ const AddCookieIngredientForm = ({ cookieId, onClose }: Props) => {
       <form onSubmit={handleFormSubmit}>
         <FormControl>
           <Box>
-            <Select
-              placeholder="Select Ingredient"
-              ref={ingredientId}
-              paddingBottom={2}
-            >
-              {ingredientItems?.map((ingredientItem) => (
-                <option key={ingredientItem.id} value={ingredientItem.id}>
-                  {ingredientItem.name}
-                </option>
-              ))}
-            </Select>
             <HStack>
-              <Text>Quantity:</Text>
-              <NumberInput
-                width="100%"
-                ref={ingredientQuantity}
-                defaultValue="1"
+              {/* Select Element */}
+              <Select
+                width="50%" // 50% width for the select element
+                placeholder="Select Ingredient"
+                ref={ingredientId}
+                paddingBottom={2}
               >
-                <NumberInputField type="number" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+                {ingredientItems?.map((ingredientItem) => (
+                  <option key={ingredientItem.id} value={ingredientItem.id}>
+                    {ingredientItem.name}
+                  </option>
+                ))}
+              </Select>
+
+              {/* Number Input */}
+              <HStack width="50%">
+                {" "}
+                {/* Adjust width */}
+                <Text>Quantity:</Text>
+                <NumberInput
+                  flex="1" // Let it take remaining space
+                  defaultValue="1"
+                  ref={ingredientQuantity}
+                >
+                  <NumberInputField type="number" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </HStack>
+
+              {/* Input Element */}
+              <Input
+                width="20%" // Adjust width
+                ref={ingredientUnit}
+                backgroundColor="white"
+                placeholder="Unit Type"
+              />
+
+              {isLoading ? "..." : <CheckMarkButton />}
+              <CancelButton onClick={closeForm} />
             </HStack>
-            <Input
-              ref={ingredientUnit}
-              backgroundColor="white"
-              placeholder="Unit Type"
-            />
           </Box>
-          <Center>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {isLoading ? "Adding Ingredient..." : "Add Ingredient"}
-            </Button>
-          </Center>
         </FormControl>
       </form>
     </>

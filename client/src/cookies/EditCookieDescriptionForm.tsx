@@ -16,18 +16,16 @@ interface Props {
   id: number;
   oldDescription?: string;
   cookie: Cookie;
-  onSubmit: () => void;
-  onCancel: () => void;
+  closeForm: () => void;
 }
 
 const EditCookieDescriptionForm = ({
   id,
   oldDescription,
   cookie,
-  onSubmit,
-  onCancel
+  closeForm,
 }: Props) => {
-  const { editCookie, error, isLoading } = useEditCookie(id, onSubmit);
+  const { editCookie, error, isLoading } = useEditCookie(id, closeForm);
 
   const cookieDescription = useRef<HTMLInputElement>(null);
 
@@ -60,18 +58,18 @@ const EditCookieDescriptionForm = ({
             <HStack>
               <Input
                 width="100%"
-                variant='outline'
-                borderColor='black'
+                variant="outline"
+                borderColor="black"
                 focusBorderColor="green"
-                size='lg'
+                size="lg"
                 ref={cookieDescription}
                 backgroundColor="transparent"
-                textAlign='center'
-                fontSize='xl'
+                textAlign="center"
+                fontSize="xl"
                 defaultValue={description} // Set the input value from formData
               />
               {isLoading ? "..." : <CheckMarkButton />}
-              <CancelButton onClick={onCancel} />
+              <CancelButton onClick={closeForm} />
             </HStack>
           </FormControl>
         </form>
