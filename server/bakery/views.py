@@ -8,8 +8,10 @@ from rest_framework.viewsets import ModelViewSet
 from .models import *
 from .permissions import IsAdminOrReadOnly
 from .serializers import *
-from .filters import CookieFilter
+from .filters import CookieFilter, BakedCookieFilter, StoreFilter
 from rest_framework.generics import get_object_or_404
+
+
 
 
 # Create your views here.
@@ -78,7 +80,8 @@ class BakedCookieViewSet(mixins.RetrieveModelMixin,
     queryset = BakedCookie.objects.select_related('cookie', 'location').all()
     serializer_class = BakedCookieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['cookie_id', 'size', 'location']
+    # filterset_fields = ['cookie_id', 'location']
+    filterset_class = BakedCookieFilter
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'date_added', 'size', 'location']
     
@@ -96,7 +99,7 @@ class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()
     serializer_class = StoreSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['cookie_id', 'size']
+    filterset_class = StoreFilter
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'last_updated', 'size', 'location']
     

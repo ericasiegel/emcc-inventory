@@ -17,6 +17,8 @@ import useEditCookieIngredients from "./useEditCookieIngredients";
 import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
 import { Form } from "react-router-dom";
+import useEditData from "../hooks/useEditData";
+import { INGREDIENTS_ENDOINT } from "../constants";
 
 interface Props {
   ingredient: Ingredients;
@@ -24,11 +26,16 @@ interface Props {
 }
 
 const EditCookieIngredientForm = ({ ingredient, closeForm }: Props) => {
-  const { editCookieIngredient, error, isLoading } = useEditCookieIngredients(
-    ingredient.id,
-    closeForm
-  );
-
+  // const { editCookieIngredient, error, isLoading } = useEditCookieIngredients(
+  //   ingredient.id,
+  //   closeForm
+  // );
+  const { editData, error, isLoading } = useEditData<Ingredients>({
+    id: ingredient.id,
+    endpoint: INGREDIENTS_ENDOINT,
+    onSuccessCallback: closeForm,
+  });
+  
   const ingredientQuantity = useRef<HTMLInputElement>(null);
   const ingredientUnit = useRef<HTMLInputElement>(null);
 
@@ -45,7 +52,7 @@ const EditCookieIngredientForm = ({ ingredient, closeForm }: Props) => {
       unit: ingredientUnitValue!,
     };
 
-    editCookieIngredient(cookieIngredientData);
+    editData(cookieIngredientData);
   };
 
   return (
