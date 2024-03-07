@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { useRef } from "react";
 import { Ingredients } from "./Recipe";
-import useEditCookieIngredients from "./useEditCookieIngredients";
 import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
 import { Form } from "react-router-dom";
@@ -26,16 +25,13 @@ interface Props {
 }
 
 const EditCookieIngredientForm = ({ ingredient, closeForm }: Props) => {
-  // const { editCookieIngredient, error, isLoading } = useEditCookieIngredients(
-  //   ingredient.id,
-  //   closeForm
-  // );
+
   const { editData, error, isLoading } = useEditData<Ingredients>({
     id: ingredient.id,
     endpoint: INGREDIENTS_ENDOINT,
     onSuccessCallback: closeForm,
   });
-  
+
   const ingredientQuantity = useRef<HTMLInputElement>(null);
   const ingredientUnit = useRef<HTMLInputElement>(null);
 
