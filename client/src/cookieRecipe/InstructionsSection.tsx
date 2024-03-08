@@ -12,6 +12,8 @@ import { Instructions } from "./Recipe";
 import { useState } from "react";
 import AddInstructionsForm from "./AddInstructionsForm";
 import AddButton from "../components/AddButton";
+import EditInstructionsForm from "./EditInstructionsForm";
+import EditButton from "../components/EditButton";
 
 interface Props {
   instructions: Instructions[];
@@ -20,6 +22,15 @@ interface Props {
 
 const InstructionsSection = ({ instructions, cookieId }: Props) => {
   const [openForm, setOpenForm] = useState(false);
+  const [openEditForm, setOpenEditForm] = useState(false);
+  const [selectedInstruction, setSelectedInstruction] = useState<number | null>(
+    null
+  );
+
+  const openEditInstructionsForm = (instructionId: number) => {
+    setSelectedInstruction(instructionId);
+    setOpenEditForm(true);
+  };
 
   return (
     <Box>
@@ -37,15 +48,27 @@ const InstructionsSection = ({ instructions, cookieId }: Props) => {
         )}
       </HStack>
       <UnorderedList>
-        {instructions.map((instructon) => (
-          <ListItem key={instructon.id}>
-            <HStack justifyContent="space-between" width="100%">
-              <Text>{instructon.instruction}</Text>
-              <DeleteButton
-                id={instructon.id}
-                endpoint={INSTRUCTIONS_ENDOINT}
+        {instructions.map((instruction) => (
+          <ListItem key={instruction.id}>
+            {openEditForm && selectedInstruction === instruction.id ? (
+              <EditInstructionsForm
+                oldInstruction={instruction}
+                closeForm={() => setOpenEditForm(false)}
               />
-            </HStack>
+            ) : (
+              <HStack justifyContent="space-between" width="100%">
+                <Text>{instruction.instruction}</Text>
+                <Box>
+                  <EditButton
+                    onClick={() => openEditInstructionsForm(instruction.id)}
+                  />
+                  <DeleteButton
+                    id={instruction.id}
+                    endpoint={INSTRUCTIONS_ENDOINT}
+                  />
+                </Box>
+              </HStack>
+            )}
           </ListItem>
         ))}
       </UnorderedList>

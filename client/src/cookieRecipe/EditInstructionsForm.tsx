@@ -52,11 +52,11 @@ const EditInstructionsForm = ({ oldInstruction, closeForm }: Props) => {
                 variant="outline"
                 borderColor="black"
                 focusBorderColor="green"
-                size="lg"
+                size="md"
                 ref={instruction}
                 backgroundColor="transparent"
-                textAlign="center"
-                fontSize="xl"
+                textAlign="left"
+                fontSize="md"
                 defaultValue={oldInstruction.instruction}
               />
               {isLoading ? "..." : <CheckMarkButton />}
