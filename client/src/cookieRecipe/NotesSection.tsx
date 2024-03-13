@@ -1,20 +1,32 @@
-import { Heading, Box, Text } from '@chakra-ui/react'
+import { Heading, Box, Text, HStack } from "@chakra-ui/react";
+import { useState } from "react";
+import AddButton from "../components/AddButton";
 
 interface Props {
-    notes: string | null
+  notes: string | null;
+  cookieId: number;
 }
 
-const NotesSection = ({notes}: Props) => {
+const NotesSection = ({ notes, cookieId }: Props) => {
+  const [openForm, setOpenForm] = useState(false);
+
   return (
     <Box>
-            <Heading size="sm" textTransform="uppercase">
-              Notes
-            </Heading>
-            <Text pt="2" fontSize="sm">
-              {notes}
-            </Text>
-          </Box>
-  )
-}
+      <HStack>
+        <Heading size="sm" textTransform="uppercase">
+          Notes
+        </Heading>
+        {/* {openForm ? (
+            
+        ) : (
+            <AddButton onClick{() => setOpenForm(true)} />
+        )} */}
+      </HStack>
+      <Text pt="2" fontSize="sm">
+        {notes}
+      </Text>
+    </Box>
+  );
+};
 
-export default NotesSection
+export default NotesSection;

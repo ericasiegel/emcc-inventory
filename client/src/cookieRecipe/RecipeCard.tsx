@@ -46,7 +46,7 @@ const RecipeCard = ({ id, name, notes }: Props) => {
           
           <InstructionsSection instructions={instructions} cookieId={id} />
           
-          <NotesSection notes={notes} />
+          <NotesSection notes={notes} cookieId={id} />
         </Stack>
       </CardBody>
     </Card>

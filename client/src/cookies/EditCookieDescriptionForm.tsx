@@ -7,10 +7,12 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import React, { useRef } from "react";
-import useEditCookie from "./useEditCookie";
+// import useEditCookie from "./useEditCookie";
 import { Cookie } from "./Cookie";
 import CheckMarkButton from "../components/CheckMarkButton";
 import CancelButton from "../components/CancelButton";
+import useEditData from "../hooks/useEditData";
+import { COOKIES_ENDPOINT } from "../constants";
 
 interface Props {
   id: number;
@@ -25,7 +27,8 @@ const EditCookieDescriptionForm = ({
   cookie,
   closeForm,
 }: Props) => {
-  const { editCookie, error, isLoading } = useEditCookie(id, closeForm);
+
+  const {editData, error, isLoading} = useEditData<Cookie>({id: id, endpoint: COOKIES_ENDPOINT, onSuccessCallback: closeForm})
 
   const cookieDescription = useRef<HTMLInputElement>(null);
 
@@ -39,7 +42,7 @@ const EditCookieDescriptionForm = ({
       description: cookieDescriptionValue,
     };
 
-    editCookie(cookieData);
+    editData(cookieData);
   };
 
   const description = oldDescription || "Add a cookie description";

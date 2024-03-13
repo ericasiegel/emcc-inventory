@@ -6,7 +6,7 @@ import { COOKIES_ENDPOINT } from '../constants';
 interface Props {
     id: number;
     endpoint: string;
-    onSuccessCallback: () => void;
+    onSuccessCallback?: () => void;
 }
 
 const useEditData = <T>({ id, endpoint, onSuccessCallback }: Props) => {
@@ -18,7 +18,7 @@ const useEditData = <T>({ id, endpoint, onSuccessCallback }: Props) => {
     } = useMutateCookies<T, Error, T>(
         (editedData: T) => apiClient.patch(editedData, id),
         () => {
-            onSuccessCallback();
+            if (onSuccessCallback) onSuccessCallback();
         },
         [COOKIES_ENDPOINT, endpoint]
     )

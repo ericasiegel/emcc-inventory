@@ -9,22 +9,25 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Cookie } from "./Cookie";
-import useEditCookie from "./useEditCookie";
+import { COOKIES_ENDPOINT } from "../constants";
+import useEditData from "../hooks/useEditData";
 
 interface Props {
   cookie: Cookie;
 }
 
 const ActiveInactiveSwitch = ({ cookie }: Props) => {
-
   const [isActive, setIsActive] = useState(cookie.is_active);
-  
-  const { editCookie, error } = useEditCookie(cookie.id);
-  
+
+  const { editData, error } = useEditData<Cookie>({
+    id: cookie.id,
+    endpoint: COOKIES_ENDPOINT,
+  });
+
   const handleSwitchChange = () => {
     setIsActive(!isActive);
 
-    editCookie({
+    editData({
       ...cookie,
       is_active: !isActive,
     });

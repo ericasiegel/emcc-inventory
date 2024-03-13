@@ -13,10 +13,6 @@ export interface Cookie {
   notes: string | null;
 }
 
-export interface EditDescription {
-  description: string;
-}
-
 export interface AddImage {
   image: File;
 }
