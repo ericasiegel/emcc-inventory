@@ -1,6 +1,8 @@
 import { Heading, Box, Text, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import AddButton from "../components/AddButton";
+import NoteForm from "./NoteForm";
+import EditButton from "../components/EditButton";
 
 interface Props {
   notes: string | null;
@@ -12,19 +14,26 @@ const NotesSection = ({ notes, cookieId }: Props) => {
 
   return (
     <Box>
-      <HStack>
+      <HStack  paddingBottom={2}>
         <Heading size="sm" textTransform="uppercase">
           Notes
         </Heading>
-        {/* {openForm ? (
-            
-        ) : (
-            <AddButton onClick{() => setOpenForm(true)} />
-        )} */}
+        {!openForm &&
+          (notes === null || notes === "" ? (
+            <AddButton onClick={() => setOpenForm(true)} />
+          ) : (
+            <EditButton onClick={() => setOpenForm(true)} />
+          ))}
       </HStack>
-      <Text pt="2" fontSize="sm">
-        {notes}
-      </Text>
+      {openForm ? (
+        <NoteForm
+          cookieId={cookieId}
+          note={notes!}
+          closeForm={() => setOpenForm(false)}
+        />
+      ) : (
+        <Text>{notes}</Text>
+      )}
     </Box>
   );
 };

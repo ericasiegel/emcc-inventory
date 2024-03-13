@@ -20,3 +20,7 @@ export interface AddImage {
 export interface DeleteImage {
   delete_image: boolean;
 }
+
+export interface EditNotes {
+  notes: string | null;
+}
