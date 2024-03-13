@@ -9,8 +9,8 @@ import {
 import { ChangeEvent, useState } from "react";
 import useAddImage from "./useAddImage";
 import { AddImage } from "../cookies/Cookie";
-import CheckMarkButton from "../components/CheckMarkButton";
 import CancelButton from "../components/CancelButton";
+import { FaRegCircleCheck } from "react-icons/fa6";
 
 interface Props {
   id: number;
@@ -69,7 +69,7 @@ const AddImageForm = ({ id, onCancel }: Props) => {
                 variant="unstyled"
                 isDisabled={!selectedFile}
               >
-                <CheckMarkButton />
+                <FaRegCircleCheck size={30} color="green" />
               </Button>
               <CancelButton onClick={onCancel} />
             </HStack>

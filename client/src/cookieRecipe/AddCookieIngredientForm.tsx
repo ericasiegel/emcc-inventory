@@ -13,11 +13,13 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
-import useAddCookieIngredient from "./useAddCookieIngredient";
 import useIngredientItem from "./useIngredientItem";
 import { useRef } from "react";
 import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
+import useAddData from "../hooks/useAddData";
+import { INGREDIENTS_ENDOINT } from "../constants";
+import { Ingredients } from "./Recipe";
 
 const defaultIngredientValue = {
   id: 0,
@@ -26,7 +28,7 @@ const defaultIngredientValue = {
   ingredient: "",
   ingredient_id: 0,
   quantity: 0,
-  unit: ""
+  unit: "",
 };
 
 interface Props {
@@ -41,8 +43,10 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
     (page) => page.results
   );
 
-  const { addCookieIngredient, error, isLoading } =
-    useAddCookieIngredient(closeForm);
+  const { addData, error, isLoading } = useAddData<Ingredients>({
+    endpoint: INGREDIENTS_ENDOINT,
+    onSuccessCallback: closeForm,
+  });
 
   const ingredientId = useRef<HTMLSelectElement>(null);
   const ingredientQuantity = useRef<HTMLInputElement>(null);
@@ -64,7 +68,7 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
       unit: ingredientUnitValue!,
     };
 
-    addCookieIngredient(cookieIngredientData);
+    addData(cookieIngredientData);
   };
 
   return (

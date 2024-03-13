@@ -1,15 +1,24 @@
-import useAddInstructions from "./useAddInstructions";
-import { Alert, AlertIcon, FormControl, HStack, Input, Box } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  FormControl,
+  HStack,
+  Input,
+  Box,
+} from "@chakra-ui/react";
 import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
 import { useRef } from "react";
+import useAddData from "../hooks/useAddData";
+import { INSTRUCTIONS_ENDOINT } from "../constants";
+import { Instructions } from "./Recipe";
 
 const defaultInstructionValue = {
-    id: 0,
-    cookie: "", 
-    cookie_id: 0,
-    instruction: ""
-}
+  id: 0,
+  cookie: "",
+  cookie_id: 0,
+  instruction: "",
+};
 
 interface Props {
   cookieId: number;
@@ -17,7 +26,10 @@ interface Props {
 }
 
 const AddInstructionsForm = ({ cookieId, closeForm }: Props) => {
-  const { addInstructions, error, isLoading } = useAddInstructions(closeForm);
+  const { addData, error, isLoading } = useAddData<Instructions>({
+    endpoint: INSTRUCTIONS_ENDOINT,
+    onSuccessCallback: closeForm,
+  });
 
   const instruction = useRef<HTMLInputElement>(null);
 
@@ -27,13 +39,12 @@ const AddInstructionsForm = ({ cookieId, closeForm }: Props) => {
     const instructionValue = instruction.current?.value;
 
     const instructionData = {
-        ...defaultInstructionValue, 
-        cookie_id: cookieId,
-        instruction: instructionValue!,
+      ...defaultInstructionValue,
+      cookie_id: cookieId,
+      instruction: instructionValue!,
     };
-    addInstructions(instructionData)
-  }
-
+    addData(instructionData);
+  };
 
   return (
     <>

@@ -32,7 +32,7 @@ const HomePage = () => {
         <HStack paddingX={4} justifyContent="space-between">
           <CookieHeading />
           {openForm ? (
-            <AddCookieForm onSubmit={() => setOpenForm(false)} onCancel={() => setOpenForm(false)} />
+            <AddCookieForm closeForm={() => setOpenForm(false)} />
           ) : (
             <HStack>
               <Text fontSize="2xl">
