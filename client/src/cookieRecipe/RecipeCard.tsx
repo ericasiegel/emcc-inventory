@@ -1,18 +1,17 @@
 import {
-  Box,
   Card,
   CardBody,
   CardHeader,
   Heading,
   Stack,
   StackDivider,
-  Text,
 } from "@chakra-ui/react";
 import { Ingredients, Instructions } from "./Recipe";
 import useGetData from "../hooks/useGetData";
 import { INGREDIENTS_ENDOINT, INSTRUCTIONS_ENDOINT } from "../constants";
 import IngredientsSection from "./IngredientsSection";
 import InstructionsSection from "./InstructionsSection";
+import NotesSection from "./NotesSection";
 
 interface Props {
   id: number;
@@ -46,14 +45,8 @@ const RecipeCard = ({ id, name, notes }: Props) => {
           <IngredientsSection ingredients={ingredients} cookieId={id} />
           
           <InstructionsSection instructions={instructions} cookieId={id} />
-          <Box>
-            <Heading size="sm" textTransform="uppercase">
-              Notes
-            </Heading>
-            <Text pt="2" fontSize="sm">
-              {notes}
-            </Text>
-          </Box>
+          
+          <NotesSection notes={notes} />
         </Stack>
       </CardBody>
     </Card>
