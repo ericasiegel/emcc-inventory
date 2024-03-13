@@ -47,7 +47,7 @@ const CookieCard = ({ cookie }: Props) => {
       </CardHeader>
       <CardBody paddingX={3} height="100%">
         <Link to={"/cookies/" + cookie.slug}>
-          <CookieCounts counts={cookie.counts} />
+          <CookieCounts counts={cookie.counts!} />
         </Link>
       </CardBody>
       <CardFooter justifyContent="center">
