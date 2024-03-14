@@ -18,7 +18,8 @@ import DeleteButton from "./DeleteButton";
 import AddDoughForm from "../dough/AddDoughForm";
 import AddBakedCookiesForm from "../baked/AddBakedCookiesForm";
 import useGetData from "../hooks/useGetData";
-import FormModal from "./FormModal";
+import { useState } from "react";
+import AddButton from "./AddButton";
 
 interface Props {
   id: number;
@@ -37,6 +38,8 @@ const DetailCard = <T extends Baked | Dough>({
 }: Props) => {
   const result = useGetData<T>({endpoint, id, size});
   const items = result?.data?.pages.flatMap((page) => page.results) || [];
+
+  const [openForm, setOpenForm] = useState(false);
 
   let countSize =
     size === "mega" ? count?.baked_cookies.mega : count?.baked_cookies.mini;
@@ -62,16 +65,13 @@ const DetailCard = <T extends Baked | Dough>({
   );
 
   let chooseForm;
-  let header;
 
   switch (endpoint) {
     case "doughs":
-      chooseForm = <AddDoughForm id={id} counts={countSize!} />;
-      header = 'Add Doughs'
+      chooseForm = <AddDoughForm id={id} closeForm={() => setOpenForm(false)} />;
       break;
     case "bakedcookies":
       chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;
-      header = `Add ${size} baked cookies`
       break;
     default:
       chooseForm = null;
@@ -87,7 +87,9 @@ const DetailCard = <T extends Baked | Dough>({
     >
       <CardHeader>
         {headerContent}
-        <FormModal header={header} isAddForm={true}>{chooseForm}</FormModal>
+        {openForm ? (
+          chooseForm
+        ) : (<AddButton onClick={() => setOpenForm(true)} />)}
       </CardHeader>
       <CardBody paddingTop={2}>
         <UnorderedList>
