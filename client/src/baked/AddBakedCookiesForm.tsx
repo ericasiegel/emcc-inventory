@@ -2,7 +2,6 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
   Center,
   FormControl,
   HStack,
@@ -15,10 +14,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../cookies/useLocations";
-import { AddUpdateBaked, Baked } from "./Baked";
+import { Baked } from "./Baked";
 import { useReducer, useRef } from "react";
-import useAddBaked from "./useAddBaked";
-import useEditDough from "../dough/useEditDough";
 import { Dough, EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
 import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
@@ -98,7 +95,7 @@ const AddBakedCookiesForm = ({ id, cookieSize, closeForm }: Props) => {
     endpoint: BAKED_ENDPOINT,
     onSuccessCallback: closeForm,
   });
-  const { editData } = useEditData({
+  const { editData } = useEditData<EditDough>({
     id: Number(doughId.current?.value),
     endpoint: DOUGHS_ENDPOINT,
     onSuccessCallback: closeForm,

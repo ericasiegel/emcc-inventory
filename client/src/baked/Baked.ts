@@ -9,13 +9,6 @@ export interface Baked {
     date_added: string;
 }
 
-export interface AddUpdateBaked {
-    cookie_id: number;
-    location_id: number;
-    size: string;
-    quantity?: number;
-}
-
 export interface EditBaked {
     quantity?: number
 }
