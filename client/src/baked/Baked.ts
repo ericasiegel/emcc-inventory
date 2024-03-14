@@ -3,7 +3,7 @@ export interface Baked {
     cookie: string;
     cookie_id: number;
     size: string;
-    quantity: number;
+    quantity?: number;
     location: string;
     location_id: number;
     date_added: string;

@@ -14,8 +14,8 @@ const AddUpdateFormRadioButtons = ({ title, usage, handleUsage }: Props) => {
               </Text>
               <RadioGroup value={usage} defaultValue="No" onChange={handleUsage}>
                 <HStack spacing="24px">
-                  <Radio value="No">No</Radio>
-                  <Radio value="Yes">Yes</Radio>
+                  <Radio value="No" borderColor="black">No</Radio>
+                  <Radio value="Yes" borderColor="black">Yes</Radio>
                 </HStack>
               </RadioGroup>
             </Box>

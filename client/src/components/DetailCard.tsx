@@ -71,7 +71,7 @@ const DetailCard = <T extends Baked | Dough>({
       chooseForm = <AddDoughForm id={id} closeForm={() => setOpenForm(false)} />;
       break;
     case "bakedcookies":
-      chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} />;
+      chooseForm = <AddBakedCookiesForm id={id} cookieSize={size!} closeForm={() => setOpenForm(false)} />;
       break;
     default:
       chooseForm = null;

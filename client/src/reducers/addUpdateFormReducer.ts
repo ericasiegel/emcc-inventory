@@ -7,7 +7,7 @@ export interface StartingState {
 
 export interface Action {
     type: string;
-    payload: number | string;
+    payload: number | string | undefined;
 }
 
 const addUpdateFormReducer = (state: StartingState, action: Action): StartingState => {

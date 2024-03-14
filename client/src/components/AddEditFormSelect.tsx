@@ -44,7 +44,8 @@ const AddEditFormSelect = ({
         placeholder={placeholder}
         ref={selectRefObject}
         onChange={handleSelection}
-        paddingBottom={3}
+        marginBottom={3}
+        borderColor="black"
       >
         {cookies?.map((cookie) => (
           <option key={cookie.id} value={cookie.id}>
@@ -60,11 +61,12 @@ const AddEditFormSelect = ({
         onChange={(value) => changeValue(Number(value))}
         width="100%"
         ref={inputRefObject}
+        borderColor="black"
       >
         <NumberInputField type="number" />
         <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
+          <NumberIncrementStepper borderColor="black" />
+          <NumberDecrementStepper borderColor="black" />
         </NumberInputStepper>
       </NumberInput>
     </Box>

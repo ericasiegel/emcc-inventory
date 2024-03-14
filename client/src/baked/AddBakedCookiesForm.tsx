@@ -15,26 +15,42 @@ import {
   Text,
 } from "@chakra-ui/react";
 import useLocations from "../cookies/useLocations";
-import { AddUpdateBaked } from "./Baked";
+import { AddUpdateBaked, Baked } from "./Baked";
 import { useReducer, useRef } from "react";
 import useAddBaked from "./useAddBaked";
 import useEditDough from "../dough/useEditDough";
 import { Dough, EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
-import { DOUGHS_ENDPOINT } from "../constants";
+import { BAKED_ENDPOINT, DOUGHS_ENDPOINT } from "../constants";
 import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 import AddEditFormSelect from "../components/AddEditFormSelect";
 import useGetData from "../hooks/useGetData";
+import CancelButton from "../components/CancelButton";
+import CheckMarkButton from "../components/CheckMarkButton";
+import useAddData from "../hooks/useAddData";
+import useEditData from "../hooks/useEditData";
 
 interface Props {
   id: number;
   cookieSize: string;
+  closeForm: () => void;
 }
 
-const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
+const defaultBaked = {
+  id: 0,
+  cookie: "",
+  cookie_id: 0,
+  size: "",
+  quantity: 0,
+  location: "",
+  location_id: 0,
+  date_added: "",
+};
+
+const AddBakedCookiesForm = ({ id, cookieSize, closeForm }: Props) => {
   //  state declarations
   const initialState: StartingState = {
     cookieValue: 1, // reset form value
@@ -57,7 +73,7 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const setDoughUsedValue = (value: number) => {
     dispatch({ type: "set_stored_usage_value", payload: value });
   };
-  const setDoughQuantity = (value: number) => {
+  const setDoughQuantity = (value: number | undefined) => {
     dispatch({ type: "set_stored_Quantity", payload: value });
   };
 
@@ -71,20 +87,22 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
   const { data: getLocations } = useLocations();
   const locations = getLocations?.pages.flatMap((page) => page.results);
   // get doughs for Select List
-  const { data: getDoughs } = useGetData<Dough>({endpoint:DOUGHS_ENDPOINT, id});
+  const { data: getDoughs } = useGetData<Dough>({
+    endpoint: DOUGHS_ENDPOINT,
+    id,
+  });
   const doughs = getDoughs?.pages.flatMap((page) => page.results);
 
-  // reset form function
-  const resetForm = () => {
-    if (locationId.current) locationId.current.value = "";
-    if (doughId.current) doughId.current.value = "";
-    setDoughUsage("No");
-    setDoughUsedValue(0);
-    setBakedValue(1);
-  };
   // hooks for add, edit, delete operatoins
-  const { addBakedCookies, error, isLoading } = useAddBaked(resetForm);
-  const { editDough } = useEditDough(Number(doughId.current?.value));
+  const { addData, error, isLoading } = useAddData<Baked>({
+    endpoint: BAKED_ENDPOINT,
+    onSuccessCallback: closeForm,
+  });
+  const { editData } = useEditData({
+    id: Number(doughId.current?.value),
+    endpoint: DOUGHS_ENDPOINT,
+    onSuccessCallback: closeForm,
+  });
   const { deleteItem } = useDeleteCookies(DOUGHS_ENDPOINT);
 
   // Determine if dough was used or not
@@ -112,13 +130,14 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
       doughUsedQuantity.current?.querySelector("input")?.valueAsNumber;
 
     // Prepare bakedData and add baked cookies
-    const bakedData: AddUpdateBaked = {
+    const bakedData = {
+      ...defaultBaked,
       cookie_id: id,
       quantity: bakedQuantityValue,
       size: cookieSize,
       location_id: parseInt(locationIdValue || "0"), // Assuming a default value if not available
     };
-    addBakedCookies(bakedData);
+    addData(bakedData);
 
     // Handling dough delete and edit operations
     if (doughId.current && doughUsedQuantity.current) {
@@ -126,8 +145,8 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
         deleteItem(Number(doughIdValue));
       } else {
         const newDoughQuantity = storedQuantity - (doughQuantityValue || 0);
-        const doughData: EditDough = { quantity: newDoughQuantity };
-        editDough(doughData);
+        const doughData = { quantity: newDoughQuantity };
+        editData(doughData);
       }
     }
   };
@@ -171,8 +190,9 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
             <Select
               placeholder="Select Stored Location"
               ref={locationId}
-              paddingBottom={2}
+              marginBottom={2}
               required
+              borderColor="black"
             >
               {locations?.map((location) => (
                 <option key={location.id} value={location.id}>
@@ -188,24 +208,19 @@ const AddBakedCookiesForm = ({ id, cookieSize }: Props) => {
                 width="100%"
                 ref={bakedQuantity}
                 isRequired
+                borderColor="black"
               >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
+                  <NumberIncrementStepper borderColor="black" />
+                  <NumberDecrementStepper borderColor="black" />
                 </NumberInputStepper>
               </NumberInput>
             </HStack>
           </Box>
           <Center>
-            <Button
-              disabled={isLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {isLoading ? "Adding Baked Cookies..." : "Add Baked Cookies"}
-            </Button>
+            {isLoading ? "..." : <CheckMarkButton />}
+            <CancelButton onClick={closeForm} />
           </Center>
         </FormControl>
       </form>
