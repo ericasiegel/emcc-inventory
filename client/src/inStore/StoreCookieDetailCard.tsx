@@ -6,16 +6,16 @@ import {
   Flex,
   Heading,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 import ColorBadge from "../counts/ColorBadge";
-import { format, set } from "date-fns";
+import { format } from "date-fns";
 import DeleteButton from "../components/DeleteButton";
 import StoreCookiesForm from "./StoreCookiesForm";
 import useGetData from "../hooks/useGetData";
 import { Store } from "./StoreCookie";
-import FormModal from "../components/FormModal";
 import { useState } from "react";
+import AddButton from "../components/AddButton";
+import EditButton from "../components/EditButton";
 
 interface Props {
   id: number;
@@ -25,18 +25,40 @@ interface Props {
 }
 
 const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
+  const [openForm, setOpenForm] = useState(false);
 
-  const { openForm, setOpenForm } = useState(false)
-
-  const {isOpen: addIsOpen, onOpen: addOnOpen, onClose: addOnClose } = useDisclosure();
-  const {isOpen: editIsOpen, onOpen: editOnOpen, onClose: editOnClose } = useDisclosure();
-
-  const result = useGetData<Store>({ endpoint, id, size});
+  const result = useGetData<Store>({ endpoint, id, size });
   const cookieData = result.data?.pages.flatMap((page) => page.results)[0];
   const headingSize = size === "mega" ? "Mega" : "Mini";
 
   const countSize =
     size === "mega" ? count?.total_in_store.mega : count?.total_in_store.mini;
+
+  const addStoreCookieForm = openForm ? (
+    <StoreCookiesForm
+      id={id}
+      cookieSize={size}
+      mode="add"
+      inStoreQuantityId={cookieData?.id}
+      closeForm={() => setOpenForm(false)}
+    />
+  ) : (
+    <AddButton onClick={() => setOpenForm(true)} />
+  );
+
+  const editStoreCookieForm = openForm ? (
+    <StoreCookiesForm
+                id={id}
+                cookieSize={size}
+                mode="edit"
+                inStoreQuantityId={cookieData?.id}
+                closeForm={() => setOpenForm(false)}
+              />
+  ) : (
+    <EditButton onClick={() => setOpenForm(true)} />
+  )
+
+
 
   return (
     <Card backgroundColor="inherit" variant="unstyled" padding={4} minW="50%">
@@ -46,17 +68,12 @@ const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
           <Heading fontSize="2xl">{headingSize}</Heading>
           <ColorBadge size="30px" count={countSize!} />
         </Flex>
-        {/* { countSize! > 0 ? } */}
         {countSize! > 0 ? (
-          <FormModal header={`Edit quantity of ${size} cookies in store`} isAddForm={false} onClose={editOnClose} isOpen={editIsOpen} onOpen={editOnOpen}>
-            {cookieData ? (
-              <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} closeForm={() => setOpenForm(true)} />
-            ) : null}
-          </FormModal>
+            cookieData ? (
+              editStoreCookieForm
+            ) : null
         ) : (
-          <FormModal header={`Add quantity of ${size} cookies in store`}  isAddForm={true} onClose={addOnClose} isOpen={addIsOpen} onOpen={addOnOpen}>
-            <StoreCookiesForm id={id} cookieSize={size!} mode="add" inStoreQuantityId={0} closeForm={() => setOpenForm(true)} />
-          </FormModal>
+          addStoreCookieForm
         )}
       </CardHeader>
       <CardBody paddingTop={2}>

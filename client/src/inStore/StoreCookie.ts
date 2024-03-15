@@ -10,12 +10,6 @@ export interface Store {
     };  
 }
 
-export interface AddEditStore {
-    cookie_id: number;
-    size: string;
-    quantity?: number;
-}
-
 export interface EditStore {
     quantity?: number;
 }

@@ -33,7 +33,7 @@ interface Props {
   id: number;
   cookieSize: string;
   mode: "add" | "edit";
-  inStoreQuantityId: number;
+  inStoreQuantityId?: number;
   closeForm: () => void;
 }
 
@@ -124,7 +124,7 @@ const StoreCookiesForm = ({
     error: editError,
     isLoading: editIsLoading,
   } = useEditData<EditStore>({
-    id: inStoreQuantityId,
+    id: inStoreQuantityId!,
     endpoint: STORE_ENDPOINT,
     onSuccessCallback: closeForm,
   });
@@ -216,11 +216,12 @@ const StoreCookiesForm = ({
                 onChange={(value) => setStoreQuantityValue(Number(value))}
                 width="100%"
                 ref={storeQuantity}
+                borderColor='black'
               >
                 <NumberInputField type="number" />
                 <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
+                  <NumberIncrementStepper borderColor='black' />
+                  <NumberDecrementStepper borderColor='black' />
                 </NumberInputStepper>
               </NumberInput>
             </HStack>
