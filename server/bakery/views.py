@@ -8,31 +8,50 @@ from rest_framework.viewsets import ModelViewSet
 from .models import *
 from .permissions import IsAdminOrReadOnly
 from .serializers import *
+from .filters import CookieFilter, BakedCookieFilter, StoreFilter
+from rest_framework.generics import get_object_or_404
+
+
 
 
 # Create your views here.
 class CookieViewSet(ModelViewSet):
-    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set', 'images').all()
+    queryset = Cookie.objects.prefetch_related('dough_set', 'bakedcookie_set', 'store_set', 'instructions', 'ingredients').all()
     serializer_class = CookieSerializer
-    filter_backends = [SearchFilter, OrderingFilter]
+    filter_backends = [SearchFilter, OrderingFilter, DjangoFilterBackend]
     search_fields = ['name']
-    ordering_fields = ['id']
+    ordering_fields = ['id', 'is_active']
+    filterset_class = CookieFilter
+    lookup_field = 'slug'
     
     def get_serializer_context(self):
         return {'request': self.request}
+    
+    def get_object(self):
+        lookup_value = self.kwargs.get(self.lookup_field)
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Check if the lookup value is a digit (ID) or a string (slug)
+        if not lookup_value.isdigit():
+            return get_object_or_404(queryset, slug=lookup_value)
+        
+        return get_object_or_404(queryset, pk=lookup_value)
 
     def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
         if (
-            Dough.objects.filter(cookie_id=kwargs['pk']).exists() or
-            BakedCookie.objects.filter(cookie_id=kwargs['pk']).exists() or
-            Store.objects.filter(cookie_id=kwargs['pk']).exists()
+            Dough.objects.filter(cookie_id=instance.pk).exists() or
+            BakedCookie.objects.filter(cookie_id=instance.pk).exists() or
+            Store.objects.filter(cookie_id=instance.pk).exists()
             ):
             return Response(
                 {'error': 'Cookie cannot be deleted because it is associated with a dough, baked cookie, or store cookie.'}, 
                 status=status.HTTP_405_METHOD_NOT_ALLOWED
                 )
 
-        return super().destroy(request, *args, **kwargs)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DoughViewSet(ModelViewSet):
     queryset = Dough.objects.select_related('cookie', 'location').all()
@@ -61,7 +80,8 @@ class BakedCookieViewSet(mixins.RetrieveModelMixin,
     queryset = BakedCookie.objects.select_related('cookie', 'location').all()
     serializer_class = BakedCookieSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['cookie_id', 'size', 'location']
+    # filterset_fields = ['cookie_id', 'location']
+    filterset_class = BakedCookieFilter
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'date_added', 'size', 'location']
     
@@ -79,7 +99,7 @@ class StoreViewSet(ModelViewSet):
     queryset = Store.objects.select_related('cookie', 'updated_by').all()
     serializer_class = StoreSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['cookie_id', 'size']
+    filterset_class = StoreFilter
     search_fields = ['cookie__name', 'size']
     ordering_fields = ['id', 'cookie__name', 'last_updated', 'size', 'location']
     
@@ -99,15 +119,32 @@ class LocationViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     search_fields = ['title']
     ordering_fields = ['id', 'title']
-      
-class RecipeViewSet(ModelViewSet):
-    queryset = Recipe.objects.select_related('cookie', 'modified_by').all()
-    serializer_class = RecipeSerializer
+    
+class IngredientViewSet(ModelViewSet):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['name']
+    search_fields = ['name']
+    ordering_fields = ['id', 'name']
+    
+class RecipeIngredientViewSet(viewsets.ModelViewSet):
+    queryset = RecipeIngredient.objects.select_related('ingredient').all()
+    serializer_class = RecipeIngredientSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['cookie_id']
+    search_fields = ['cookie__name', 'ingredient']
+    ordering_fields = ['id', 'cookie__name']
+    
+
+class RecipeInstructionViewSet(ModelViewSet):
+    queryset = RecipeInstruction.objects.all()
+    serializer_class = RecipeInstructionSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['cookie_id']
     search_fields = ['cookie__name']
-    ordering_fields = ['id', 'cookie__name', 'created_at', 'last_updated']
-    permission_classes = [IsAdminOrReadOnly]
+    ordering_fields = ['id', 'cookie__name']
+    
     
 class GroceryViewSet(ModelViewSet):
     queryset = Grocery.objects.select_related('location').all()
@@ -134,11 +171,3 @@ class UserViewSet(ModelViewSet):
             serializer.save()
             return Response(serializer.data)
 
-class CookieImageViewSet(ModelViewSet):
-    serializer_class = CookieImageSerializer
-    
-    def get_serializer_context(self):
-        return {'cookie_id': self.kwargs['cookie_pk']}
-    
-    def get_queryset(self):
-        return CookieImage.objects.filter(cookie_id=self.kwargs['cookie_pk'])

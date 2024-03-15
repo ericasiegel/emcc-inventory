@@ -4,25 +4,36 @@ from django.urls import reverse
 from django.utils.html import format_html, urlencode
 from .models import *
 
-class CookieImageInline(admin.TabularInline):
-    model = CookieImage
-    readonly_fields = ['thumbnail']
-    
-    def thumbnail(self, instance):
-        if instance.image.name != '':
-            return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
-        return ''
+# Define an inline admin class for CookieImage
+# class CookieImageInline(admin.TabularInline):
+#     model = CookieImage
+#     readonly_fields = ['thumbnail']
+#     extra = 1
 
+#     # Define a custom thumbnail method for rendering images
+#     def thumbnail(self, instance):
+#         if instance.image.name != '':
+#             return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
+#         return ''
+
+# BaseAdmin class with list_editable attribute
 class BaseAdmin(admin.ModelAdmin):
     list_editable = ['quantity']
-    
 
+# Register the Cookie model with custom admin settings
 @admin.register(Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'dough_quantity', 'mega_quantity',  'mini_quantity', 'mega_in_store', 'mini_in_store']
+    list_display = ['id', 'name', 'description', 'is_active', 'display_thumbnail', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
-    inlines = [CookieImageInline]
+    exclude = ['slug']
+    
+     # Add a custom method to display the thumbnail
+    def display_thumbnail(self, obj):
+        return format_html(f'<img src="{obj.image.url}" width="50" height="50" />')
+    
+    display_thumbnail.short_description = 'Thumbnail'
 
+    # Custom method to create formatted HTML links to related objects' changelist views
     def _formatted_link(self, cookie, app_name, model_name, attribute_name, size=None):
         """
         Returns a formatted HTML link to the changelist view of specified objects with specified criteria.
@@ -35,6 +46,7 @@ class CookieAdmin(admin.ModelAdmin):
         
         return format_html('<a href="{}">{}</a>', url, getattr(cookie, attribute_name))
 
+    # Custom methods for displaying links to related objects' changelist views
     def dough_quantity(self, cookie):
         return self._formatted_link(cookie, app_name="bakery", model_name="dough", attribute_name="dough_quantity")
 
@@ -50,6 +62,7 @@ class CookieAdmin(admin.ModelAdmin):
     def mini_in_store(self, cookie):
         return self._formatted_link(cookie, app_name="bakery", model_name="store", attribute_name="store_mini", size="mini")
 
+    # Custom queryset method to optimize retrieval and annotate quantities of related objects
     def get_queryset(self, request):
         """
         Overrides the default queryset to optimize retrieval and annotate quantities of related objects.
@@ -79,30 +92,19 @@ class CookieAdmin(admin.ModelAdmin):
             )
         )
 
+    # Define media settings to include custom CSS
     class Media:
         css = {
             'all': ['/static/bakery/styles.css']
         }
 
-
-@admin.register(Recipe)
-class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cookie', 'description', 'ingredients', 'instructions', 'created_at', 'last_updated', 'modified_by']
-    list_editable = ['description', 'ingredients', 'instructions']
-    list_select_related = ['cookie', 'modified_by']
-    list_per_page = 5
-    search_fields = ['cookie__name__icontains']
-    list_filter = ['last_updated', 'cookie']
-    exclude = ['modified_by']
-    autocomplete_fields = ['cookie']
-
-
+# Register the Location model with custom admin settings
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ['id', 'title']
     search_fields = ['title__icontains']
-    
 
+# Register the Dough model with custom admin settings
 @admin.register(Dough)
 class DoughAdmin(BaseAdmin):
     list_display = ['id', 'cookie', 'quantity', 'location', 'date_added']
@@ -112,7 +114,7 @@ class DoughAdmin(BaseAdmin):
     list_filter = ['date_added', 'location']
     autocomplete_fields = ['cookie', 'location']
 
-
+# Register the BakedCookie model with custom admin settings
 @admin.register(BakedCookie)
 class BakedCookieAdmin(BaseAdmin):
     list_display = ['id', 'cookie', 'quantity', 'size', 'location', 'date_added']
@@ -122,15 +124,7 @@ class BakedCookieAdmin(BaseAdmin):
     list_filter = ['date_added', 'size', 'location']
     autocomplete_fields = ['cookie', 'location']
 
-    
-@admin.register(Grocery)
-class GroceryAdmin(BaseAdmin):
-    list_display = ['id', 'title', 'quantity', 'description', 'location', 'order_link']
-    list_per_page = 10
-    search_fields = ['title__icontains', 'location__title__icontains']
-    list_filter = ['location']
-    autocomplete_fields = ['location']
-
+# Register the Store model with custom admin settings
 @admin.register(Store)
 class StoreAdmin(admin.ModelAdmin):
     list_display = ['id', 'cookie', 'size', 'quantity', 'last_updated', 'updated_by']
@@ -140,3 +134,39 @@ class StoreAdmin(admin.ModelAdmin):
     list_filter = ['last_updated', 'size']
     exclude = ['updated_by']
     autocomplete_fields = ['cookie']
+
+# Register the Ingredient model with custom admin settings
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name']
+
+# Register the RecipeInstruction model with custom admin settings
+@admin.register(RecipeInstruction)
+class RecipeInstructionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'instruction']
+    list_editable = ['instruction']
+
+# Register the RecipeIngredient model with custom admin settings
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ['id', 'ingredient', 'quantity', 'unit']
+    list_editable = ['quantity', 'unit']
+    search_fields = ['ingredient__name', 'cookie__name']
+    list_filter = ['cookie']
+    autocomplete_fields = ['ingredient', 'cookie']
+
+# Inline admin class for RecipeIngredient
+class RecipeIngredientInline(admin.TabularInline):
+    model = RecipeIngredient
+    extra = 1
+
+# Register the Grocery model with custom admin settings
+@admin.register(Grocery)
+class GroceryAdmin(BaseAdmin):
+    list_display = ['id', 'ingredient', 'quantity', 'unit', 'description', 'location', 'order_link']
+    list_per_page = 10
+    list_editable = ['quantity', 'unit', 'description', 'location', 'order_link']
+    search_fields = ['ingredient', 'title__icontains', 'location__title__icontains']
+    list_filter = ['location']
+    autocomplete_fields = ['location']

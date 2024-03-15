@@ -13,11 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+import secrets
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = secrets.token_hex(64)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-
 
 
 # Application definition
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework.authtoken',
     "djoser",
     'debug_toolbar',
@@ -131,9 +134,18 @@ REST_FRAMEWORK = {
     ]
 }
 
+
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1)
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=7),
+    'SLIDING_TOKEN_REFRESH_ON_LOGIN': True,
+    'SLIDING_TOKEN_REFRESH_ON_REFRESH': True,
+    'ROTATE_REFRESH_TOKENS': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY.encode(),  # Replace with your actual secret key
+    'VERIFYING_KEY': None,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 DJOSER = {
@@ -144,7 +156,8 @@ DJOSER = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8001',
-    'http://127.0.0.1:8001',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
 ]
+
 

@@ -1,6 +1,7 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
 from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
 
 from .models import *
 
@@ -44,24 +45,100 @@ class UserNameSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username']
         
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = [
+            'id',
+            'name'
+        ]
         
-# Serializer Classes to display on API
-class CookieImageSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        cookie_id = self.context['cookie_id']
-        return CookieImage.objects.create(cookie_id=cookie_id, **validated_data)
+        
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    cookie = serializers.StringRelatedField(read_only=True)
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    ingredient = serializers.StringRelatedField(read_only=True)
+    ingredient_id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(), write_only=True, source='ingredient')
+
+    class Meta:
+        model = RecipeIngredient
+        fields = [
+            'id',
+            'cookie',
+            'cookie_id',
+            'ingredient',
+            'ingredient_id',
+            'quantity',
+            'unit'
+        ]
+
+class IngredientDetailSerializer(serializers.ModelSerializer):
+    ingredient = serializers.StringRelatedField(source='ingredient.name')
+
+    class Meta:
+        model = RecipeIngredient
+        fields = [
+            'ingredient',
+            'quantity',
+            'unit'
+        ]
+
+class RecipeInstructionSerializer(serializers.ModelSerializer):
+    cookie = serializers.StringRelatedField(read_only=True)
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     
     class Meta:
-        model = CookieImage
-        fields = ['id', 'image']
+        model = RecipeInstruction
+        fields = [
+            'id',
+            'cookie',
+            'cookie_id',
+            'instruction'
+        ]
         
+        
+class InstructionDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecipeInstruction
+        fields = [
+            'instruction'
+        ]
 
 class CookieSerializer(serializers.ModelSerializer):
     counts = serializers.SerializerMethodField(method_name='calculate_totals')
-    images = CookieImageSerializer(many=True, read_only=True)
+    slug = serializers.StringRelatedField(read_only=True)
+    delete_image = serializers.BooleanField(write_only=True, default=False)
+    ingredients = IngredientDetailSerializer(many=True, read_only=True)
+    instructions = InstructionDetailSerializer(many=True, read_only=True)
+
+    
     class Meta:
         model = Cookie
-        fields = ['id', 'name', 'counts', 'images']
+        fields = ['id', 'name', 'slug', 'image', 'description', 'notes', 'is_active', 'ingredients', 'instructions', 'counts', 'delete_image']
+        
+    def create(self, validated_data):
+        delete_image = validated_data.pop('delete_image', False)
+        
+        # Create a Cookie instance without the delete_image field
+        cookie = Cookie.objects.create(**validated_data)
+        
+        # Delete the image if delete_image is True
+        if delete_image and cookie.image:
+            cookie.image.delete()
+        
+        return cookie
+        
+    def update(self, instance, validated_data):
+        delete_image = validated_data.pop('delete_image', False)
+        
+        if delete_image and instance.image:
+            instance.image.delete()  # Delete the image if delete_image is True
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
     
     def calculate_totals(self, cookie: Cookie):
         """
@@ -124,39 +201,40 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class DoughSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
-    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     location = serializers.StringRelatedField(read_only=True)
-    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
 
     class Meta:
         model = Dough
         fields = [
             'id',
             'cookie', 
-            'cookie_name', 
+            'cookie_id', 
             'quantity', 
             'location',
-            'location_name',
+            'location_id',
             'date_added'
             ]
 
+
 class BakedCookieSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
-    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     size = DisplayChoiceField(choices=SIZE_CHOICES)
     location = serializers.StringRelatedField(read_only=True)
-    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
     
     class Meta:
         model = BakedCookie
         fields = [
             'id', 
             'cookie', 
-            'cookie_name', 
+            'cookie_id', 
             'size', 
             'quantity', 
             'location', 
-            'location_name',
+            'location_id',
             'date_added'
             ]
     
@@ -168,7 +246,7 @@ class BakedCookieSerializer(serializers.ModelSerializer):
 
 class StoreSerializer(serializers.ModelSerializer):
     cookie = serializers.StringRelatedField(read_only=True)
-    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
+    cookie_id = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
     size = DisplayChoiceField(choices=SIZE_CHOICES)
     updated_by = UserNameSerializer(read_only=True)
     
@@ -177,45 +255,36 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = [
             'id', 
             'cookie', 
-            'cookie_name', 
+            'cookie_id', 
             'size', 
             'quantity', 
             'last_updated', 
             'updated_by'
             ]
         
-class RecipeSerializer(serializers.ModelSerializer):
-    cookie = serializers.StringRelatedField(read_only=True)
-    cookie_name = serializers.PrimaryKeyRelatedField(queryset=Cookie.objects.all(), write_only=True, source='cookie')
-    modified_by = UserNameSerializer(read_only=True)
-    
-    class Meta:
-        model = Recipe
-        fields = [
-            'id', 
-            'cookie', 
-            'cookie_name', 
-            'description', 
-            'ingredients', 
-            'instructions', 
-            'created_at',
-            'last_updated',
-            'modified_by'
-            ]
+
+        
+
+
+
            
 class GrocerySerializer(serializers.ModelSerializer):
     location = serializers.StringRelatedField(read_only=True)
-    location_name = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all(), write_only=True, source='location')
+    ingredient_name = serializers.StringRelatedField(source='ingredient.name')
+    ingredient = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
         model = Grocery
         fields = [
             'id',
-            'title',
+            'ingredient',
+            'ingredient_name',
             'quantity',
+            'unit',
             'description',
             'location',
-            'location_name',
+            'location_id',
             'order_link'
         ]
         
