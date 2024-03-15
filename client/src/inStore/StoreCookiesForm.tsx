@@ -4,7 +4,6 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
   Center,
   FormControl,
   HStack,
@@ -18,26 +17,45 @@ import {
 import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
-import useEditBaked from "../baked/useEditBaked";
-import { BAKED_ENDPOINT } from "../constants";
+import { BAKED_ENDPOINT, STORE_ENDPOINT } from "../constants";
 import useDeleteCookies from "../hooks/useDeleteCookies";
-import useAddStoreCookie from "./useAddStoreCookie";
-import useEditStoreCookies from "./useEditStoreCookies";
-import { AddEditStore, EditStore } from "./StoreCookie";
+import { EditStore, Store } from "./StoreCookie";
 import { Baked, EditBaked } from "../baked/Baked";
 import AddUpdateFormRadioButtons from "../components/AddUpdateFormRadioButtons";
 import AddEditFormSelect from "../components/AddEditFormSelect";
 import useGetData from "../hooks/useGetData";
+import CheckMarkButton from "../components/CheckMarkButton";
+import CancelButton from "../components/CancelButton";
+import useAddData from "../hooks/useAddData";
+import useEditData from "../hooks/useEditData";
 
 interface Props {
   id: number;
   cookieSize: string;
   mode: "add" | "edit";
   inStoreQuantityId: number;
-  onClose: () => void;
+  closeForm: () => void;
 }
 
-const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: Props) => {
+const defaultStoreData = {
+  id: 0,
+  cookie: "",
+  cookie_id: 0,
+  size: "",
+  quantity: 0,
+  last_updated: "",
+  updated_by: {
+    username: "",
+  },
+};
+
+const StoreCookiesForm = ({
+  id,
+  cookieSize,
+  mode,
+  inStoreQuantityId,
+  closeForm,
+}: Props) => {
   // Define the initial state for the form
   const initialState: StartingState = {
     cookieValue: 1, // Reset form value
@@ -63,7 +81,7 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
   const setCookieUsedValue = (value: number) => {
     dispatch({ type: "set_stored_usage_value", payload: value });
   };
-  const setCookieQuantity = (value: number) => {
+  const setCookieQuantity = (value: number | undefined) => {
     dispatch({ type: "set_stored_Quantity", payload: value });
   };
 
@@ -73,7 +91,11 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
   const bakedCookieUsedQuantity = useRef<HTMLInputElement>(null);
 
   // Fetch baked cookies data using a custom hook
-  const { data: getBakedCookies } = useGetData<Baked>({endpoint: BAKED_ENDPOINT, id, size: cookieSize});
+  const { data: getBakedCookies } = useGetData<Baked>({
+    endpoint: BAKED_ENDPOINT,
+    id,
+    size: cookieSize,
+  });
   const bakedCookies = getBakedCookies?.pages.flatMap((page) => page.results);
 
   // Handle baked cookie usage selection
@@ -89,19 +111,28 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
   };
 
   // Custom hooks for adding, editing, and deleting cookies
-    const {
-    editStoreCookies,
-    error: editError,
-    isLoading: editIsLoading,
-  } = useEditStoreCookies(inStoreQuantityId, onClose);
   const {
-    addStoreCookies,
+    addData,
     error: addError,
     isLoading: addIsLoading,
-  } = useAddStoreCookie(onClose);
-  const { editBakedCookie } = useEditBaked(
-    Number(bakedCookieId.current?.value)
-  );
+  } = useAddData<Store>({
+    endpoint: STORE_ENDPOINT,
+    onSuccessCallback: closeForm,
+  });
+  const {
+    editData: editStoreCookies,
+    error: editError,
+    isLoading: editIsLoading,
+  } = useEditData<EditStore>({
+    id: inStoreQuantityId,
+    endpoint: STORE_ENDPOINT,
+    onSuccessCallback: closeForm,
+  });
+  const { editData: editBakedCookie } = useEditData<EditBaked>({
+    id: Number(bakedCookieId.current?.value),
+    endpoint: BAKED_ENDPOINT,
+    onSuccessCallback: closeForm,
+  });
   const { deleteItem } = useDeleteCookies(BAKED_ENDPOINT);
 
   // Handle form submission
@@ -123,24 +154,26 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
       editStoreCookies(storeData);
     } else {
       // Create store data object
-      const storeData: AddEditStore = {
+      const storeData = {
+        ...defaultStoreData,
         cookie_id: id,
         quantity: storeQuantityValue,
         size: cookieSize,
       };
-      addStoreCookies(storeData);
+      addData(storeData);
     }
 
-     // Handling cookie delete and edit operations
-     if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
-        if (storedQuantity === bakedCookieQuantityValue) {
-          deleteItem(Number(bakedCookieIdValue));
-        } else {
-          const newBakedCookieQuantity = storedQuantity - (bakedCookieQuantityValue || 0);
-          const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
-          editBakedCookie(bakedCookieData);
-        }
+    // Handling cookie delete and edit operations
+    if (bakedCookieId.current && bakedCookieUsedQuantity.current) {
+      if (storedQuantity === bakedCookieQuantityValue) {
+        deleteItem(Number(bakedCookieIdValue));
+      } else {
+        const newBakedCookieQuantity =
+          storedQuantity - (bakedCookieQuantityValue || 0);
+        const bakedCookieData: EditBaked = { quantity: newBakedCookieQuantity };
+        editBakedCookie(bakedCookieData);
       }
+    }
   };
 
   return (
@@ -162,16 +195,16 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
           )}
 
           {selectedStoredUsage === "Yes" && (
-            <AddEditFormSelect 
-                title='How many cookies?' 
-                placeholder='Select Cookies Used' 
-                selectRefObject={bakedCookieId} 
-                handleSelection={handleBakedCookieSelection}
-                cookies={bakedCookies}
-                selectedQuantity={storedQuantity}
-                selectedValue={storedUsageValue}
-                changeValue={setCookieUsedValue}
-                inputRefObject={bakedCookieUsedQuantity}
+            <AddEditFormSelect
+              title="How many cookies?"
+              placeholder="Select Cookies Used"
+              selectRefObject={bakedCookieId}
+              handleSelection={handleBakedCookieSelection}
+              cookies={bakedCookies}
+              selectedQuantity={storedQuantity}
+              selectedValue={storedUsageValue}
+              changeValue={setCookieUsedValue}
+              inputRefObject={bakedCookieUsedQuantity}
             />
           )}
 
@@ -193,20 +226,18 @@ const StoreCookiesForm = ({ id, cookieSize, mode, inStoreQuantityId, onClose }: 
             </HStack>
           </Box>
           <Center>
-            <Button
-              disabled={mode === "edit" ? editIsLoading : addIsLoading}
-              type="submit"
-              colorScheme="blue"
-              marginTop={3}
-            >
-              {mode === "edit"
-                ? editIsLoading
-                  ? "Editing Cookies in Store..."
-                  : "Edit Cookies in Store"
-                : addIsLoading
-                ? "Adding Cookies to Store..."
-                : "Add Cookies to Store"}
-            </Button>
+            {mode === "edit" ? (
+              editIsLoading ? (
+                "Editing Cookies in Store..."
+              ) : (
+                <CheckMarkButton />
+              )
+            ) : addIsLoading ? (
+              "Adding Cookies to Store..."
+            ) : (
+              <CheckMarkButton />
+            )}
+            <CancelButton onClick={closeForm} />
           </Center>
         </FormControl>
       </form>

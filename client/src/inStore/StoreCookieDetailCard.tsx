@@ -9,12 +9,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import ColorBadge from "../counts/ColorBadge";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import DeleteButton from "../components/DeleteButton";
 import StoreCookiesForm from "./StoreCookiesForm";
 import useGetData from "../hooks/useGetData";
 import { Store } from "./StoreCookie";
 import FormModal from "../components/FormModal";
+import { useState } from "react";
 
 interface Props {
   id: number;
@@ -24,6 +25,8 @@ interface Props {
 }
 
 const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
+
+  const { openForm, setOpenForm } = useState(false)
 
   const {isOpen: addIsOpen, onOpen: addOnOpen, onClose: addOnClose } = useDisclosure();
   const {isOpen: editIsOpen, onOpen: editOnOpen, onClose: editOnClose } = useDisclosure();
@@ -43,15 +46,16 @@ const StoreCookieDetailCard = ({ id, size, count, endpoint }: Props) => {
           <Heading fontSize="2xl">{headingSize}</Heading>
           <ColorBadge size="30px" count={countSize!} />
         </Flex>
+        {/* { countSize! > 0 ? } */}
         {countSize! > 0 ? (
           <FormModal header={`Edit quantity of ${size} cookies in store`} isAddForm={false} onClose={editOnClose} isOpen={editIsOpen} onOpen={editOnOpen}>
             {cookieData ? (
-              <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} onClose={editOnClose} />
+              <StoreCookiesForm id={id} cookieSize={size} mode='edit' inStoreQuantityId={cookieData.id} closeForm={() => setOpenForm(true)} />
             ) : null}
           </FormModal>
         ) : (
           <FormModal header={`Add quantity of ${size} cookies in store`}  isAddForm={true} onClose={addOnClose} isOpen={addIsOpen} onOpen={addOnOpen}>
-            <StoreCookiesForm id={id} cookieSize={size!} mode="add" inStoreQuantityId={0} onClose={addOnClose} />
+            <StoreCookiesForm id={id} cookieSize={size!} mode="add" inStoreQuantityId={0} closeForm={() => setOpenForm(true)} />
           </FormModal>
         )}
       </CardHeader>

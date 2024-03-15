@@ -3,7 +3,7 @@ export interface Store {
     cookie: string;
     cookie_id: number;
     size: string;
-    quantity: number;
+    quantity?: number;
     last_updated: string;
     updated_by: {
         username: string;
