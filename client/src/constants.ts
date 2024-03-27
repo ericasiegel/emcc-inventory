@@ -5,3 +5,5 @@ export const STORE_ENDPOINT = "store";
 export const INGREDIENT_ENDOINT = 'ingredient';
 export const INGREDIENTS_ENDOINT = 'ingredients';
 export const INSTRUCTIONS_ENDOINT = 'instructions';
+export const LOCATIONS_ENDOINT = 'locations';
+export const GROCERIES_ENDOINT = 'groceries';
