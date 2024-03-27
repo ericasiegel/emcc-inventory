@@ -1,23 +1,50 @@
-import { Container, Spinner, Center, Heading } from "@chakra-ui/react"
-import useGetData from "../hooks/useGetData"
-import { Location } from "./Location"
-import { LOCATIONS_ENDOINT } from "../constants"
-
+import {
+  Container,
+  Spinner,
+  Center,
+  Heading,
+  Alert,
+  AlertIcon,
+  Text,
+  UnorderedList,
+  ListItem,
+} from "@chakra-ui/react";
+import useGetData from "../hooks/useGetData";
+import { Location } from "./Location";
+import { LOCATIONS_ENDOINT } from "../constants";
 
 const LocationCard = () => {
-  useGetData<Location>({
+  const {
+    data: getLocations,
+    isLoading,
+    error,
+  } = useGetData<Location>({
     endpoint: LOCATIONS_ENDOINT,
-    id: 0
-  })
+    id: 0,
+  });
+  const locations = getLocations?.pages.flatMap((page) => page.results);
+
+  if (error)
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        <Text size="lg">Locations could not be retrieved</Text>
+      </Alert>
+    );
+
   return (
-    <Container color="#941c3e" width="100%" padding={0}>
-      {/* {isLoading && <Spinner />} */}
-      <Center paddingY={6}>
+    <Container color="#941c3e" width="100%" padding={4} borderTop='4px' borderBottom='4px'>
+      <Center paddingBottom={3}>
         <Heading fontSize="3xl">Locations</Heading>
       </Center>
+      {isLoading && <Spinner />}
+      <UnorderedList>
+        {locations?.map((location) => (
+          <ListItem key={location.id}><Text fontSize='xl'>{location.title}</Text></ListItem>
+        ))}
+      </UnorderedList>
+    </Container>
+  );
+};
 
-      </Container>
-  )
-}
-
-export default LocationCard
+export default LocationCard;
