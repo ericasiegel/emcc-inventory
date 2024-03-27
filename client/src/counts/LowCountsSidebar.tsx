@@ -24,13 +24,13 @@ const LowCountsSidebar = () => {
       const lowCounts = data.pages
         .flatMap((page) => page.results)
         .filter((cookie) => {
-          const { doughs, baked_cookies, total_in_store } = cookie.counts;
+          const { doughs, baked_cookies, total_in_store } = cookie.counts || {};
           return (
-            doughs <= lowCountThreshold ||
-            baked_cookies.mega <= lowCountThreshold ||
-            baked_cookies.mini <= lowCountThreshold ||
-            total_in_store.mega <= lowCountThreshold ||
-            total_in_store.mini <= lowCountThreshold
+            doughs !== undefined && doughs <= lowCountThreshold ||
+            (baked_cookies?.mega !== undefined && baked_cookies?.mega <= lowCountThreshold) || 
+            (baked_cookies?.mini !== undefined && baked_cookies?.mini <= lowCountThreshold) || 
+            (total_in_store?.mega !== undefined && total_in_store?.mega <= lowCountThreshold) || 
+            (total_in_store?.mini !== undefined && total_in_store?.mini <= lowCountThreshold) 
           );
         });
       setProcessedLowCounts(lowCounts);
@@ -51,9 +51,9 @@ const LowCountsSidebar = () => {
           <LowCounts
             cookies={processedLowCounts}
             filterCriteria={(cookie) =>
-              cookie.counts.doughs <= lowCountThreshold
+              cookie.counts?.doughs !== undefined && cookie.counts.doughs <= lowCountThreshold
             }
-            displayData={(cookie) => cookie.counts.doughs}
+            displayData={(cookie) => cookie.counts?.doughs || 0}
           />
         </LowCountsBox>
       </LowCountsTitleBox>
@@ -63,18 +63,18 @@ const LowCountsSidebar = () => {
           <LowCounts
             cookies={processedLowCounts}
             filterCriteria={(cookie) =>
-              cookie.counts.baked_cookies.mega <= lowCountThreshold
+              cookie.counts?.baked_cookies.mega !== undefined && cookie.counts.baked_cookies.mega <= lowCountThreshold
             }
-            displayData={(cookie) => cookie.counts.baked_cookies.mega}
+            displayData={(cookie) => cookie.counts?.baked_cookies.mega || 0}
           />
         </LowCountsBox>
         <LowCountsBox subTitle="Mini">
           <LowCounts
             cookies={processedLowCounts}
             filterCriteria={(cookie) =>
-              cookie.counts.baked_cookies.mini <= lowCountThreshold
+              cookie.counts?.baked_cookies.mini !== undefined && cookie.counts.baked_cookies.mini <= lowCountThreshold
             }
-            displayData={(cookie) => cookie.counts.baked_cookies.mini}
+            displayData={(cookie) => cookie.counts?.baked_cookies.mini || 0}
           />
         </LowCountsBox>
       </LowCountsTitleBox>
@@ -84,18 +84,18 @@ const LowCountsSidebar = () => {
           <LowCounts
             cookies={processedLowCounts}
             filterCriteria={(cookie) =>
-              cookie.counts.total_in_store.mega <= lowCountThreshold
+              cookie.counts?.total_in_store.mega !== undefined && cookie.counts.total_in_store.mega <= lowCountThreshold
             }
-            displayData={(cookie) => cookie.counts.total_in_store.mega}
+            displayData={(cookie) => cookie.counts?.total_in_store.mega || 0}
           />
         </LowCountsBox>
         <LowCountsBox subTitle="Mini">
           <LowCounts
             cookies={processedLowCounts}
             filterCriteria={(cookie) =>
-              cookie.counts.total_in_store.mini <= lowCountThreshold
+              cookie.counts?.total_in_store.mini !== undefined && cookie.counts.total_in_store.mini <= lowCountThreshold
             }
-            displayData={(cookie) => cookie.counts.total_in_store.mini}
+            displayData={(cookie) => cookie.counts?.total_in_store.mini || 0}
           />
         </LowCountsBox>
       </LowCountsTitleBox>

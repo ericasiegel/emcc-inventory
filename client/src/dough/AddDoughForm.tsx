@@ -22,7 +22,7 @@ import CheckMarkButton from "../components/CheckMarkButton";
 import useAddData from "../hooks/useAddData";
 import { DOUGHS_ENDPOINT, LOCATIONS_ENDOINT } from "../constants";
 import useGetData from "../hooks/useGetData";
-import { Location } from "../cookies/Location";
+import { Location } from "../location/Location";
 
 const defaultDough = {
   id: 0,
@@ -42,8 +42,8 @@ interface Props {
 
 const AddDoughForm = ({ id, closeForm }: Props) => {
   const { data: getLocations } = useGetData<Location>({
-    endpoint: LOCATIONS_ENDOINT, 
-    id: 0
+    endpoint: LOCATIONS_ENDOINT,
+    id: 0,
   });
   const locations = getLocations?.pages.flatMap((page) => page.results);
 

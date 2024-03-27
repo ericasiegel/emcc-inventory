@@ -17,7 +17,11 @@ import { Baked } from "./Baked";
 import { useReducer, useRef } from "react";
 import { Dough, EditDough } from "../dough/Dough";
 import useDeleteCookies from "../hooks/useDeleteCookies";
-import { BAKED_ENDPOINT, DOUGHS_ENDPOINT, LOCATIONS_ENDOINT } from "../constants";
+import {
+  BAKED_ENDPOINT,
+  DOUGHS_ENDPOINT,
+  LOCATIONS_ENDOINT,
+} from "../constants";
 import addUpdateFormReducer, {
   StartingState,
 } from "../reducers/addUpdateFormReducer";
@@ -28,7 +32,7 @@ import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
 import useAddData from "../hooks/useAddData";
 import useEditData from "../hooks/useEditData";
-import { Location } from "../cookies/Location";
+import { Location } from "../location/Location";
 
 interface Props {
   id: number;
@@ -82,8 +86,8 @@ const AddBakedCookiesForm = ({ id, cookieSize, closeForm }: Props) => {
 
   // get Locations for Select List
   const { data: getLocations } = useGetData<Location>({
-    endpoint: LOCATIONS_ENDOINT, 
-    id: 0
+    endpoint: LOCATIONS_ENDOINT,
+    id: 0,
   });
   const locations = getLocations?.pages.flatMap((page) => page.results);
   // get doughs for Select List
