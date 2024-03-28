@@ -54,14 +54,17 @@ const LocationCard = () => {
         {openForm ? (
           <AddLocationForm closeForm={() => setOpenForm(false)} />
         ) : (
-          <AddButton onClick={() => setOpenForm(true)} />
+          <Center marginBottom={3}>
+            <Text fontSize="md" color='black'>Add a Storage Location</Text>
+            <AddButton onClick={() => setOpenForm(true)} />
+          </Center>
         )}
       </Center>
       {isLoading && <Spinner />}
       <UnorderedList>
         {locations?.map((location) => (
           <ListItem key={location.id}>
-            <HStack justifyContent='space-between'>
+            <HStack justifyContent="space-between">
               <Text fontSize="xl">{location.title}</Text>
               <DeleteButton endpoint={LOCATIONS_ENDOINT} id={location.id} />
             </HStack>
