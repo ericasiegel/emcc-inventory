@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { BsTrash } from "react-icons/bs";
 import useDeleteCookies from "../hooks/useDeleteCookies";
+import { COOKIES_ENDPOINT, LOCATIONS_ENDOINT } from "../constants";
 
 interface Props {
   endpoint: string;
@@ -19,7 +20,11 @@ const DeleteButton = ({ endpoint, id }: Props) => {
 
   if (error) {
     // Check if the error status code is 405
-    if (error.response && error.response.status === 405) {
+    if (
+      error.response &&
+      error.response.status === 405 &&
+      endpoint === COOKIES_ENDPOINT
+    ) {
       // Display a specific message for a 405 error
       return (
         <Alert status="error">
@@ -32,8 +37,23 @@ const DeleteButton = ({ endpoint, id }: Props) => {
           </Flex>
         </Alert>
       );
+    } else if (
+      error.response &&
+      error.response.status === 405 &&
+      endpoint === LOCATIONS_ENDOINT
+    ) {
+      return (
+        <Alert status="error">
+          <AlertIcon />
+          <Flex direction="column">
+            <AlertTitle>Location Can't Be Deleted</AlertTitle>
+            <AlertDescription>
+              Delete all associated doughs and baked cookies
+            </AlertDescription>
+          </Flex>
+        </Alert>
+      );
     } else {
-      // Display a generic error message for all other errors
       return (
         <Alert status="error">
           <AlertIcon />
