@@ -1,15 +1,17 @@
 import {
-  // Alert,
-  // AlertIcon,
+  Alert,
+  AlertIcon,
   Button,
   Center,
   FormControl,
   Input,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import APIClient from "../services/api-client";
 
 const LoginForm = () => {
+  const [error, setError] = useState('');
+  
   const usernameData = useRef<HTMLInputElement>(null);
   const passwordData = useRef<HTMLInputElement>(null);
 
@@ -30,22 +32,26 @@ const LoginForm = () => {
       // Save token to local storage
       localStorage.setItem("accessToken", token);
 
+      // Reload the page
+      window.location.reload();
+
       // Optionally, you can redirect the user to another page or perform other actions
     } catch (error) {
       // Handle authentication error
       console.error("Login failed:", error);
+      setError("Login failed. Please check your credentials.");
       // Optionally, you can show an error message to the user
     }
   };
 
   return (
     <>
-      {/* {error && (
+      {error && (
         <Alert status="error">
           <AlertIcon />
-          {error.message}
+          {error}
         </Alert>
-      )} */}
+      )}
       {/* <form> */}
       <form onSubmit={handleLogin}>
         <FormControl>
