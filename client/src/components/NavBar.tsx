@@ -4,6 +4,7 @@ import logo from "../assets/emcc-logo-white_1024x1024.webp";
 import SearchInput from "./SearchInput";
 import { Box } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import LogoutButton from "../userAuth/LogoutButton";
 
 const NavBar = () => {
   return (
@@ -32,6 +33,7 @@ const NavBar = () => {
           </Link>
           </HStack>
         </Box>
+        <LogoutButton />
         <SearchInput />
       </HStack>
     </Box>
