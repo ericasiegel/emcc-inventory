@@ -120,6 +120,21 @@ class LocationViewSet(ModelViewSet):
     search_fields = ['title']
     ordering_fields = ['id', 'title']
     
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if (
+            Dough.objects.filter(location_id=instance.pk).exists() or
+            BakedCookie.objects.filter(location_id=instance.pk).exists()
+            ):
+            return Response(
+                {'error': 'Location cannot be deleted because it is associated with a dough or baked cookie'}, 
+                status=status.HTTP_405_METHOD_NOT_ALLOWED
+                )
+
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
 class IngredientViewSet(ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
