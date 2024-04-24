@@ -7,7 +7,7 @@ import LoginForm from "../userAuth/LoginForm";
 
 const Layout = () => {
   const [ isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isOpen, onClose } = useDisclosure()
+  const { onClose } = useDisclosure()
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');

@@ -8,7 +8,7 @@ export interface FetchResponse<T> {
     results: T[];
   }
 
-const apiToken = localStorage.getItem('apiToken')
+const apiToken = localStorage.getItem('accessToken')
 console.log(apiToken);
 
 // const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAyMDYxNTI4LCJpYXQiOjE3MDE5NzUxMjgsImp0aSI6IjUyOWU3NGE5ZDY1OTRiM2ZiMmI2M2I3MGNmMTEzYWEyIiwidXNlcl9pZCI6MX0.GOHNhipE64AiSImnvpwgUXNCrfra3OZhx61dWj19Yqs'
