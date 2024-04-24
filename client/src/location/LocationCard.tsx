@@ -71,7 +71,6 @@ const LocationCard = () => {
           </ListItem>
         ))}
       </UnorderedList>
-      {/* add Alert box for reason why it can't be deleted if there are items present */}
     </Container>
   );
 };
