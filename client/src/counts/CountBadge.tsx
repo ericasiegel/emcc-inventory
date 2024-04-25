@@ -9,10 +9,10 @@ interface Props {
 const CountBadge = ({ label, count }: Props) => {
   return (
     <HStack px={2}>
-      <Text fontSize="md" as="i">
+      <Text fontSize="xl" as="i">
         {label}:
       </Text>
-      <ColorBadge size="16px" count={count} />
+      <ColorBadge size="xl" count={count} />
     </HStack>
   );
 };

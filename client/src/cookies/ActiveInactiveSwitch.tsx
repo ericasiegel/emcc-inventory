@@ -43,7 +43,7 @@ const ActiveInactiveSwitch = ({ cookie }: Props) => {
       )}
       <Flex justifyContent="center" alignItems="center">
         <FormControl paddingTop={4} display="flex" alignItems="center">
-          <FormLabel htmlFor={cookie.slug} mb="0">
+          <FormLabel htmlFor={cookie.slug} mb="0" fontSize='xl'>
             {cookie.is_active ? <Text>Active</Text> : <Text>Inactive</Text>}
           </FormLabel>
           <Switch
@@ -51,6 +51,7 @@ const ActiveInactiveSwitch = ({ cookie }: Props) => {
             colorScheme="green"
             isChecked={cookie.is_active}
             onChange={handleSwitchChange}
+            size='lg'
           />
         </FormControl>
       </Flex>

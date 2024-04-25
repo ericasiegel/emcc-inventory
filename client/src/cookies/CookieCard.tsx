@@ -27,11 +27,11 @@ const CookieCard = ({ cookie }: Props) => {
   const inactiveCookie = !cookie.is_active ? "40%" : "100%";
 
   return (
-    <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%">
+    <Card backgroundColor="inherit" opacity={inactiveCookie} height="100%" align='center'>
       <Image src={imgUrl} alt={cookie.description} width="100%" height="auto"/>
-      <CardHeader borderBottom="1px" justifyContent="center">
+      <CardHeader borderBottom="1px">
         <Link to={"/cookies/" + cookie.slug}>
-          <Heading as="em" color="#941c3e" fontSize="3xl">
+          <Heading color="#941c3e" fontSize="4xl">
             {cookie.name}
           </Heading>
           <CookieDescriptionCard description={cookie?.description} />
