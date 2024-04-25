@@ -1,35 +1,34 @@
-import { Box, useDisclosure } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import NavBar from "../components/NavBar";
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import MainModal from "../components/MainModal";
-import LoginForm from "../userAuth/LoginForm";
+import LoginPage from "./LoginPage";
 
 const Layout = () => {
-  const [ isLoggedIn, setIsLoggedIn] = useState(false);
-  const { onClose } = useDisclosure()
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) setIsLoggedIn(true);
   }, []);
 
   const containerStyle: React.CSSProperties = {
-    backgroundColor: "#f8a5c2", // Replace 'blue' with the color you want
+    // backgroundColor: "#f8a5c2", 
+    backgroundColor: "#ebb6c8", 
     minHeight: "100vh", // Ensures the background covers the entire viewport
   };
   return (
     <div style={containerStyle}>
-      <NavBar />
-      <Box padding={5}>
-        { isLoggedIn ? (
-          <Outlet />
-        ) : (
-          <MainModal header="Login to EMCC Inventory" isOpen={!isLoggedIn && !localStorage.getItem('accessToken')} onClose={onClose}>
-            <LoginForm />
-          </MainModal>
-        )}
-      </Box>
+      {isLoggedIn ? (
+        <>
+          <NavBar />
+          <Box padding={5}>
+            <Outlet />
+          </Box>
+        </>
+      ) : (
+        <LoginPage />
+      )}
     </div>
   );
 };

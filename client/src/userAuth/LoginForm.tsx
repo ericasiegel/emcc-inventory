@@ -5,6 +5,7 @@ import {
   Center,
   FormControl,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import APIClient from "../services/api-client";
@@ -69,8 +70,8 @@ const LoginForm = () => {
             size="lg"
           />
           <Center>
-            <Button colorScheme="purple" size="lg" my={3} type="submit">
-              Login
+            <Button bg="#6F1E51" size="lg" my={3} type="submit" _hover={{ bg: "#B33771" }} >
+              <Text color='white'>Login</Text>
             </Button>
           </Center>
         </FormControl>

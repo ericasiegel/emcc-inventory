@@ -1,4 +1,5 @@
-import { Box } from "@chakra-ui/layout";
+
+import { Card } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -7,11 +8,12 @@ interface Props {
 
 const CookieCardContainer = ({ children }: Props) => {
   return (
-    <Box
+    <Card
+    variant='elevated'
       height="100%"
       borderRadius={10}
+      // borderColor="black"
       backgroundColor='#fcc0d5'
-      outline='1px'
       boxShadow="xl"
       overflow="hidden"
       _hover={{
@@ -20,7 +22,7 @@ const CookieCardContainer = ({ children }: Props) => {
       }}
     >
         {children}
-    </Box>
+    </Card>
   );
 };
 
