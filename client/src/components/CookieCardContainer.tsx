@@ -11,11 +11,13 @@ const CookieCardContainer = ({ children }: Props) => {
     <Card
     variant='elevated'
       height="100%"
-      borderRadius={10}
+      // borderRadius={10}
       // borderColor="black"
-      backgroundColor='#fcc0d5'
+      // backgroundColor='#cf6a87'
+      backgroundColor='#ebb6c8'
       boxShadow="xl"
       overflow="hidden"
+      p={1}
       _hover={{
         transform: 'scale(1.03)',
         transition: 'transform .15s ease-in'

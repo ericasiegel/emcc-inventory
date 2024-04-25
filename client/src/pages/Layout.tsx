@@ -14,7 +14,7 @@ const Layout = () => {
 
   const containerStyle: React.CSSProperties = {
     // backgroundColor: "#f8a5c2", 
-    backgroundColor: "#ebb6c8", 
+    backgroundColor: "#edc8d5", 
     minHeight: "100vh", // Ensures the background covers the entire viewport
   };
   return (

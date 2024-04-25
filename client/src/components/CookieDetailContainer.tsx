@@ -8,9 +8,9 @@ interface Props {
 const CookieDetailContainer = ({ children }: Props) => {
   return (
     <Flex
-      border="2px"
-      borderColor="#c44569"
-      backgroundColor="#fcc0d5"
+      border="4px"
+      borderColor="#6D214F"
+      backgroundColor="#ebb6c8"
       borderRadius={10}
       overflow="hidden"
       marginY={3}

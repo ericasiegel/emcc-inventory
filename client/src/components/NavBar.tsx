@@ -8,7 +8,7 @@ import LogoutButton from "../userAuth/LogoutButton";
 
 const NavBar = () => {
   return (
-    <Box background="#cf6a87" paddingBottom={{ base: "3", sm: "3", md: "0" }}>
+    <Box background="#6D214F" paddingBottom={{ base: "3", sm: "3", md: "0" }}>
       <HStack
         justifyContent={{ base: "center", md: "space-between" }}
         alignItems="center"
