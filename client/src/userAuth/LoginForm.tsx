@@ -27,19 +27,15 @@ const LoginForm = () => {
 
     try {
       // Call the API to authenticate the user
-      const apiClient = new APIClient("");
-      const token = await apiClient.fetchBearerToken(username, password);
+      const apiClient = new APIClient(""); // Ensure endpoint is properly set if needed
+      await apiClient.fetchBearerToken(username, password);
 
-      // Save token to local storage
-      localStorage.setItem("accessToken", token);
-
-      // Reload the page
+      // Reload the page to reflect the authenticated state
       window.location.reload();
 
-      // Optionally, you can redirect the user to another page or perform other actions
     } catch (error) {
       // Handle authentication error
-      console.error("Login failed:", error);
+      console.error("Login failed: ", error);
       setError("Login failed. Please check your credentials.");
       // Optionally, you can show an error message to the user
     }

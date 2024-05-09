@@ -31,12 +31,17 @@ class APIClient<T> {
 
     // Method to prepare and return Axios request configuration with Authorization header
     private getAuthorizedConfig = async (extraConfig: AxiosRequestConfig = {}) => {
-        const token = localStorage.getItem('accessToken'); // retrieve the token from local storage
-        if (!token || this.isTokenExpired(token)) { // Check if the token is absent or expired
-            localStorage.removeItem('accessToken'); // Remove token if it is invalid
-            window.location.reload(); // reload the page to redirect to login screen
-            throw new Error("Session has expired"); // Throw an error indicating session has expired
-        }
+        let token = localStorage.getItem('accessToken'); // retrieve the token from local storage
+        if (!token || this.isTokenExpired(token)) {
+            try {
+              token = await this.refreshToken();  // Attempt to refresh the token
+            } catch (error) {
+              localStorage.removeItem('accessToken');  // Remove invalid tokens
+              localStorage.removeItem('refreshToken');
+              window.location.reload();  // Force re-login if refresh fails
+              throw new Error("Session expired");
+            }
+          }
         const config: AxiosRequestConfig = {
             headers: {
                 ...extraConfig.headers, // merge any existing headers with the Authorizaion header
@@ -82,9 +87,34 @@ class APIClient<T> {
             username,
             password,
         });
-        localStorage.setItem('accessToken', response.data.access); // store the recieved token in local storage
-        return response.data.access; // return the token
+        const { access, refresh } = response.data;
+        localStorage.setItem('accessToken', access); // store the recieved token in local storage
+        localStorage.setItem('refreshToken', refresh); // store the recieved token in local storage
+        return access; // return the token
     };
+
+    // Method to refresh the access token using the refresh token
+    refreshToken = async() => {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+            throw new Error("No refresh token available");
+        }
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/auth/jwt/refresh/', {
+                refresh: refreshToken,
+            });
+            const { access } = response.data;
+            localStorage.setItem('accessToken', access);
+            return access;
+        } catch (error) {
+            console.error("Failed to refresh token: ", error);
+            // Optionally clear tokens and force logout here
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            window.location.reload();
+            throw error;
+        }
+    }
 }
 
 export default APIClient
