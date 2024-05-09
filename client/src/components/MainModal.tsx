@@ -9,28 +9,15 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import AddButton from "./AddButton";
-import EditButton from "./EditButton";
-import AddImageButton from "../cookieImage/AddImageButton";
 
 interface Props {
   children: ReactNode;
   header?: string;
-  isAddForm?: boolean;
   isOpen: boolean;
-  onOpen: () => void;
   onClose: () => void;
 }
 
-const FormModal = ({ children, header, isAddForm,  onOpen, onClose, isOpen }: Props) => {
-  
-  const renderTriggerButton = () => {
-    if (isAddForm) {
-      return <AddButton onClick={onOpen} />;
-    } else {
-      return <EditButton onClick={onOpen} />;
-    }
-  };
+const MainModal = ({ children, header, onClose, isOpen }: Props) => {
 
   const renderModalContent = () => {
     return (
@@ -53,11 +40,6 @@ const FormModal = ({ children, header, isAddForm,  onOpen, onClose, isOpen }: Pr
 
   return (
     <>
-      {isAddForm && header === 'Add Image' ? (
-        <AddImageButton onClick={onOpen} />
-      ) : (
-        renderTriggerButton()
-      )}
       <Modal isOpen={isOpen} onClose={onClose}>
         {renderModalContent()}
       </Modal>
@@ -65,4 +47,4 @@ const FormModal = ({ children, header, isAddForm,  onOpen, onClose, isOpen }: Pr
   );
 };
 
-export default FormModal;
+export default MainModal;

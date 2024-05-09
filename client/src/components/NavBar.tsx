@@ -4,10 +4,11 @@ import logo from "../assets/emcc-logo-white_1024x1024.webp";
 import SearchInput from "./SearchInput";
 import { Box } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import LogoutButton from "../userAuth/LogoutButton";
 
 const NavBar = () => {
   return (
-    <Box background="#cf6a87" paddingBottom={{ base: "3", sm: "3", md: "0" }}>
+    <Box background="#6D214F" paddingBottom={{ base: "3", sm: "3", md: "0" }}>
       <HStack
         justifyContent={{ base: "center", md: "space-between" }}
         alignItems="center"
@@ -32,6 +33,7 @@ const NavBar = () => {
           </Link>
           </HStack>
         </Box>
+        <LogoutButton />
         <SearchInput />
       </HStack>
     </Box>

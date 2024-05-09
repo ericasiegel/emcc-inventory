@@ -1,5 +1,6 @@
-import React from 'react'
+
 import IngredientCard from '../pantry/IngredientCard'
+
 
 const Pantry = () => {
   return (

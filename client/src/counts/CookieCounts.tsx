@@ -12,14 +12,14 @@ const CookieCounts = ({ counts }: Props) => {
     <>
       <Box py={2}>
         <Center>
-          <Heading fontSize="xl">Dough</Heading>
+          <Heading fontSize="2xl">Dough</Heading>
           <CountBadge label="" count={counts.doughs} />
         </Center>
       </Box>
 
       <Box py={2}>
         <Center>
-          <Heading fontSize="xl">Baked Cookies</Heading>
+          <Heading fontSize="2xl">Baked Cookies</Heading>
         </Center>
         <Center>
           <CountBadge label="Mega" count={counts.baked_cookies.mega} />
@@ -29,7 +29,7 @@ const CookieCounts = ({ counts }: Props) => {
 
       <Box py={2}>
         <Center>
-          <Heading fontSize="xl">Cookies In Store</Heading>
+          <Heading fontSize="2xl">Cookies In Store</Heading>
         </Center>
         <Center>
           <CountBadge label="Mega" count={counts.total_in_store.mega} />

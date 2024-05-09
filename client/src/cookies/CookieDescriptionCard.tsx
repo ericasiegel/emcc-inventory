@@ -7,7 +7,7 @@ interface Props {
 const CookieDescriptionCard = ({ description }: Props) => {
   return (
     <Box display="flex" justifyContent='center' paddingY={2}>
-      <Text fontSize='xl' as='cite'>{description}</Text>
+      <Text fontSize='xl' as='em'>{description}</Text>
     </Box>
   );
 };
