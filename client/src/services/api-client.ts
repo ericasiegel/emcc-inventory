@@ -16,6 +16,21 @@ const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/bakery', // base URL for all API Requests
 });
 
+axiosInstance.interceptors.response.use(
+    response => response, // This function handles the response (this could be left unchanged)
+    error => {
+      // Here, check if the error response status is 401
+      if (error.response && error.response.status === 401) {
+        // Logic to handle 401 error
+        console.log('401 detected, handling authentication error');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        window.location.reload();  // Force a reload to trigger re-authentication
+      }
+      return Promise.reject(error);  // If it's not a 401 error, just pass the error along
+    }
+  );
+
 class APIClient<T> {
     endpoint: string; // endpoint associated with the specific API Client instance
 
@@ -54,11 +69,26 @@ class APIClient<T> {
 
     // Generic method to handle all API requests
     request = async <U = T>(method: 'get' | 'post' | 'patch' | 'delete', url: string, data?: U, config: AxiosRequestConfig = {}): Promise<FetchResponse<U> | U> => {
-        const finalConfig = await this.getAuthorizedConfig(config); // get the authorized config
-        if (method === "get" || method === "delete") { // Handle Get and Delete requests that do not requrie a body
-            return axiosInstance[method](url, finalConfig).then(res => res.data);
-        } else { // handle POST and PATCh requests that may require a body
-            return axiosInstance[method](url, data, finalConfig).then(res => res.data);
+        try {
+
+            const finalConfig = await this.getAuthorizedConfig(config); // get the authorized config
+            if (method === "get" || method === "delete") { // Handle Get and Delete requests that do not requrie a body
+                return axiosInstance[method](url, finalConfig).then(res => res.data);
+            } else { // handle POST and PATCh requests that may require a body
+                return axiosInstance[method](url, data, finalConfig).then(res => res.data);
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                // Handle expected errors from Axios
+                if (error.response && error.response.status !== 401) {
+                    // Handle specific non-401 errors if necessary
+                    console.error("An error occurred:", error.message);
+                }
+            } else {
+                // Handle unexpected errors
+                console.error("Unexpected error:", error);
+            }
+            throw error; // Rethrow the error if you need further up the chain handling
         }
     }
 
