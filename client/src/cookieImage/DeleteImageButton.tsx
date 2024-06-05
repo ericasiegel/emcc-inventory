@@ -1,13 +1,17 @@
 import { Alert, AlertIcon, Button } from "@chakra-ui/react";
 import { FcRemoveImage } from "react-icons/fc";
-import useDeleteImage from "./useDeleteImage";
+import useEditData from "../hooks/useEditData";
+import { DeleteImage } from "../cookies/Cookie";
+import { COOKIES_ENDPOINT } from "../constants";
 
 interface Props {
   id: number;
 }
 
 const DeleteImageButton = ({ id }: Props) => {
-  const { deleteImage, error, isLoading } = useDeleteImage(id);
+  // console.log(id);
+  
+ const { editData: deleteImage, error, isLoading} = useEditData<DeleteImage>({ id: id, endpoint: COOKIES_ENDPOINT})
 
   const handleDeleteImage = () => {
     deleteImage({

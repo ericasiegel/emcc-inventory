@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { AddImage } from "../cookies/Cookie";
+import { AddImage, Cookie } from "../cookies/Cookie";
 
 export interface FetchResponse<T> {
     count: number; // the number of total items available
@@ -7,7 +7,7 @@ export interface FetchResponse<T> {
     results: T[]; // Array of items of generic type T
 }
 
-const apiToken = localStorage.getItem('accessToken');
+// const apiToken = localStorage.getItem('accessToken');
 // console.log(apiToken);
 
 const axiosInstance = axios.create({
@@ -103,7 +103,7 @@ class APIClient<T> {
     delete = (id: number | string): Promise<{ message: string }> => this.request<{ message: string }>('delete', `${this.endpoint}/${id}`);
 
     // Special method for uploading images
-    uploadImage = async (image: AddImage, id: number) => {
+    uploadImage = async (image: AddImage, id: number): Promise<Cookie> => {
         const formData = new FormData();
         formData.append('image', image.image); // append the image file to FormData
 
@@ -113,9 +113,10 @@ class APIClient<T> {
             }
         };
 
-        const imageConfig = await this.getAuthorizedConfig(extraConfig);
-        // console.log(imageConfig);
-        return this.request<FormData>('patch', `${this.endpoint}/${id}/`, formData, imageConfig); // send the request to update the image
+        const finalConfig = await this.getAuthorizedConfig(extraConfig);
+        console.log("Upload image finalConfig headers:", finalConfig.headers);
+
+        return axiosInstance.patch(`${this.endpoint}/${id}/`, formData, finalConfig).then(res => res.data); // send the request to update the image
     };
 
     fetchBearerToken = async (username: string, password: string) => {

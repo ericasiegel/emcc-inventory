@@ -13,7 +13,7 @@ const useAddImage = (id: number) => {
     isLoading,
   } = useMutateCookies<Cookie, Error, AddImage>(
     (image: AddImage) =>
-      apiClient.uploadImage(image, id).then((res) => res.data),
+      apiClient.uploadImage(image, id),
     () => {},
     [COOKIES_ENDPOINT]
   );
