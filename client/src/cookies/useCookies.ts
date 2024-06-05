@@ -7,7 +7,6 @@ import cookieService from '../services/cookieService';
 import { COOKIES_ENDPOINT } from '../constants';
 
 
-
   const useCookies = () => {
     const cookieQuery = useCookieQueryStore(s => s.cookieQuery)
     return useInfiniteQuery<FetchResponse<Cookie>, Error>({

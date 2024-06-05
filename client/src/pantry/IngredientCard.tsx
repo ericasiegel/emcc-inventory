@@ -24,7 +24,7 @@ const IngredientCard = () => {
           Welcome to the Pantry!
         </AlertTitle>
         <AlertDescription maxWidth="md" fontSize='xl'>
-          We are working hard on this feature, and it will be coming soon!
+          We are working hard on different elements of this feature, and it will be coming soon!
         </AlertDescription>
       </Alert>
     </Center>

@@ -18,8 +18,13 @@ import { useRef } from "react";
 import CancelButton from "../components/CancelButton";
 import CheckMarkButton from "../components/CheckMarkButton";
 import useAddData from "../hooks/useAddData";
-import { INGREDIENTS_ENDOINT } from "../constants";
-import { Ingredients } from "./Recipe";
+import { INGREDIENT_ENDOINT, INGREDIENTS_ENDOINT } from "../constants";
+import { Ingredient, Ingredients } from "./Recipe";
+
+const defaultIngredient = {
+  id: 0,
+  name: ""
+}
 
 const defaultIngredientValue = {
   id: 0,
@@ -39,23 +44,48 @@ interface Props {
 const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
   // get list of ingredients,
   const { data: getIngredientItems } = useIngredientItem();
+  console.log(getIngredientItems);
+  
   const ingredientItems = getIngredientItems?.pages.flatMap(
     (page) => page.results
   );
 
-  const { addData, error, isLoading } = useAddData<Ingredients>({
+  const { addData: addRecipeIngredient, error, isLoading } = useAddData<Ingredients>({
     endpoint: INGREDIENTS_ENDOINT,
     onSuccessCallback: closeForm,
   });
 
+  const { addData: addIngredient } = useAddData<Ingredient>({
+    endpoint: INGREDIENT_ENDOINT,
+    onSuccessCallback: closeForm,
+  });
+
+  
   const ingredientId = useRef<HTMLSelectElement>(null);
   const ingredientQuantity = useRef<HTMLInputElement>(null);
   const ingredientUnit = useRef<HTMLInputElement>(null);
+  const newIngredient = useRef<HTMLInputElement>(null);
+  
+  const getIngredient = async () => {
+    if (ingredientId.current && ingredientId.current.value) {
+      return ingredientId.current.value;
+    } else {
+      const newIngredientValue = newIngredient.current?.value;
+      const ingredientData = {
+        ...defaultIngredient,
+        name: newIngredientValue
+      }
+      const addedIngredient = await addIngredient(ingredientData!)
+      console.log(addedIngredient);
+      return addedIngredient.id;
 
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    }
+  }
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const ingredientIdValue = ingredientId.current?.value;
+    const ingredientIdValue = await getIngredient();
     const ingredientQuantityValue =
       ingredientQuantity.current?.querySelector("input")?.valueAsNumber;
     const ingredientUnitValue = ingredientUnit.current?.value;
@@ -63,12 +93,12 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
     const cookieIngredientData = {
       ...defaultIngredientValue,
       cookie_id: cookieId,
-      ingredient_id: parseInt(ingredientIdValue!),
+      ingredient_id: parseInt(ingredientIdValue),
       quantity: ingredientQuantityValue!,
       unit: ingredientUnitValue!,
     };
 
-    addData(cookieIngredientData);
+    addRecipeIngredient(cookieIngredientData);
   };
 
   return (
@@ -126,6 +156,16 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
               {isLoading ? "..." : <CheckMarkButton />}
               <CancelButton onClick={closeForm} />
             </HStack>
+            <HStack>
+
+            <Text>Can't find your ingredient?: </Text>
+            <Input
+                width="20%" // Adjust width
+                ref={newIngredient}
+                backgroundColor="white"
+                placeholder="Add Ingredient"
+                />
+                </HStack>
           </Box>
         </FormControl>
       </form>

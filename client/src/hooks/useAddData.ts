@@ -15,7 +15,7 @@ const useAddData = <T>({ endpoint, onSuccessCallback }: Props) => {
         error, 
         isLoading 
     } = useMutateCookies<T, Error, T>(
-        (newData: T) => apiClient.post(newData),
+        (newData: T) => apiClient.post(newData).then(res => res as T),
         () => {
             onSuccessCallback();
         },

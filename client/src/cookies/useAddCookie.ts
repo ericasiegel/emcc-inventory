@@ -3,9 +3,8 @@ import { COOKIES_ENDPOINT } from '../constants';
 import { Cookie } from './Cookie';
 import useMutateCookies from '../hooks/useMutateCookies';
 
-
 const useAddCookie = (onSuccessCallback: () => void) => {
-  const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
+  const apiClient = new APIClient<Cookie>(COOKIES_ENDPOINT + "/");
   
   const {
     mutate: addCookie,
@@ -18,7 +17,7 @@ const useAddCookie = (onSuccessCallback: () => void) => {
     },
     [COOKIES_ENDPOINT]
   );
-  return { addCookie, error, isLoading }
+  return { addCookie, error, isLoading };
 }
 
-export default useAddCookie
+export default useAddCookie;

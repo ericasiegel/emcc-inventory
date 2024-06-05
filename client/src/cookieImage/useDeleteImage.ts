@@ -4,7 +4,7 @@ import APIClient from '../services/api-client';
 import useMutateCookies from '../hooks/useMutateCookies';
 
 const useDeleteImage = (id : number) => {
-    const apiClient = new APIClient(COOKIES_ENDPOINT + "/");
+    const apiClient = new APIClient<Cookie>(COOKIES_ENDPOINT + "/");
     const {
       mutate: deleteImage,
       error,
