@@ -23,15 +23,15 @@ class BaseAdmin(admin.ModelAdmin):
 # Register the Cookie model with custom admin settings
 @admin.register(Cookie)
 class CookieAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description', 'is_active', 'display_thumbnail', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
+    list_display = ['id', 'name', 'description', 'is_active', 'image', 'dough_quantity', 'mega_quantity', 'mini_quantity', 'mega_in_store', 'mini_in_store']
     search_fields = ['name__icontains']
     exclude = ['slug']
     
      # Add a custom method to display the thumbnail
-    def display_thumbnail(self, obj):
-        return format_html(f'<img src="{obj.image.url}" width="50" height="50" />')
+    # def display_thumbnail(self, obj):
+    #     return format_html(f'<img src="{obj.image.url}" width="50" height="50" />')
     
-    display_thumbnail.short_description = 'Thumbnail'
+    # display_thumbnail.short_description = 'Thumbnail'
 
     # Custom method to create formatted HTML links to related objects' changelist views
     def _formatted_link(self, cookie, app_name, model_name, attribute_name, size=None):

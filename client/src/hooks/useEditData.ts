@@ -10,7 +10,7 @@ interface Props {
 }
 
 const useEditData = <T>({ id, endpoint, onSuccessCallback }: Props) => {
-    const apiClient = new APIClient(endpoint + '/');
+    const apiClient = new APIClient<T>(endpoint+"/");
     const {
         mutate: editData,
         error,
