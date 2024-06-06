@@ -58,6 +58,9 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
   const { addData: addIngredient } = useAddData<Ingredient>({
     endpoint: INGREDIENT_ENDOINT,
     onSuccessCallback: closeForm,
+    onResultCallback: (result) => {
+      console.log("New Ingredient Added:", result);
+    }
   });
 
   
@@ -66,21 +69,21 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
   const ingredientUnit = useRef<HTMLInputElement>(null);
   const newIngredient = useRef<HTMLInputElement>(null);
   
-  const getIngredient = async () => {
+  const getIngredient = async (): Promise<number> => {
     if (ingredientId.current && ingredientId.current.value) {
-      return ingredientId.current.value;
+      return parseInt(ingredientId.current.value);
     } else {
       const newIngredientValue = newIngredient.current?.value;
       const ingredientData = {
         ...defaultIngredient,
         name: newIngredientValue
       }
-      const addedIngredient = await addIngredient(ingredientData!)
+      const addedIngredient = await addIngredient(ingredientData);
       console.log(addedIngredient);
       return addedIngredient.id;
-
     }
   }
+  
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -93,7 +96,7 @@ const AddCookieIngredientForm = ({ cookieId, closeForm }: Props) => {
     const cookieIngredientData = {
       ...defaultIngredientValue,
       cookie_id: cookieId,
-      ingredient_id: parseInt(ingredientIdValue),
+      ingredient_id: ingredientIdValue,
       quantity: ingredientQuantityValue!,
       unit: ingredientUnitValue!,
     };
